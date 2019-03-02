@@ -12,13 +12,68 @@
             100 százalékban minden magot!
         </para>
         <para>
-            Megoldás videó:
-        </para>
-        <para>
             Megoldás forrása:                
         </para>
         <para>
-            Tanulságok, tapasztalatok, magyarázat...
+            Végtelen ciklusnak nevezzük azt az utasítást, ami örökké futna, ha nem állítanánk le a programot. 
+            A végtelen ciklus nem minden esetben jelent rossz dolgot, csak akkor, ha olyan feladat során keletkezik, amelynek végrehajtása nem igényel ilyen ciklusos algoritmust. 
+            Ilyen ciklus lehet például az alábbi kódrészlet:
+        </para>
+        <programlisting language="c"><![CDATA[Program vegtelen.c {
+            
+                int main() {
+                    int i = 0;
+                    while (i<=0) {
+                        i--;
+                        printf("\n vegtelen ciklus");
+                    }
+                }
+            
+        }]]>
+        </programlisting>
+        <para>
+            A program a while utáni zárójelben lévő kifejezést értékeli ki. Mivel a az „i” változó értéke egyenlő vagy kisebb a nullával ezért ez a feltétel igaz lesz és a program lefut. 
+            Ennek eredményeképpen az i változó értéke eggyel kisebb lesz és újból indul az egész. Mivel az eredmény sose lesz nullánál nagyobb, ezért a feltétel mindig igaz lesz, azaz végtelen ciklusba kerül.
+            Vannak esetek, amikor szükség van végtelen ciklusra, ekkor érdemesebb az alábbi példát használni, amikor nem töltjük ki a for ciklus fejlécét:
+        </para>
+        <programlisting language="c"><![CDATA[Program vegtelen_for {
+            
+            int main() {
+                for(;;);
+            }
+            
+        }]]>
+        </programlisting>
+        <para>
+            Ez a végtelen ciklus 1 magot használ 100%-on. Ha több magot szeretnénk dolgoztatni, akkor hozzá kell adni a #pragma omp parallel-t, tehát a végleges kódrészlet így fog kinézni:
+        </para>
+        <programlisting language="c"><![CDATA[Program vegtelen_pragma.c {
+            
+            int main() {
+                #pragma omp parallel
+                for(;;);
+            }
+            
+        }]]>
+        </programlisting>
+        <para>
+            Ezzel az elhelyezett OpenMP alapú parallel régiók segítségével olyan függvényt hívunk elő, amellyel könnyen kihasználhatjuk vele egy számítógép processzorainak teljes számítási kapacitását. 
+            Fontos megjegyezni, hogy fordítás során hozzá kell adni <function>-fopenmp</function> kódrészletet is, ezért végül így fog kinézni: <function>gcc vegtelen_pragma.c -o vegtelen_pragma -fopenmp</function>
+            Ha olyan programra van szükség, ahol csak 0%-ban dolgoztatnak meg egy magot, akkor a sleep(1) függvényt kell használnunk:
+        </para>
+         <programlisting language="c"><![CDATA[Program vegtelen_sleep.c {
+             
+            int main() {
+                for(;;) {
+                    sleep(1);
+                }   
+            }
+            
+        }]]>
+        </programlisting>
+        <para>
+            A sleep() függvény hatására a program a zárójelben megadott értékű másodpercre megáll, alszik. 
+            Ha a zárójelben nincs megadva argumentum, akkor meghatározatlan időre alszik. Ezzel érhető el, hogy a mag ne legyen 100%-ban kihasználva.
         </para>            
     </section>        
         
