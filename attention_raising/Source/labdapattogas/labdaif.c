@@ -21,13 +21,12 @@ main ( void )
 
         getmaxyx ( ablak, my , mx );
 
+        clear ();
         mvprintw ( y, x, "O" );
-
-        refresh ();
-        usleep ( 100000 );
 
         x = x + xnov;
         y = y + ynov;
+
 
         if ( x>=mx-1 ) { // elerte-e a jobb oldalt?
             xnov = xnov * -1;
@@ -41,6 +40,9 @@ main ( void )
         if ( y>=my-1 ) { // elerte-e a aljat?
             ynov = ynov * -1;
         }
+
+        refresh ();
+        usleep ( 100000 );
 
     }
 
