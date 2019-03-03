@@ -12,7 +12,7 @@
             100 százalékban minden magot!
         </para>
         <para>
-            Megoldás forrása:                
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/vegtelen">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/vegtelen</link>             
         </para>
         <para>
             Végtelen ciklusnak nevezzük azt az utasítást, ami örökké futna, ha nem állítanánk le a programot. 
@@ -34,7 +34,7 @@
         <para>
             A program a while utáni zárójelben lévő kifejezést értékeli ki. Mivel a az „i” változó értéke egyenlő vagy kisebb a nullával ezért ez a feltétel igaz lesz és a program lefut. 
             Ennek eredményeképpen az i változó értéke eggyel kisebb lesz és újból indul az egész. Mivel az eredmény sose lesz nullánál nagyobb, ezért a feltétel mindig igaz lesz, azaz végtelen ciklusba kerül.
-            Vannak esetek, amikor szükség van végtelen ciklusra, ekkor érdemesebb az alábbi példát használni, amikor nem töltjük ki a for ciklus fejlécét:
+            Vannak esetek, amikor szükség van végtelen ciklusra, ekkor érdemes olyat programkódot használni, amiről lehet látni, hogy ezt direkt így akartuk és nem pedig szoftverhiba. Ilyen ciklus az alábbi példa, amikor nem töltjük ki a for ciklus fejlécét:
         </para>
         <programlisting language="c"><![CDATA[Program vegtelen_for {
             
@@ -173,17 +173,53 @@ false]]></screen>
             Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2018/08/28/10_begin_goto_20_avagy_elindulunk">https://bhaxor.blog.hu/2018/08/28/10_begin_goto_20_avagy_elindulunk</link>
         </para>
         <para>
-            Megoldás forrása:  
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/csere.c">https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/csere.c</link>
         </para>
         <para>
-            Tanulságok, tapasztalatok, magyarázat...
+            Két változó értékének felcserélése segédváltozó nélkül a legegyszerűbben XOR-ral oldható meg:
         </para>
-    </section>                     
+        <programlisting><![CDATA[Program csere.c {
+            
+          int main(){
+	
+	    int x = 3;
+	    int y = 5;
+	
+	    x ^= y; // x = 6
+	    y ^= x; // y = 3
+	    x ^= y; //x = 5
 
+	    printf("x:%d y:%d\n",x,y);
+
+	    return 0;
+          }
+              
+}]]></programlisting>
+    <para>
+    Az XOR lényege, hogy a számok bináris alakjainak különbségét vizsgálja meg. Nézzük meg sorról sorra a kódot:
+    </para>
+    <para>3 bináris alakja: 0011</para>
+    <para>5 bináris alakja: 0101 </para>
+    <para>
+    x ^= y esetén x értéke 0110 lesz, mert a 2 szám binárisan összehasonlítva, ha az adott biten a két szám értéke megegyezik, akkor 0-át kapunk, ha különbözőek, akkor pedig 1-et. Az eredményt az táblázat mutatja, ahol az eltérést pirossal, az egyezést zölddel jelöltem:
+    </para>
+        <figure>
+            <title>EXOR működése</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/kep1.png" width="70%" format="PNG"/>
+              </imageobject>
+            </mediaobject>
+        </figure>                  
+    <para>
+        Ezután y ^= x esetén (ahol y = 0101 és x = 0110) y értéke 0011 lesz, ami a 3-as szám bináris alakjának felel meg. 
+        Ezután már csak a x értékét kell helyesen megadni, azaz x ^= y esetén (ahol x = 0110 és y = 0011)  x értéke binárisan 0101 lesz, ezzel pedig meg is kapjuk az 5-ös számot, azaz y és x értékét sikeresen felcseréltük segédváltozó nélkül.
+    </para>
+    </section>
     <section>
         <title>Labdapattogás</title>
         <para>
-            Először if-ekkel, majd bármiféle logikai utasítás vagy kifejezés
+            Először <emphasis role="strong">if-ekkel</emphasis>, majd bármiféle logikai utasítás vagy kifejezés
             nasználata nélkül írj egy olyan programot, ami egy labdát pattogtat a karakteres konzolon! (Hogy mit értek
             pattogtatás alatt, alább láthatod a videókon.)
         </para>
@@ -191,11 +227,110 @@ false]]></screen>
             Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2018/08/28/labdapattogas">https://bhaxor.blog.hu/2018/08/28/labdapattogas</link>
         </para>
         <para>
-            Megoldás forrása:  
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/labdapattogas">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/labdapattogas</link> 
         </para>
         <para>
-            Tanulságok, tapasztalatok, magyarázat...
+            Először nézzük meg a labdapattogatást if-ekkel.
+            Az initscr() curses módba kapcsolja a terminált. Ez törli a képernyőt és fekete hátteret ad, továbbá tárolja az ablak adataival kapcsolódó információkat.
+            Először fontos, hogy az ablakkal és a lépésekkel kapcsolatos változókat meghatározása. Az <function>int x</function>-el és az <function>int y</function>-al adjuk meg az aktuális pozíciót, mely az x és az y tengelyen fog elhelyezkedni. 
+            Az <function>int xnov</function> és az <function>int ynov</function> lesznek a lépésközök, azaz hogy mennyit lépjen majd előre a labda az x éy y tengelyen. 
+            Az <function>int mx</function>-ben és a <function>int my</function>-ben pedig az ablak méreteit fogjuk majd eltárolni. 
         </para>
+        <programlisting><![CDATA[Program labdaif.c 
+{
+            
+            WINDOW *ablak;
+            ablak = initscr ();
+
+            int x = 0;
+            int y = 0;
+
+            int xnov = 1;
+            int ynov = 1;
+
+            int mx;
+            int my;
+            ...
+            
+}]]></programlisting>
+    <para>
+        Mivel azt szeretnénk, hogy a program folyamatosan, megállás nélkül fusson, ezért végtelen ciklusra lesz szükségünk, amit a <function>for(;;)</function> ciklussal érhetünk el. Ezen belül kell program számára megadni, hogy pontosan mekkora lesz a képernyő.
+        Ezt a getmaxyx() fügvény segítségével érhetjük el, ahol az <function>ablak</function>-ban tárolt értékeket elmenti az <function>mx</function> és <function>my</function> változóba. 
+    </para>
+    <para>
+        Megadhatjuk továbbá, hogy a képernyő ciklusonként törölje az előző "labda" nyomát a <function>clrear()</function> fügvénnyel. Ha ezt kihagyjuk, akkor a képernyőn folyamatosan látni fogjuk a labda eddigi helyzetét is, azaz folyamatosan "csíkot húz" maga után.
+        Ennek a függvénynek mindig az <function>mvprintw()</function> előtt kell szerepelnie, ellenkező esetben csak üres ablakot fogunk látni. Ez utóbbi fügvény segítségével adhatjuk meg, hogy az "O" karaktert, hol jelenítse meg a képernyőn. Majd az a következő pár sorban az 
+        x és y értékeket 1-el növeljük.
+    </para>
+    <programlisting><![CDATA[Program labdaif.c 
+{
+        ...
+        getmaxyx ( ablak, my , mx );
+
+        clear ();
+        mvprintw ( y, x, "O" );
+
+        x = x + xnov;
+        y = y + ynov;
+        ...
+        
+}]]></programlisting>
+    <para>
+        Ezután következik annak meghatározása, hogy a labda elérte-e a képernyő szélét. Ha igen, akkor az értékeket meg kell szorozni -1-el és így a labda "visszapattog". Itt kell használnunk az <function>if()</function> függvényeket.
+        Ha itt megnézzük az első sort, akkor láthatjuk, hogy ha az x értéke nagyobb mint az ablak mx-1 értéke, akkor a labda útját, azaz az xnov értékét meg kell szorozni mínusz 1-gyel. Értelemszerűen ugyanígy kell meghatározni a többit is a hozzá tartozó változókkal.
+    </para>
+     <programlisting><![CDATA[Program labdaif.c 
+{
+       ...
+        if ( x>=mx-1 ) { // elerte-e a jobb oldalt?
+            xnov = xnov * -1;
+        }
+        if ( x<=0 ) { // elerte-e a bal oldalt?
+            xnov = xnov * -1;
+        }
+        if ( y<=0 ) { // elerte-e a tetejet?
+            ynov = ynov * -1;
+        }
+        if ( y>=my-1 ) { // elerte-e a aljat?
+            ynov = ynov * -1;
+        }
+        ...
+ 
+        
+}]]></programlisting>
+    <para>
+        Végül az <function>usleep()</function> fügvénnyel adjuk meg a labda sebességét. Jelenleg 1 másodperc van megadva, ami átszámolva 100000 mikroszekundum. Ha ez letelik, a ciklus újraindul.
+    </para>
+    <para>
+        Ha a <emphasis role="strong">labdapattogást if nélkül</emphasis> szeretnénk megoldani, akkor maradékos osztást kell használni, ami az alábbi kódrészletben látható:
+    </para>
+    <programlisting><![CDATA[Program labda.c 
+{        
+    ...
+        
+    for (;;)
+    {
+    	getmaxyx (ablak, my, mx);
+        xj = (xj - 1) % mx;
+        xk = (xk + 1) % mx;
+
+        yj = (yj - 1) % my;
+        yk = (yk + 1) % my;
+
+        clear ();
+
+        mvprintw (abs (yj + (my - yk)),
+                  abs (xj + (mx - xk)), "o");
+
+        refresh ();
+        usleep (100000);
+
+    } 
+    
+    ...
+        
+}]]></programlisting>
+    
     </section>                     
 
     <section>
@@ -205,14 +340,106 @@ false]]></screen>
             Használd ugyanazt a while ciklus fejet, amit Linus Torvalds a BogoMIPS rutinjában! 
         </para>
         <para>
-            Megoldás videó: <link xlink:href=""></link>
+             Megoldás videó: <link xlink:href="https://youtu.be/9KnMqrkj_kU">https://youtu.be/9KnMqrkj_kU</link>, 
+            <link xlink:href="https://youtu.be/KRZlt1ZJ3qk">https://youtu.be/KRZlt1ZJ3qk</link>, 
+            <link xlink:href=""></link>.
+
         </para>
         <para>
-            Megoldás forrása: <link xlink:href=""></link>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/bogomips">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/bogomips</link>
         </para>
         <para>
-            Tanulságok, tapasztalatok, magyarázat... 
+            A szóhosszt az alábbi programmal tudjuk kiíratni:
         </para>
+        <programlisting><![CDATA[Program szohossz.c 
+{        
+        int h = 0;
+        int n = 0x01;
+        do
+          ++h;
+        while (n <<= 1);
+        printf ("A szohossz ezen a gepen: %d bites\n", h);
+        return 0;
+        
+}]]></programlisting>
+        <para>
+            A program elindítása után a terminálban olvashatjuk, hogy a szóhozz ezen a gépen 32 bites.
+        </para>
+        <para>
+            A <function>0x01</function> kifejezés hexadecimális (16-os számrendszer) számot jelent, mely 0x prefixszel kezdődik. A <function>do</function> és <function>while</function> páros pedig azt jelenti, hogy "csináld ezt, amíg a feltétel teljesül".
+            Van még egy fontos eleme a programnak, ami a while utáni zárójelben szerepel, ez pedig a bittologató (vagy más néven shiftelő) operátor. Ennek a jele: &lt;&lt; vagy &gt;&gt; lehet. Jelen példában a &lt;&lt; operátort használjuk,
+            mert a biteket balra szeretnénk tolni egyesével, egészen addig, amíg csupa nullát nem kapunk. A bitek léptetését így kell elképzelni:
+        </para>
+        <programlisting><![CDATA[Bitek léptetése 
+        
+        00000001
+        00000010
+        00000100
+        00001000
+        00010000
+        00100000
+        01000000
+        10000000
+        00000000
+            
+]]></programlisting>
+        <para>
+            A program végül azért ír 32 bitet végereményül, mert ennyiszer fut le a ciklus, amíg csupa nulla nem lesz.
+        </para>
+        <para>
+            A <emphasis role="strong">Bogomips</emphasis> egy Linux operációs rendszeren nyújtott mérési program, amely relatív módon jelzi, hogy a számítógép processzor milyen gyorsan fut, azaz a processzor hányszor halad át egy adott cikluson egy meghatározott idő alatt. 
+            A programot Linus Tovalds írta.
+            Most ennek a programnak a működését fogom bemutatni.
+        </para>
+        <para>
+            A program elején látható, hogy először 2 változót dekraláltunk: az egyik a <function>loops_per_sec</function>, melynek értéke 1, a másik pedig a ticks, ami a while
+            cikluson belül a <function>clock()</function> függvényt rendeljük hozzá. Ez a <function>clock()</function> függvény méri, hogy eddig mennyi processzor idő telt el.
+            A while ciklus zárójelében a <function>loops_per_sec</function> értéke a <function>&lt;&lt;=</function> shiftelő operátor miatt 2 hatványaival fog számolni.
+            Ezután meghívjuk a <function>delay()</function> függvényt, aminek mindig átadom a ciklus változó értékét. Nagyon gyorsan növekedik, mindig hatványodik és ez a 
+            <function>delay()</function> függvény azt csinálja, hogy 0-tól egyesével növelgetve elszámol a loops értékig.
+            Ezt követően újra lekérem a ticks értékét, mégpedig úgy, hogy a processzoridőből kivonjuk az előző időt. Lényegében ezzel kapjuk meg, hogy mennyi idő telt el.
+        </para>
+         <programlisting><![CDATA[Program bogomips.c
+    
+ void delay (unsigned long long loops)
+{
+  for (unsigned long long i = 0; i < loops; i++);
+}    
+       
+       ...
+             
+       while (loops_per_sec <<= 1)
+        { 
+          ticks = clock ();  
+          delay (loops_per_sec);
+          ticks = clock () - ticks;
+
+       ...
+            
+]]></programlisting>
+        <para>
+            Az if függvénnyel megvizsgáljuk, hogy a <function>ticks</function> értéke nagyobb vagy egyenlő-e a <function>CLOCKS_PER_SEC</function> értékénél. Ez utóbbi értéke 
+            mindig 1.000.000. Ha ez a feltétel teljesül, akkor kiszámoljuk, <function>loops_per_sec</function> értékét. Itt arra vagyunk kiváncsiak, hogy hogy milyen ciklusérték tartozna
+            hozzá, ha nem 2 hatványaival mennénk. Tehát, hogy milyen hosszú ciklust képes végrehajtani a gép. Kiíratásnál még elosztjuk az adatokat, hogy jobban olvasható legyen a kapott eredmény.
+        </para>
+
+<programlisting><![CDATA[Program bogomips.c
+        
+       ...
+            if (ticks >= CLOCKS_PER_SEC)
+            {
+               loops_per_sec = (loops_per_sec / ticks) * CLOCKS_PER_SEC;
+
+               printf ("ok - %llu.%02llu BogoMIPS\n", loops_per_sec / 500000,
+                       (loops_per_sec / 5000) % 100);
+
+               return 0;
+            }
+        }
+
+       ...
+            
+]]></programlisting>
     </section>                     
 
     <section>
@@ -228,8 +455,109 @@ false]]></screen>
             Megoldás forrása: <link xlink:href=""></link>
         </para>
         <para>
-            Tanulságok, tapasztalatok, magyarázat...
+            A PageRank a Google internetes keresőmotor alapja, amit a Google alapítói, Larry Page és Sergey Brin fejlesztettek ki 1998-ban a Stanford Egyetemen. 
+            A PageRank a Google bejegyzett védjegye, legfontosabb tulajdonsága, hogy képes elemezni az oldalak közötti kapcsolatokat és ezáltal relevánsabb találatokat tud visszaadni.
+            A forrásban látható program egy 4 honlapból álló hálózatra számolja ki a négy lap PageRank-ét.
         </para>
+        <para>
+            Először is szükségünk lesz egy 4x4es mátrixra, mivel 4 honlapunk van. Ezt az L változóban dekraláljuk. Látható, hogy oszloponként vannak kiszámolva az eredmények.
+            Minden oldalnak egy egységnyi szavazata van, amit szétoszt azok között az oldalak között, amikre hivatkozik. Tehát ha az A oszlopban csak 1 honlapra van hivatkozás, ezért oda 1-es kerül.
+            A második oszlopban lévő honlap 2 oldalra is hivatkozik ezért ezt egyenlő arányban osztja szét, tehát mindkét hivatkozott oldal fél-fél szavazatot kap és ez így megy tovább a többi oszlopnál is.
+            Ezután meghívjuk a <function>pagerank()</function> függvényt, aminek átadjuk az L változóban tárolt mátrixot.
+        </para>
+        <programlisting><![CDATA[Program pagerank.c
+        
+...
+            
+int main (void){
+    double L[4][4] = {
+        {0.0,  0.0,      1.0/3.0,  0.0},
+        {1.0,  1.0/2.0,  1.0/3.0,  1.0},
+        {0.0,  1.0/2.0,  0.0,      0.0},
+        {0.0,  0.0, 	 1.0/3.0,  0.0}
+    };	
+	
+    pagerank(L);
+    
+    printf("\n");
+    
+    return 0;
+}
+            
+]]></programlisting>
+    <para>
+        A <function>pagerank()</function> függvényben a <function>PRv[]</function> tömbben lesznek eltárolva az L mátrixból kapott értékek. A <function>PR[]</function> tömbben
+        pedig majd a számítás során kapott eredményeket. A for függvény négyszer fog lefutni, mert összesen ennyi honlapunk van, ezeket össze fogja adni, míg végül egy oszlopból álló 4 soros
+        mátrixot kapunk, aminek eredménye bekerül a már említett <function>PR[]</function> tömbbe.
+    </para>
+    <programlisting><![CDATA[Program pagerank.c
+        
+...
+  
+void pagerank(double T[4][4]){
+    double PR[4] = { 0.0, 0.0, 0.0, 0.0 }; 
+    double PRv[4] = { 1.0/4.0, 1.0/4.0, 1.0/4.0, 1.0/4.0}; 	
+    
+    int i, j;
+    for(;;){
+        for (i=0; i<4; i++){
+            PR[i]=0.0;
+            for (j=0; j<4; j++){
+                PR[i] = PR[i] + T[i][j]*PRv[j];
+            }
+        }
+    
+        if (tavolsag(PR,PRv,4) < 0.0000000001) 
+        break;
+        
+        for (i=0;i<4; i++){
+            PRv[i]=PR[i];
+        }	
+    }
+    kiir (PR, 4);
+}          
+
+...            
+]]></programlisting>
+    <para>
+        Ezután if függvénnyel megvizsgáljuk, hogy a távolság() fügvény által adott eredmény kisebb-e 0.0000000001-val. Az ezt a függvényt az alábbi kódrészletben lehet látni:
+    </para>
+        <programlisting><![CDATA[Program pagerank.c
+        
+...
+  
+double
+tavolsag (double PR[], double PRv[], int n){
+    
+    int i;
+    double osszeg=0;
+            	
+    for (i = 0; i < n; ++i)
+        osszeg += (PRv[i] - PR[i]) * (PRv[i] - PR[i]);
+        return sqrt(osszeg);
+}
+
+...            
+]]></programlisting>
+    <para>
+        Ezután már csak kiíratjuk a <function>PR[]</function> tömbben tárolt eredményeket egyesével, amit a <function>kiir()</function> függvény segítségével tesszük meg.
+    </para>
+    <programlisting><![CDATA[Program pagerank.c
+        
+...
+  
+void
+kiir (double tomb[], int db){
+    int i;
+    
+    for (i=0; i<db; ++i){
+        printf("%f\n",tomb[i]);
+    }
+}
+
+...  
+                  
+]]></programlisting>
     </section>
 
     <section xml:id="Brun">
@@ -241,10 +569,60 @@ false]]></screen>
             Megoldás videó: <link xlink:href="https://youtu.be/xbYhp9G6VqQ">https://youtu.be/xbYhp9G6VqQ</link>
         </para>
         <para>
-            Megoldás forrása: <link xlink:href="https://gitlab.com/nbatfai/bhax/blob/master/attention_raising/Primek_R">https://gitlab.com/nbatfai/bhax/blob/master/attention_raising/Primek_R</link>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Primek_R/stp.r">https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Primek_R/stp.r</link>
         </para>
-    </section>
+        <para>
+            A számelmélet egyik legfontosabb tétele a Brun-tétel, mely a prímszámokkal kapcsolatos elméleteket gondolja tovább.
+            Prímszámoknak nevezzük azokat a számokat, amelyeknek trivális osztóik vannak, azaz csak önmagával és 1-el oszthatók. 
+            A Brun-tétel szerint végtelen sok olyan p prím létezik, amire p+2 is prím (pl.: 3,5; 5,7; 7,9; stb). Az ilyen prímpárokat, amiknek a különbsége 2, ikerprímeknek nevezzük.
+            Az ilyen ikerprímsejtések bizonyítása vagy cáfolatat jelenleg meghaladja a matematika eszközeit. Az ikerprímek, ha végtelen sokan vannak vannak is, 
+            nagyon riktán fordulnak elő a prímek között. Ugyanis míg a prímek reciprokaiból álló sor divergens, addig az ikerprímek reciprokai sora konvergens.
+            Konvergensnek nevezzük azokat a sorokat, ha az elemek tartanak egy számhoz. Azt a számot pedig ahova eljut, a sor összegének nevezzük.
+            A Brun tétel szerint ezt a sor összeget az ikerprímszámok reciprokainak összeadásával kapjuk meg [(1/3+1/5)+(1/5+1/7)+(1/7+1/9)+...] és megkapunk egy határértéket.
+            Ezt a határértéket nevezzük Brun konstansnak.
+            Most nézzük meg az alábbi programot, ami megpróbálja közelíteni a Brun konstans értékét:
+        </para>
     
+   <programlisting><![CDATA[Program stp.r 
+library(matlab)
+
+stp <- function(x){
+
+    primes = primes(x)
+    diff = primes[2:length(primes)]-primes[1:length(primes)-1]
+    idx = which(diff==2)
+    t1primes = primes[idx]
+    t2primes = primes[idx]+2
+    rt1plust2 = 1/t1primes+1/t2primes
+    return(sum(rt1plust2))
+}
+
+x=seq(13, 1000000, by=10000)
+y=sapply(x, FUN = stp)
+plot(x,y,type="b")
+
+]]></programlisting>
+
+    <para>
+        A kód futtatásához Matlabra lesz szükség. A <function>primes()</function> függvény egy paramétert kér, az x helyére bármilyen számot írhatunk és az ott megadott számig
+        fogja kiszámolni a prímeket.
+    </para>
+    <para>
+        A <function>diff</function> a <function>primes</function> vektorban lévő számok segítségével az egymást követő számok különbségét kapjuk meg egy vektorba rendezve. 
+    </para>
+    <para>
+        Az <function>idx</function> változóban megkeressük azokat a számokat, ahol a <function>diff</function> egyenlő 2-vel. Ugyanis ezek lesznek majd az ikerprím párok.
+    </para>
+    <para>
+        A <function>t1primes</function> kiveszi az ikerprímpárok első tagját, majd a <function>t2primes</function> változóban az ikerprím pár első tagjához hozzáadunk 2-őt,
+        és így megkapjuk az ikerprímpár második tagját is. Majd ezen ikerpárok reciprokösszegét a <function>rt1plust2</function> változóban tároljuk. Végül pedig a <function>sum()</function>
+        függvénnyel ezeket a törteket összeadjuk.
+    </para>
+    <para>
+        Ezután már csak meg kell jelenítenünk a kapott eredményeket egy függvényy segítségével. A jelen példában egy <function>seq()</function> függvényt fogjuk használni. Az y változóban az <function>sapply()</function>
+         függvény használatával rendeljük hozzá az x érték adatait. Végül pedig a plot() függvénnyel rajzoljuk ki az eredményt.
+    </para>
+   </section>
     <section xml:id="bhax-textbook-feladatok-turing.MontyHall">
         <title>A Monty Hall probléma</title>
         <para>
@@ -257,8 +635,106 @@ false]]></screen>
             Megoldás forrása: <link xlink:href="https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/MontyHall_R">https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/MontyHall_R</link>
         </para>
         <para>
-            Tanulságok, tapasztalatok, magyarázat...
+            A paradoxon egy az Egyesült Államokban az 1960-as években nagy sikerrel futott televíziós vetélkedő utolsó játékán alapszik. Nevét a show házigazdájáról kapta.
         </para>
+         <para>
+            A probléma alaphelyzete a következő: A játékosnak mutatnak három zárt ajtót, melyek közül kettő mögött egy-egy kecske van, a harmadik pedig egy vadonatúj autót rejt. 
+            A hangulat fokozása érdekében a választást, illetve a felnyitást egy kicsit megbonyolították. 
+            A játékos kiválaszt egy ajtót, de mielőtt ezt kinyitná, a műsorvezető a másik két ajtó közül kinyit egyet, mely mögött biztos nem az autó van 
+             (természetesen a showman a kezdettől tisztában van azzal, hogy melyik ajtó rejti az autót). 
+            Ezt követően megkérdezi a már amúgy is ideges vendéget, hogy jól meggondolta-e a választását, vagyis nem akar-e váltani. 
+            A játékos dönt, hogy változtat, vagy sem, végül feltárul az így kiválasztott ajtó, mögötte a nyereménnyel. 
+            A paradoxon kérdése az, hogy érdemes-e változtatni, illetve van-e ennek egyáltalán jelentősége.  
+        </para>
+        <para>
+            Vizsgáljuk meg a Monty Hall paradoxont: kezdetben tehát 1:3 az esélye, hogy bármelyik ajtó mögött ott lehet a főnyeremény, az autó. Ezután a műsorvezető kinyit egy olyan
+            ajtót, ami mögött nincs ott az autó. Ekkor még mindig 1:3 lesz az esélye annak, hogy az általunk választott ajtó mögöttrejtőzik a kocsi, és 2:3 hogy mégse ott.
+            Így tehát 2:3 lesz annak is az esélye, hogy a másik ajtó mögött találjuk meg a főnyereményt, ezért jó, ha váltunk. Az alábbi táblázat bemutatja a nyerési esélyeinket:
+        </para>
+        <figure>
+            <title>Monty Hall probléma</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/kep2.png" width="70%" format="PNG"/>
+              </imageobject>
+            </mediaobject>
+        </figure>
+        <para>
+            Láthatjuk, hogy ha mindig az első ajtót választjuk, és változtatunk a döntésünkön, akkor a három esetből kétszer nyerünk. 
+        </para> 
+        <para>
+            Most pedig nézzünk meg egy ezzel kapcsolatos R szimulációt.
+            Először is megadjuk, hogy mennyi legyen a kísérletek száma (10000000). A kiserlet változóban dekraláljuk, hogy <function>sample()</function> függvénnyel, hogy 1-től 3-ig,
+            generáljon random számokat, mégpedig annyiszor, ahány a kiserletek_szama változó értéke. A replace=T engedélyezi, hogy legyen ismétlődés a számok között. Ide kerül tehát, majd
+            az, hogy hol lesz a nyeremény.
+            ezután megint ugyanezt a kódrészletet adjuk meg a jatekos változónak is, mely a játékos választásait fogja tárolni. Majd a musorvezeto értékéhez azt adjuk meg, hogy mennyi a kiserletek_szama mérete.    
+        </para>
+        <programlisting><![CDATA[Program mh.r 
+            
+kiserletek_szama=10000000
+kiserlet = sample(1:3, kiserletek_szama, replace=T)
+jatekos = sample(1:3, kiserletek_szama, replace=T)
+musorvezeto=vector(length = kiserletek_szama)
+...
+]]></programlisting>
+    <para>
+        A következő for ciklus annyiszor fog lefutni, ahány a <function>kiserletek_szama</function>. Azon belül, ha a <function>kiserlet</function> adott eleme megegyezik a 
+        <function>jatekos</function> adott elemével, azaz eltalálta a helyes ajtót, akkor a <function>kiserlet</function> tömbből kivesszük az egyezést és így lesz elmentve az adat a <function>mibol</function> változóban.
+        Ezt a <function>setdiff()</function> függvénnyel érhetjük el. Ellenkező esetben (else) mind a <function>kiserlet[]</function> és a <function>jatekos[]</function> tömbből ki kell venni az adott értéket.
+        Ezután állítjuk össze a <function>musorvezeto[]</function> értékeit a <function>mibol</function> és a sample() függvény segítségével.
+    </para>
+    <programlisting><![CDATA[Program mh.r 
+...
+        
+for (i in 1:kiserletek_szama) {
+
+    if(kiserlet[i]==jatekos[i]){
+    
+        mibol=setdiff(c(1,2,3), kiserlet[i])
+    
+    }else{
+    
+        mibol=setdiff(c(1,2,3), c(kiserlet[i], jatekos[i]))
+    
+    }
+
+    musorvezeto[i] = mibol[sample(1:length(mibol),1)]
+
+}
+
+...
+]]></programlisting>
+    <para>
+        A <function>nemvaltoztatasesnyer</function> tömbbe kerülnek azok az adatok, hogy a <function>kiserlet</function> és a <function>jatekos</function> értékeit összehasonlítva 
+        hol találhatóak egyezések. Ehhez a <function>which()</function> függvényt használjuk.
+        A <function>valtoztat</function> vektorban megadjuk, hogy a változó értéke azonos legyen a <function>kiserletek_szama</function>-val.
+    </para>
+    <programlisting><![CDATA[Program mh.r 
+...
+        
+nemvaltoztatesnyer= which(kiserlet==jatekos)
+valtoztat=vector(length = kiserletek_szama)
+
+...
+]]></programlisting>
+    <para>
+        Ezután megint for ciklus jön, megint ugyanannyiszor, ahány a kiserletek_szama. Dekraláljuk a <function>holvalt</function> tömbböt, mégpedig úgy, hogy
+        a <function>setdiff()</function> függvénnyel kivesszük azokat az értékeket, amik egyeznek az adott indexben a <function>musorvezeto</function> és a <function>jatekos</function> értékeivel.
+    </para>
+    <programlisting><![CDATA[Program mh.r 
+...
+        
+valtoztatesnyer = which(kiserlet==valtoztat)
+
+sprintf("Kiserletek szama: %i", kiserletek_szama)
+length(nemvaltoztatesnyer)
+length(valtoztatesnyer)
+length(nemvaltoztatesnyer)/length(valtoztatesnyer)
+length(nemvaltoztatesnyer)+length(valtoztatesnyer)
+]]></programlisting>
+    <para>
+        Ha ezzel megvagyunk, akkor a <function>valtoztatasesnyer</function> változót ugyanúgy adjuk meg, ahogy eddig, majd kiíratjuk az adatokat.
+    </para>
     </section>
 
 </chapter>                
