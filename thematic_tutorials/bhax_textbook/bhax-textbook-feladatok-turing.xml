@@ -201,7 +201,7 @@ false]]></screen>
     <para>3 bináris alakja: 0011</para>
     <para>5 bináris alakja: 0101 </para>
     <para>
-    x ^= y esetén x értéke 0110 lesz, mert a 2 szám binárisan összehasonlítva, ha az adott biten a két szám értéke megegyezik, akkor 0-át kapunk, ha különbözőek, akkor pedig 1-et. Az eredményt az táblázat mutatja, ahol az eltérést pirossal, az egyezést zölddel jelöltem:
+    x ^= y esetén x értéke 0110 lesz, mert a 2 szám binárisan összehasonlítva, ha az adott biten a két szám értéke megegyezik, akkor 0-át kapunk, ha különbözőek, akkor pedig 1-et. Az eredményt az alábbi táblázat mutatja, ahol az eltérést pirossal, az egyezést zölddel jelöltem:
     </para>
         <figure>
             <title>EXOR működése</title>
