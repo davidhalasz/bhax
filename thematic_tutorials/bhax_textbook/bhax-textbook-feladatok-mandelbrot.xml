@@ -11,6 +11,9 @@
             A mandelbrot-halmaz    
         </para>
         <para>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/mandelbrot/mandelpngt.c++">https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/mandelbrot/mandelpngt.c++</link>
+        </para>
+        <para>
             A forrásban megfigyelhető, hogy az eddigiekhez képest két új könyvtárat is használunk a headrünkben. Az egyik a <function>#include "png++/png.hpp"</function>, amivel png kép készíthető el, a másik könyvtár pedig a <function>#include &lt; sys/times.h &gt;</function>, amivel mérhetjük az időt, jelen
             esetben azt, hogy meddig tart a amíg a program elkészíti a képet. Ez utóbbit kihagyhatjuk, ez csak akkor érdekes, ha meg szeretnénk vizsgálni, hogy
             mennyi idő alatt készíti el a képet a processzor és mennyi ideig a videókártya.
@@ -131,6 +134,9 @@ std::cout << (double) delta / CLOCKS_PER_SEC << " sec" << std::endl;
     <section>
         <title>A Mandelbrot halmaz a <filename>std::complex</filename> osztállyal</title>
         <para>
+            Megoldás forrása: <link xlink:href="hhttps://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/mandelbrot/3.1.2.cpp">https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/mandelbrot/3.1.2.cpp</link>
+        </para>
+        <para>
             Az std::complex standard könyvtár segítségével a komplex számokat (azaz a valós és imaginárius egységeket) a complex() függvénnyel egy helyen kezelhetjük,
             anélkül, hogy további változókat hoznánk létre. Most az előző Mandelbrot programot készítjük el a complex könyvtár használatával. Az időmérést ebből a programból most kihagyjuk. 
 
@@ -245,7 +251,7 @@ std::cout << "Szamitas\n";
             Megoldás videó: <link xlink:href="https://youtu.be/IJMbgRzY76E">https://youtu.be/IJMbgRzY76E</link>
         </para>
         <para>
-            Megoldás forrása: <link xlink:href="https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/Biomorf">https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/Biomorf</link>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Biomorf/3.1.3.cpp">https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Biomorf/3.1.3.cpp</link>
         </para>
         <para>
            Vmi a Julia halmazról
@@ -348,7 +354,7 @@ for ( int y = 0; y < magassag; ++y )
     <section>
         <title>A Mandelbrot halmaz CUDA megvalósítása !!</title>
         <para>
-            Megoldás forrása:  
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/CUDA/mandelpngc_60x60_100.cu">https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/CUDA/mandelpngc_60x60_100.cu</link>
         </para>
         <para>
             A CUDA az NVIDIA által fejlesztett programozási környezet, amely az NVIDIA grafikus processzorainak párhuzamos programozására használható.
@@ -532,7 +538,7 @@ main (int argc, char *argv[])
         </para>
             
         <para>
-            Megoldás forrása:  
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/mandelbrot/nagyitas">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/mandelbrot/nagyitas</link>
         </para>
 
         <para>
@@ -575,6 +581,9 @@ main (int argc, char *argv[])
                                                                                                                                                                             
     <section>
         <title>Mandelbrot nagyító és utazó Java nyelven !!</title>
+        <para>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/mandelbrot/java">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/mandelbrot/java</link>
+        </para>
         <para>
             Ebben a feladatban a az előzőt csináljuk meg ugyanazt, csak java-ban. A fordítás a <function>javac</function> parancssal történik, és a program elindításához pedig a <function>java</function>-t használjuk. Ezt az alábbi kódsor szemlélteti:
         </para>
