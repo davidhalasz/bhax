@@ -531,7 +531,7 @@ kiir (BINFA_PTR elem)
             osztálya. A gyökér csomópont legyen kompozícióban a fával!
         </para>
         <para>
-            Megoldás forrása:                
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/welch/binfa/binfa%20c++/z3a7.cpp">https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/welch/binfa/binfa%20c++/z3a7.cpp</link>                 
         </para>
         <para>
             Ebben a feladatban a C binfás programunkat fogjuk átírni C++ verzióba. Jelen esetünkben van egy <function>LZWBinFa</function> osztályunk,azon belül egy <function>Csomopont</function> osztály továbbá egy <function>void usage (void)</function> és az elmaradhatatlan <function>int main()</function> függvényünk is. Az LZWBinFa fa egy pointer, amely mindig az épülő LZW fa azon csomópontjára mutat, amit az input feldolgozása során az LZW algoritmus logikája diktál. 
@@ -890,7 +890,7 @@ main (int argc, char *argv[])
             fával!
         </para>
         <para>
-            Megoldás forrása:  
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/welch/binfa/binfa%20c++/z3a8.cpp">https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/welch/binfa/binfa%20c++/z3a8.cpp</link>  
         </para>
         <para>
             Ez a feladat az előző példánkkal teljesen megegyezik, azzal a különbséggel, hogy a destruktorba hozzáadtunk egy új sort:
@@ -922,7 +922,7 @@ main (int argc, char *argv[])
             Megoldás videó: 
         </para>
         <para>
-            Megoldás forrása:  
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/welch/binfa/binfa%20c++/z3a9.cpp">https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/welch/binfa/binfa%20c++/z3a9.cpp</link> 
         </para>
         <para>
           A Mozgató szemantikát elsősorban nagyobb méretű objektumok esetén szoktuk használni, segítségével kevesebb helyet foglalunk, mely gyorsabb programot eredményez.

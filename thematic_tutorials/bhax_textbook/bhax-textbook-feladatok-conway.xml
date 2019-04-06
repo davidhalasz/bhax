@@ -31,11 +31,280 @@
             Megoldás videó: 
         </para>
         <para>
-            Megoldás forrása: <link xlink:href=""></link>               
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/conway/java/Sejtautomata.java">https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/conway/java/Sejtautomata.java</link>               
         </para>
         <para>
-            Tanulságok, tapasztalatok, magyarázat...
-        </para>            
+           John Horton Conway a 70-es évek elején valósította meg az általa elnevezett Élejtájékot, melynek lényege, hogy
+           van egy négyzethálós élettér, és minden cellában egy sejt élhet. négy keresztben, négy pedig átlósan.
+           A szabályok pedig a következők:
+        </para>
+        <itemizedlist mark='opencircle'>
+            <listitem>
+                <para>
+                    Ha egy sejtnek kettő vagy három szomszédja van: életben marad.
+                </para>
+            </listitem>
+            <listitem override='bullet'>
+                <para>
+                    Ha egy sejtnek négy vagy több szomszédja van: meghal. Ugyanez vonatkozik a 2-nél kisebb szomszéddal rendelkezőkre.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Ha egy üres cellának pontosan három élő sejt van a szomszédjában, akkor ott új sejt születik.
+                </para>
+            </listitem>
+        </itemizedlist>
+        <para>
+            Innen az élet elnevezeés, ugyanis a szimuláció generációról generációra mutatja meg a sejtek alakulását. Hogy könnyebb legyen elképzelni a fenti szabályokat, készítettem egy ábrát, ami egy lépést (azaz egy generáció születését) mutat be. Az alábbi ábrán a fekete háttérrel rendelkezők az élő sejtek, a piros szegéllyel
+            jelöltek jelentik a halálozást, mivel 2-nél kisebb és 3-nál több szomszéddal rendelkeznek. Ezek a következő generációban tehát fehér hátterűek lesznek. Vannak még továbbá üres cellák, zöld szegéllyel, ezeknek
+            pontosan 3 élő sejttel rendelkező szomszédjuk van, így a következő lépésben itt fognak új sejtek születeni.  
+        </para>
+        <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/conwaymagy.png" width="100%" format="PNG"/>
+              </imageobject>
+        </mediaobject>
+        <para>
+            Ezt a szimulációt fogjuk megvalósítani java-ban, melynek neve <function>Sejtautomata.java</function>.
+            Először is létrehozzuk a <function>Sejtautomata</function> osztályt, majd azon belül deklaráljuk a változókat és értékeket rendelünk hozzá. Például megadunk két boolean típusú változót, mellyel azt fogjuk meghatározni,
+            hogy egy sejt élő vagy halott lesz-e. Továbbá a rács elkészítéséhez fontos adatokat is itt deklaráljuk.
+        </para>
+        <programlisting language="java"><![CDATA[
+public class Sejtautomata extends java.awt.Frame implements Runnable {
+    
+    public static final boolean ÉLŐ = true;
+    public static final boolean HALOTT = false;
+    protected boolean [][][] rácsok = new boolean [2][][];
+    protected boolean [][] rács;
+    protected int rácsIndex = 0;
+    protected int cellaSzélesség = 20;
+    protected int cellaMagasság = 20;
+    protected int szélesség = 20;
+    protected int magasság = 10;
+    protected int várakozás = 1000;
+    private java.awt.Robot robot;
+    private boolean pillanatfelvétel = false;
+    private static int pillanatfelvételSzámláló = 0;
+    /**
+     * Létrehoz egy <code>Sejtautomata</code> objektumot.
+     *
+     * @param      szélesség    a sejttér szélessége.
+     * @param      magasság     a sejttér szélessége.
+     */
+
+     ...
+            ]]>
+        </programlisting>  
+        <para>
+            Ezután létrehozzuk a <function>Sejtautomata()</function> függvényt. Itt készítjük el a rácsokat a fenti adatok felhasználásával. Kezdetben a rács minden cellája halott lesz, ezért for ciklussal végigmegyünk először az egyes cellákon és <function>HALOTT</function> azaz false értékeket rendelünk hozzá.
+            Meghívjuk a siklóKilövő() függvényt, melynek paraméterként a rácsot, a sor és az oszlop számát adjuk át.
+            Lényege, hogy a sejttérbe ezzel helyezzük el a "sikló ágyút". Ez fog majd először megjelenni a programunk elindítása után, mely egy adott irányba fog elindulni. 
+            Az <function>addWindowListener</function> függvény figyeli az ablakot, ha bezárjuk, akkor <function>windowClosing</function> függvény leállítja a programot is. Van még egy <function>addKeyListener</function> függvényünk is, amely a nevéből adódóan a billentyűzetleütéseket figyeli. Itt megadjuk hogy, hogy ha a leütött billentyűzet megegyezik a programban megadottakkal, akkor végezze ez az utasításokat. Például 'K' leütése megfelezi a sejtek méretét, 'N' billentyű lenyomásával pedig növeljük. Az 'S' billenytű pillanatfelvételt készít. Itt azért van felkiáltójel a pillanatfelvétel mögött, mert alapértelmezettként false van megadva, ezért 
+            ezzel true értékké alakítjuk át. A 'G' billentyűzettel megfelezzük az időt, azaz gyorsítjuk, végül pedig az 'L'-el fogjuk tudni lassítani, ha arra lenne szükségünk.
+        </para>
+        <programlisting language="java"><![CDATA[
+... 
+
+    public Sejtautomata(int szélesség, int magasság) {
+        this.szélesség = szélesség;
+        this.magasság = magasság;
+        
+        rácsok[0] = new boolean[magasság][szélesség];
+        rácsok[1] = new boolean[magasság][szélesség];
+        rácsIndex = 0;
+        rács = rácsok[rácsIndex];
+        
+        for(int i=0; i<rács.length; ++i)
+            for(int j=0; j<rács[0].length; ++j)
+                rács[i][j] = HALOTT;
+        
+        siklóKilövő(rács, 5, 60);
+        
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                setVisible(false);
+                System.exit(0);
+            }
+        });
+       
+        addKeyListener(new java.awt.event.KeyAdapter() {
+           
+            public void keyPressed(java.awt.event.KeyEvent e) {
+                if(e.getKeyCode() == java.awt.event.KeyEvent.VK_K) {
+                   
+                    cellaSzélesség /= 2;
+                    cellaMagasság /= 2;
+                    setSize(Sejtautomata.this.szélesség*cellaSzélesség,
+                            Sejtautomata.this.magasság*cellaMagasság);
+                    validate();
+                } else if(e.getKeyCode() == java.awt.event.KeyEvent.VK_N) {
+                   
+                    cellaSzélesség *= 2;
+                    cellaMagasság *= 2;
+                    setSize(Sejtautomata.this.szélesség*cellaSzélesség,
+                            Sejtautomata.this.magasság*cellaMagasság);
+                    validate();
+                } else if(e.getKeyCode() == java.awt.event.KeyEvent.VK_S)
+                    pillanatfelvétel = !pillanatfelvétel;
+                else if(e.getKeyCode() == java.awt.event.KeyEvent.VK_G)
+                    várakozás /= 2;
+                else if(e.getKeyCode() == java.awt.event.KeyEvent.VK_L)
+                    várakozás *= 2;
+                repaint();
+            }
+        });
+       
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent m) {
+                int x = m.getX()/cellaSzélesség;
+                int y = m.getY()/cellaMagasság;
+                rácsok[rácsIndex][y][x] = !rácsok[rácsIndex][y][x];
+                repaint();
+            }
+        });
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent m) {
+                int x = m.getX()/cellaSzélesség;
+                int y = m.getY()/cellaMagasság;
+                rácsok[rácsIndex][y][x] = ÉLŐ;
+                repaint();
+            }
+        });
+
+        cellaSzélesség = 10;
+        cellaMagasság = 10;
+        try {
+            robot = new java.awt.Robot(
+                    java.awt.GraphicsEnvironment.
+                    getLocalGraphicsEnvironment().
+                    getDefaultScreenDevice());
+        } catch(java.awt.AWTException e) {
+            e.printStackTrace();
+        }
+        setTitle("Sejtautomata");
+        setResizable(false);
+        setSize(szélesség*cellaSzélesség,
+                magasság*cellaMagasság);
+        setVisible(true);
+
+        new Thread(this).start();
+    }
+...
+        ]]>
+        </programlisting>
+        <para>
+            Valahogy ki kellene rajzolni az élő sejteket is, ezért készítünk egy <function>paint()</function> függvényt. For ciklussal végigmenyünk a sorokon és az oszlopokon, ha az adott sor adott oszlopában van egy ÉLŐ sejt, akkor feketére színezzük, különben fehér lesz. Továbbá itt figyeljük azt is, hogy a pillanatfelvétel készítés aktiválva lett-e, ha igen, meghívjuk a pillanatfelvétel függvényt és készítünk egy képet továbbá visszaállítjuk false értékre, különben folyamatosan készítené a képeket, amit ugye nem szeretnénk, hogy megtörténjen.
+        </para>
+        <programlisting language="java"><![CDATA[
+... 
+
+ public void paint(java.awt.Graphics g) {
+       
+        boolean [][] rács = rácsok[rácsIndex];
+        
+        for(int i=0; i<rács.length; ++i) { 
+            for(int j=0; j<rács[0].length; ++j) { 
+                
+                if(rács[i][j] == ÉLŐ)
+                    g.setColor(java.awt.Color.BLACK);
+                else
+                    g.setColor(java.awt.Color.WHITE);
+                g.fillRect(j*cellaSzélesség, i*cellaMagasság,
+                        cellaSzélesség, cellaMagasság);
+                
+                g.setColor(java.awt.Color.LIGHT_GRAY);
+                g.drawRect(j*cellaSzélesség, i*cellaMagasság,
+                        cellaSzélesség, cellaMagasság);
+            }
+        }
+       
+        if(pillanatfelvétel) {
+
+            pillanatfelvétel = false;
+            pillanatfelvétel(robot.createScreenCapture
+                    (new java.awt.Rectangle
+                    (getLocation().x, getLocation().y,
+                    szélesség*cellaSzélesség,
+                    magasság*cellaMagasság)));
+        }
+    }
+...
+        ]]>
+        </programlisting> 
+        <para>
+            A <function>szomszédokSzáma()</function> függvényben fogjuk megszámolni a szomszédokat az adott élő sejt körül. Itt is két for ciklus lesz, a sorok és az oszlopok miatt, azonban -1-től 1-ig fogjuk megvizsgálni, és csak akkor ha aza adott sejt nincs benne (i==0 és j==0). 
+        </para>
+        <programlisting language="java"><![CDATA[
+... 
+
+public int szomszédokSzáma(boolean [][] rács,
+    int sor, int oszlop, boolean állapot) {        
+        int állapotúSzomszéd = 0;
+                
+        for(int i=-1; i<2; ++i)
+            for(int j=-1; j<2; ++j)
+                if(!((i==0) && (j==0))) {
+            
+                int o = oszlop + j;
+                if(o < 0)
+                o = szélesség-1;
+                else if(o >= szélesség)
+                
+                o = 0;                
+                int s = sor + i;
+                if(s < 0)
+                    s = magasság-1;
+                else if(s >= magasság)
+                    s = 0;   
+
+                if(rács[s][o] == állapot)
+                    ++állapotúSzomszéd;
+            }
+        return állapotúSzomszéd;
+}
+...
+        ]]>
+        </programlisting> 
+        <para>
+            A  bevezetőben ismertetett életjáték szabályokat az <function>időFejlődés()</function>-ben adjuk meg.
+            If függvénnyel megvizsgáljuk, hogy az adott cella ÉLŐ-e? Ha igen, akkor a vizsgált élő cellának van-e 2 vagy 3 ÉLŐ szomszédja, ha ez teljesül, akkor az ezt követő rácsban is élő marad az adott pozícióban. Ellenkező esetben halott lesz. Ha a vizsgált cella nem élő akkor lépünk az else ágba. If függvénnyel itt azt vizsgáljuk meg, hogy van e pontosan 3 szomszédja, ha igen, akkor ez is élő lesz, ellenkező esetben halott. 
+        </para>
+        <programlisting language="java"><![CDATA[
+... 
+
+public void időFejlődés() {
+        
+        boolean [][] rácsElőtte = rácsok[rácsIndex];
+        boolean [][] rácsUtána = rácsok[(rácsIndex+1)%2];
+        
+        for(int i=0; i<rácsElőtte.length; ++i) { // sorok
+            for(int j=0; j<rácsElőtte[0].length; ++j) { // oszlopok
+                
+                int élők = szomszédokSzáma(rácsElőtte, i, j, ÉLŐ);
+                
+                if(rácsElőtte[i][j] == ÉLŐ) {
+                /* Élő élő marad, ha kettő vagy három élő
+                 szomszedja van, különben halott lesz. */
+                    if(élők==2 || élők==3)
+                        rácsUtána[i][j] = ÉLŐ;
+                    else
+                        rácsUtána[i][j] = HALOTT;
+                }  else {
+                /* Halott halott marad, ha három élő
+                 szomszedja van, különben élő lesz. */
+                    if(élők==3)
+                        rácsUtána[i][j] = ÉLŐ;
+                    else
+                        rácsUtána[i][j] = HALOTT;
+                }
+            }
+        }
+        rácsIndex = (rácsIndex+1)%2;
+    }
+...
+        ]]>
+        </programlisting>        
     </section>        
     <section>
         <title>Qt C++ életjáték</title>
@@ -46,11 +315,312 @@
             Megoldás videó: 
         </para>
         <para>
-            Megoldás forrása: <link xlink:href=""></link>               
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/conway/c++">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/conway/c++</link>               
         </para>
         <para>
-            Tanulságok, tapasztalatok, magyarázat...
-        </para>            
+            A program felépítése nagyon hasonlít a Mandelbrot nagyítós fejezetnél megismert programhoz, és a futtatása is ugyanúgy történik (qmake és make parancsok használata). Itt is 5 külöálló fájlból fog állni a programunk.
+            A main.cpp-ben adjuk meg, hogy mekkora legyen az ablakunk mérete. Jelen esetünkben 100x75 pixel méretű lesz. <function>w.show()</function> függvénnyel hívjuk elő a az ablakot.
+        </para>
+        <programlisting language="c++"><![CDATA[
+            #include <QApplication>
+            #include "sejtablak.h"
+            #include <QDesktopWidget>
+
+            int main(int argc, char *argv[])
+            {
+              QApplication a(argc, argv);
+              SejtAblak w(100, 75);
+              w.show();
+              
+              return a.exec();
+            }
+            ]]>
+        </programlisting> 
+        <para>
+           A <function>sejtablak.h</function> fájlban megadjuk az ablakon belüli rácsokat, melynek mérete megegyezik a az ablakunk méretével. Továbbá az ELO és HALOTT boolean típusú változónk konstans változók lesznek, azaz 
+           ezt a későbbiekben a programon belül ezek értékeit nem fogjuk tudni megváltozatni. A protected-en belül pedig további változókat dekralálunk.
+        </para> 
+        <programlisting language="c++"><![CDATA[
+            #ifndef SEJTABLAK_H
+            #define SEJTABLAK_H
+
+            #include <QMainWindow>
+            #include <QPainter>
+            #include "sejtszal.h"
+
+            class SejtSzal;
+
+            class SejtAblak : public QMainWindow
+            {
+              Q_OBJECT
+              
+            public:
+              SejtAblak(int szelesseg = 100, int magassag = 75, QWidget *parent = 0);
+
+              ~SejtAblak();
+              static const bool ELO = true;
+              static const bool HALOTT = false;
+              void vissza(int racsIndex);
+              
+            protected:
+              bool ***racsok;
+              bool **racs;
+              int racsIndex;
+              int cellaSzelesseg;
+              int cellaMagassag;
+              int szelesseg;
+              int magassag;    
+              void paintEvent(QPaintEvent*);
+              void siklo(bool **racs, int x, int y);
+              void sikloKilovo(bool **racs, int x, int y);
+              
+            private:
+              SejtSzal* eletjatek;
+              
+            };
+
+            #endif // SEJTABLAK_H
+            ]]>
+        </programlisting> 
+        <para>
+            sejtszal.h
+        </para>
+        <programlisting language="c++"><![CDATA[
+            #ifndef SEJTSZAL_H
+            #define SEJTSZAL_H
+
+            #include <QThread>
+            #include "sejtablak.h"
+
+            class SejtAblak;
+
+            class SejtSzal : public QThread
+            {
+                Q_OBJECT
+
+            public:
+                SejtSzal(bool ***racsok, int szelesseg, int magassag,
+                         int varakozas, SejtAblak *sejtAblak);
+                ~SejtSzal();
+                void run();
+
+            protected:
+                bool ***racsok;
+                int szelesseg, magassag;
+                int racsIndex;
+                int varakozas;
+                void idoFejlodes();
+                int szomszedokSzama(bool **racs,
+                                    int sor, int oszlop, bool allapot);
+                SejtAblak* sejtAblak;
+
+            };
+
+            #endif // SEJTSZAL_H
+            ]]>
+        </programlisting>
+        <para>
+            A <function>sejtablak.cpp</function> fájlban a SejtAblak() függvénnyel az ablakkal kapcsolatos adatokat adjuk meg. Ez 3 paramétert vár: szélesség, magasság és egy pointert, ami a QWidget "parent" paraméteréhez tartozik. Ennek értéke 0. A <function>setWindowTitle()</function> azt jelenti, hogy a zárójelben megadott szöveg lesz majd az ablakunk fejlécében látható cím. A <function>setFixedSize()</function>-ban a szélességet és a magasságot megszorozzuk 6-al, majd ez alapján for ciklusokkal létrehozunk két rácsot. A <function>paintEvent</function>-en belül végiglépkedunk a sorokon és az oszlopokon és ha az adott cellában 
+            van egy ELO,  akkor feketére színezzük a QT segítségével. Ellenkező esetben fehér lesz. 
+        </para>
+        <programlisting language="c++"><![CDATA[
+#include "sejtablak.h"
+
+SejtAblak::SejtAblak(int szelesseg, int magassag, QWidget *parent)
+: QMainWindow(parent)
+{
+  setWindowTitle("A John Horton Conway-féle életjáték");
+  
+  this->magassag = magassag;
+  this->szelesseg = szelesseg;
+
+  
+  cellaSzelesseg = 6;
+  cellaMagassag = 6;
+
+  setFixedSize(QSize(szelesseg*cellaSzelesseg, magassag*cellaMagassag));
+  
+  racsok = new bool**[2];
+  racsok[0] = new bool*[magassag];
+  for(int i=0; i<magassag; ++i)
+    racsok[0][i] = new bool [szelesseg];
+  racsok[1] = new bool*[magassag];
+  for(int i=0; i<magassag; ++i)
+    racsok[1][i] = new bool [szelesseg];
+
+  racsIndex = 0;
+  racs = racsok[racsIndex];
+
+  for(int i=0; i<magassag; ++i)
+    for(int j=0; j<szelesseg; ++j)
+      racs[i][j] = HALOTT;
+
+    sikloKilovo(racs, 5, 60);
+
+  eletjatek = new SejtSzal(racsok, szelesseg, magassag, 120, this);
+
+  eletjatek->start();
+  
+}
+
+void SejtAblak::paintEvent(QPaintEvent*) {
+  QPainter qpainter(this);
+  
+  bool **racs = racsok[racsIndex];
+  for(int i=0; i<magassag; ++i) { 
+    for(int j=0; j<szelesseg; ++j) {
+      if(racs[i][j] == ELO)
+    qpainter.fillRect(j*cellaSzelesseg, i*cellaMagassag,
+              cellaSzelesseg, cellaMagassag, Qt::black);
+    else
+      qpainter.fillRect(j*cellaSzelesseg, i*cellaMagassag,
+                cellaSzelesseg, cellaMagassag, Qt::white);
+      qpainter.setPen(QPen(Qt::gray, 1));
+    
+    qpainter.drawRect(j*cellaSzelesseg, i*cellaMagassag,
+              cellaSzelesseg, cellaMagassag);
+    }
+  }
+  qpainter.end();
+}
+
+
+SejtAblak::~SejtAblak()
+{
+  delete eletjatek;
+  
+  for(int i=0; i<magassag; ++i) {
+    delete[] racsok[0][i];
+    delete[] racsok[1][i];
+  }
+  
+  delete[] racsok[0];
+  delete[] racsok[1];
+  delete[] racsok;
+  
+  
+}
+
+void SejtAblak::vissza(int racsIndex)
+{
+  this->racsIndex = racsIndex;
+  update();
+}
+
+void SejtAblak::siklo(bool **racs, int x, int y) {
+  
+  racs[y+ 0][x+ 2] = ELO;
+  racs[y+ 1][x+ 1] = ELO;
+  racs[y+ 2][x+ 1] = ELO;
+  racs[y+ 2][x+ 2] = ELO;
+  racs[y+ 2][x+ 3] = ELO;
+  
+}
+
+void SejtAblak::sikloKilovo(bool **racs, int x, int y) {
+  
+  racs[y+ 6][x+ 0] = ELO;
+  racs[y+ 6][x+ 1] = ELO;
+  racs[y+ 7][x+ 0] = ELO;
+  racs[y+ 7][x+ 1] = ELO;
+  
+  ...
+}
+            ]]>
+        </programlisting> 
+        <para>
+            Most nézzük meg a <function>sejtszal.cpp</function> fájlt. Itt fogjuk megszámolni a szomszédokat, és megadjuk a szomszédok száma alapján, hogy hol lesz élő és halott cella. Ennek a felépítése megegyezik a java programunkban ismertetett módszerrel. 
+        </para>
+        <programlisting language="c++"><![CDATA[
+#include "sejtszal.h"
+
+SejtSzal::SejtSzal(bool ***racsok, int szelesseg, int magassag, int varakozas, SejtAblak *sejtAblak)
+{
+    this->racsok = racsok;
+    this->szelesseg = szelesseg;
+    this->magassag = magassag;
+    this->varakozas = varakozas;
+    this->sejtAblak = sejtAblak;
+
+    racsIndex = 0;
+}
+
+int SejtSzal::szomszedokSzama(bool **racs,
+                              int sor, int oszlop, bool allapot) {
+    int allapotuSzomszed = 0;
+    for(int i=-1; i<2; ++i)
+        for(int j=-1; j<2; ++j)
+        
+            if(!((i==0) && (j==0))) {
+       
+                int o = oszlop + j;
+                if(o < 0)
+                    o = szelesseg-1;
+                else if(o >= szelesseg)
+                    o = 0;
+
+                int s = sor + i;
+                if(s < 0)
+                    s = magassag-1;
+                else if(s >= magassag)
+                    s = 0;
+
+                if(racs[s][o] == allapot)
+                    ++allapotuSzomszed;
+            }
+    return allapotuSzomszed;
+}
+
+void SejtSzal::idoFejlodes() {
+
+    bool **racsElotte = racsok[racsIndex];
+    bool **racsUtana = racsok[(racsIndex+1)%2];
+
+    for(int i=0; i<magassag; ++i) { // sorok
+        for(int j=0; j<szelesseg; ++j) { // oszlopok
+
+            int elok = szomszedokSzama(racsElotte, i, j, SejtAblak::ELO);
+
+            if(racsElotte[i][j] == SejtAblak::ELO) {
+
+                if(elok==2 || elok==3)
+                    racsUtana[i][j] = SejtAblak::ELO;
+                else
+                    racsUtana[i][j] = SejtAblak::HALOTT;
+            }  else {
+               
+                if(elok==3)
+                    racsUtana[i][j] = SejtAblak::ELO;
+                else
+                    racsUtana[i][j] = SejtAblak::HALOTT;
+            }
+        }
+    }
+    racsIndex = (racsIndex+1)%2;
+}
+
+void SejtSzal::run()
+{
+    while(true) {
+        QThread::msleep(varakozas);
+        idoFejlodes();
+        sejtAblak->vissza(racsIndex);
+    }
+}
+
+SejtSzal::~SejtSzal()
+{
+}
+        ]]>
+    </programlisting>
+    <para>
+        A program futtatása a következő: a <function>qmake -project</function> létrehoz egy .pro végződésű fájlt, amibe bele kell írni, hogy <function>QT += widgets</function>. Majd a parancssorba beírjuk hogy <function>qmake *.pro</function>, ami létrehoz egy Makefile-t. <function>make</function> parancssal bináris fájlt hozunk létre, majd futtatjuk a szoksásos g++ programot. Ha mindent jól csináltunk, a következő képernyőt kell kapnunk:
+    </para>
+    <mediaobject>
+        <imageobject>
+            <imagedata fileref="img/gt.png" width="60%" format="PNG"/>
+        </imageobject>
+    </mediaobject>        
     </section>        
     <section>
         <title>BrainB Benchmark</title>
