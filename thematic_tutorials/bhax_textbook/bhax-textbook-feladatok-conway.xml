@@ -15,11 +15,276 @@
             Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2018/10/10/myrmecologist">https://bhaxor.blog.hu/2018/10/10/myrmecologist</link>
         </para>
         <para>
-            Megoldás forrása: <link xlink:href=""></link>               
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/conway/Myrmecologist">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/conway/Myrmecologist</link>               
         </para>
         <para>
-            Tanulságok, tapasztalatok, magyarázat...
-        </para>            
+            Ebben a fejezetben a hangyaszimulációs programot mutatom be. A program 6 fájlból áll. Az <function>ant.h</function> fájlban deklaráljuk a hangya felépítéséhez kapcsolódó változókat. Az <function>antwin.h</function> fájlban az <function>Antwin()</function> függvényvben is szintén változókat deklarálunk és értékeket adunk meg. Itt az ablakkal és a hangyákkal kapcsolatos adatok vannak megadva(pl ablak szélesség, magasság, hangyák száma, stb.). A <function>closeEvent()</function> az ablakeseményeket figyeli. Ha bezárjuk az ablakot, akkor meghívja a <function>finish()</function> függvényt, ahol a futtatás átvált false értékre. 
+            A <function>keyPressedEvent()</function> függvény pedig a billentyűzet leütéseket figyeli. Jelen esetben azt mondjuk, hogyha az user által leütött billentyűzet azonos a P gombbal (<function>event->key() == Qt::Key_P</function>), akkor megállítjuk a programot. Ha a Q billentyűt vagy az esc-t nyomjuk le, akkor kilép a proglamból (<function>close()</function>).
+        </para>
+        <programlisting language="c++"><![CDATA[
+#ifndef ANTWIN_H
+#define ANTWIN_H
+
+#include <QMainWindow>
+#include <QPainter>
+#include <QString>
+#include <QCloseEvent>
+#include "antthread.h"
+#include "ant.h"
+
+class AntWin : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    AntWin(int width = 100, int height = 75,
+           int delay = 120, int numAnts = 100,
+           int pheromone = 10, int nbhPheromon = 3,
+           int evaporation = 2, int cellDef = 1,
+           int min = 2, int max = 50,
+           int cellAntMax = 4, QWidget *parent = 0);
+
+    AntThread* antThread;
+
+    void closeEvent ( QCloseEvent *event ) {
+
+        antThread->finish();
+        antThread->wait();
+        event->accept();
+    }
+
+    void keyPressEvent ( QKeyEvent *event )
+    {
+
+        if ( event->key() == Qt::Key_P ) {
+            antThread->pause();
+        } else if ( event->key() == Qt::Key_Q
+                    ||  event->key() == Qt::Key_Escape ) {
+            close();
+        }
+
+    }
+
+    virtual ~AntWin();
+    void paintEvent(QPaintEvent*);
+
+private:
+
+    int ***grids;
+    int **grid;
+    int gridIdx;
+    int cellWidth;
+    int cellHeight;
+    int width;
+    int height;
+    int max;
+    int min;
+    Ants* ants;
+
+public slots :
+    void step ( const int &);
+
+};
+
+#endif
+            ]]>
+        </programlisting>
+        <para>
+            Az <function>antwin.cpp</function> fájlon belül a <function>setWindowTitle()</function> segítségével adunk nevet az ablaknak, ami a program elindítása után a fejlécben fog majd megjelenni.
+            Az ablak méretét a header fájlból kérjük le. Ezután for ciklussal létrehozunk két négyzetrácsot, ezek egy <function>grids</function> nevű tömbben lesznek eltárolva. Az <function>ants</function> változó meghívja az Ants() függvényt, azaz létrehozzuk a hangyákat. Az <function>antThread</function> pedig a fenti adatok alapján létrehozza az egész életteret. 
+        </para>
+        <programlisting language="c++"><![CDATA[
+#include "antwin.h"
+#include <QDebug>
+
+AntWin::AntWin ( int width, int height, int delay, int numAnts,
+                 int pheromone, int nbhPheromon, int evaporation, int cellDef,
+                 int min, int max, int cellAntMax, QWidget *parent ) : QMainWindow ( parent )
+{
+    setWindowTitle ( "Ant Simulation" );
+
+    this->width = width;
+    this->height = height;
+    this->max = max;
+    this->min = min;
+
+    cellWidth = 6;
+    cellHeight = 6;
+
+    setFixedSize ( QSize ( width*cellWidth, height*cellHeight ) );
+
+    grids = new int**[2];
+    grids[0] = new int*[height];
+    for ( int i=0; i<height; ++i ) {
+        grids[0][i] = new int [width];
+    }
+    grids[1] = new int*[height];
+    for ( int i=0; i<height; ++i ) {
+        grids[1][i] = new int [width];
+    }
+
+    gridIdx = 0;
+    grid = grids[gridIdx];
+
+    for ( int i=0; i<height; ++i )
+        for ( int j=0; j<width; ++j ) {
+            grid[i][j] = cellDef;
+        }
+
+    ants = new Ants();
+
+    antThread = new AntThread ( ants, grids, width, height, delay, numAnts, pheromone,
+                                nbhPheromon, evaporation, min, max, cellAntMax);
+
+    connect ( antThread, SIGNAL ( step ( int) ),
+              this, SLOT ( step ( int) ) );
+
+    antThread->start();
+
+}
+            ]]>
+        </programlisting> 
+        <para>
+            A <function>paintEvent</function> függvénnyel történik a színezés, ami a hangyákat fogja szimbolizálni. Először is for ciklussal végigmegyünk a sorokon és az oszlopokon és azt mondjuk hogy a hangyákat szimuláló kis téglalapokat (<function>fillRect</function>) színezzük be.
+        </para>
+        <programlisting language="c++"><![CDATA[
+void AntWin::paintEvent ( QPaintEvent* )
+{
+    QPainter qpainter ( this );
+
+    grid = grids[gridIdx];
+
+    for ( int i=0; i<height; ++i ) {
+        for ( int j=0; j<width; ++j ) {
+
+            double rel = 255.0/max;
+
+            qpainter.fillRect ( j*cellWidth, i*cellHeight,
+                                cellWidth, cellHeight,
+                                QColor ( 255 - grid[i][j]*rel,
+                                         255,
+                                         255 - grid[i][j]*rel) );
+
+            if ( grid[i][j] != min )
+            {
+                qpainter.setPen (
+                    QPen (
+                        QColor ( 255 - grid[i][j]*rel,
+                                 255 - grid[i][j]*rel, 255),
+                        1 )
+                );
+
+                qpainter.drawRect ( j*cellWidth, i*cellHeight,
+                                    cellWidth, cellHeight );
+            }
+
+
+
+            qpainter.setPen (
+                QPen (
+                    QColor (0,0,0 ),
+                    1 )
+            );
+
+            qpainter.drawRect ( j*cellWidth, i*cellHeight,
+                                cellWidth, cellHeight );
+
+        }
+    }
+
+    for ( auto h: *ants) {
+        qpainter.setPen ( QPen ( Qt::black, 1 ) );
+
+        qpainter.drawRect ( h.x*cellWidth+1, h.y*cellHeight+1,
+                            cellWidth-2, cellHeight-2 );
+
+    }
+
+    qpainter.end();
+}
+
+AntWin::~AntWin()
+{
+    delete antThread;
+
+    for ( int i=0; i<height; ++i ) {
+        delete[] grids[0][i];
+        delete[] grids[1][i];
+    }
+
+    delete[] grids[0];
+    delete[] grids[1];
+    delete[] grids;
+
+    delete ants;
+}
+
+void AntWin::step ( const int &gridIdx )
+{
+
+    this->gridIdx = gridIdx;
+    update();
+}
+            ]]>
+        </programlisting>
+        <para>
+            Az <function>antthread.cpp</function>-n belül történik a hangyák kiíratása és mozgatása. 
+            Ahhoz, hogy a hangyák mozgása véletlenszerűen történjen, a <function>qsrand()</function> függvényt hívjuksegítségül, ahol paraméterként a másodpercenként változó időt adjuk meg.
+        </para>
+        <programlisting language="c++"><![CDATA[
+#include "antthread.h"
+#include <QDebug>
+#include <cmath>
+#include <QDateTime>
+
+AntThread::AntThread ( Ants* ants, int*** grids,
+                     int width, int height,
+                     int delay, int numAnts, 
+                     int pheromone, int nbrPheromone, 
+                     int evaporation,
+                     int min, int max, int cellAntMax)
+{
+    this->ants = ants;
+    this->grids = grids;
+    this->width = width;
+    this->height = height;
+    this->delay = delay;
+    this->pheromone = pheromone;
+    this->evaporation = evaporation;
+    this->min = min;
+    this->max = max;
+    this->cellAntMax = cellAntMax;
+    this->nbrPheromone = nbrPheromone;
+
+    numAntsinCells = new int*[height];
+    for ( int i=0; i<height; ++i ) {
+        numAntsinCells[i] = new int [width];
+    }
+
+    for ( int i=0; i<height; ++i )
+        for ( int j=0; j<width; ++j ) {
+            numAntsinCells[i][j] = 0;
+        }
+
+    qsrand ( QDateTime::currentMSecsSinceEpoch() );
+
+    Ant h {0, 0};
+    for ( int i {0}; i<numAnts; ++i ) {
+
+        h.y = height/2 + qrand() % 40-20;
+        h.x = width/2 + qrand() % 40-20;
+
+        ++numAntsinCells[h.y][h.x];
+
+        ants->push_back ( h );
+
+    }
+
+    gridIdx = 0;
+}
+
+            ]]>
+        </programlisting>           
     </section>        
     <section>
         <title>Java életjáték</title>
@@ -35,7 +300,7 @@
         </para>
         <para>
            John Horton Conway a 70-es évek elején valósította meg az általa elnevezett Élejtájékot, melynek lényege, hogy
-           van egy négyzethálós élettér, és minden cellában egy sejt élhet. négy keresztben, négy pedig átlósan.
+           van egy négyzethálós élettér, és minden cellában egy sejt élhet. Minden sejtnek 8 szomszédja lehet: négy keresztben, négy pedig átlósan.
            A szabályok pedig a következők:
         </para>
         <itemizedlist mark='opencircle'>
@@ -630,11 +895,146 @@ SejtSzal::~SejtSzal()
             Megoldás videó: 
         </para>
         <para>
-            Megoldás forrása: <link xlink:href=""></link>               
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/conway/brainb">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/conway/brainb</link>               
         </para>
         <para>
-            Tanulságok, tapasztalatok, magyarázat...
-        </para>            
+            A BrainB is egy Qt-s alkalmazás, ami OpenCV könyvtárt használ. A program célja a kiemelkedő e-sportolók korai felismerése illetve felkutatása, mérési módszerek alkalmazásával. A program lényege, hogy először egy doboz jelenik meg a képernyőn, középen egy kék körrel, ha az egeret minél tovább tartjuk a körön, annál több doboz jelenik meg a képernyőn és egyre gyorsabban is mozognak, egyre nehezbb lesz majd a körön tartani az egérmutatót.
+            Most vizsgáljuk  meg a mérés alapötletét, ami a <function>BrainBWin.cpp</function> fájlban tallható, azon belül a <function>BrainBWin::updateHeroes</function> függvényben. Először is kiszámítjuk az egér és a Samu Entropy doboza (karakter) közötti távolságot, ennek eredményét a dist változóban tároljuk el.
+            Ezután megnézzük, hogy a távolság (dist) nagyobb-e, mint 121 pixel, ha az if feltétel teljesül, akkor a <function>nofLost</function> értékét megnöveljük eggyel. Ha a nofLost értéke több lesz, mint 12, azaz 12*100 milliszekundum, akkor a feltétel teljesül, mert a játékos sikeresen tudta tartani több mint 1200 ms-on keresztül az adott karakteren az egérmutatót. Ekkor elmentjuk az adatokat a found2lost verembe, aminek értéke bit per second (bps) lesz.
+            Ha az user nem képes 1200ms-on keresztül tartani, akkor az else ágba lépünk, tehát a a játékos elvesztette a karaktert és ennek adatát is elmentjük
+            a <function>lost2found</function> változóba.
+
+        </para>
+        <programlisting language="c++"><![CDATA[
+            void BrainBWin::updateHeroes ( const QImage &image, const int &x, const int &y )
+{
+
+        if ( start && !brainBThread->get_paused() ) {
+                int dist = ( this->mouse_x - x ) * ( this->mouse_x - x ) + ( this->mouse_y - y ) * ( this->mouse_y - y );
+                if ( dist > 121 ) {
+                        ++nofLost;
+                        nofFound = 0;
+                        
+                        if ( nofLost > 12 ) {
+                                if ( state == found && firstLost ) {
+                                    found2lost.push_back ( brainBThread->get_bps() );
+                                }
+                                firstLost = true;
+
+                                state = lost;
+                                nofLost = 0;
+                                brainBThread->decComp();
+                        }
+                } else {
+                        ++nofFound;
+                        nofLost = 0;
+                        if ( nofFound > 12 ) {
+
+                                if ( state == lost && firstLost ) {
+                                        lost2found.push_back ( brainBThread->get_bps() );
+                                }
+                                state = found;
+                                nofFound = 0;
+                                brainBThread->incComp();
+                        }
+                }
+        }
+        pixmap = QPixmap::fromImage ( image );
+        update();
+}
+            ]]>
+        </programlisting>
+        <para>
+            A fenti két számítást utána összeadjuk, elosztjuk 2-vel, majd 8-cal, végül pedig 1024-el osztjuk el és elmentjük egy text fájlba. Ez 
+            a <function>BrainBWin.h</function> fájlban van felépítve. Ebből most számunkra az <function>int m1</function>, <function>int m2</function> és a <function>double res</function> változók az érdekesek. az integer típusú változók értékei a <function>lost2found</function> illetve a <function>found2lost</function> átlagával lesz egyenlő, ennek kiszámításához használjuk a <function>mean()</function> függvényt. A <function>res</function> változóba mentjük el a fentebb leírt képlettel kiszámított adatokat.
+        </para>
+        <programlisting language="c++"><![CDATA[
+            textStremam <<  "\n";
+            int m1 = m = mean ( lost2found );
+            textStremam << "mean      : " <<  m << "\n";
+            textStremam << "var       : " <<  var ( lost2found, m ) << "\n";
+
+            textStremam << "found2lost: "  ;
+            for ( int n : found2lost ) {
+                textStremam << n << ' ';
+            }
+            textStremam <<  "\n";
+            int m2 = m = mean ( found2lost );
+            textStremam << "mean      : " <<  m << "\n";
+            textStremam << "var       : " <<  var ( found2lost, m ) << "\n";
+
+            if ( m1 < m2 ) {
+                textStremam << "mean(lost2found) < mean(found2lost)" << "\n";
+            }
+
+            int min, sec;
+            millis2minsec ( t, min, sec );
+            textStremam << "time      : " <<  min  << ":"  << sec << "\n";
+
+            double res = ( ( ( ( double ) m1+ ( double ) m2 ) /2.0 ) /8.0 ) /1024.0;
+            textStremam << "U R about " << res << " Kilobytes\n";
+            ]]>
+        </programlisting>
+        <para>
+            A program futtatása után, ha az egeret képesek leszünk tartani egy adott kék ponton több, mint 1,2 másodpercig, akkor a program folyamatosan új
+            dobozokat jelenít meg, és egyre gyorsabban is mozognak: 
+        </para>
+        <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/brainb.png" width="60%" format="PNG"/>
+              </imageobject>
+        </mediaobject>
+        <para>
+            Ezeknek a dobozoknak a létrehozása és mozgatása a BrainBThread.cpp és a BrainBThread.h fájlokban vannak implementálva. A BrainThread.cpp-ban a a konstruktornak átadjuk paraméterként a szélességet és a magasságot. Itt a Hero lesz a karakter, azaz jelen esetünkben 5 karakter van megadva, ezek fognak tehát majd megjelenni először a képernyőn. Ezeket a <function>heroes</function> nevű verembe pakoljuk be a <function>push.back()</function> függvénnyel, melynek paraméterként adjuk át az általunk kreált Hero-k neveit egyenként. 
+        </para>
+        <programlisting language="c++"><![CDATA[
+BrainBThread::BrainBThread ( int w, int h )
+{
+        dispShift = heroRectSize+heroRectSize/2;
+
+        this->w = w - 3 * heroRectSize;
+        this->h = h - 3 * heroRectSize;
+
+        std::srand ( std::time ( 0 ) );
+
+        Hero me ( this->w / 2 + 200.0 * std::rand() / ( RAND_MAX + 1.0 ) - 100,
+                  this->h / 2 + 200.0 * std::rand() / ( RAND_MAX + 1.0 ) - 100, 255.0 * std::rand() / ( RAND_MAX + 1.0 ), 9 );
+
+        Hero other1 ( this->w / 2 + 200.0 * std::rand() / ( RAND_MAX + 1.0 ) - 100,
+                      this->h / 2 + 200.0 * std::rand() / ( RAND_MAX + 1.0 ) - 100, 255.0 * std::rand() / ( RAND_MAX + 1.0 ), 5, "Norbi Entropy" );
+        Hero other2 ( this->w / 2 + 200.0 * std::rand() / ( RAND_MAX + 1.0 ) - 100,
+                      this->h / 2 + 200.0 * std::rand() / ( RAND_MAX + 1.0 ) - 100, 255.0 * std::rand() / ( RAND_MAX + 1.0 ), 3, "Greta Entropy" );
+        Hero other4 ( this->w / 2 + 200.0 * std::rand() / ( RAND_MAX + 1.0 ) - 100,
+                      this->h / 2 + 200.0 * std::rand() / ( RAND_MAX + 1.0 ) - 100, 255.0 * std::rand() / ( RAND_MAX + 1.0 ), 5, "Nandi Entropy" );
+        Hero other5 ( this->w / 2 + 200.0 * std::rand() / ( RAND_MAX + 1.0 ) - 100,
+                      this->h / 2 + 200.0 * std::rand() / ( RAND_MAX + 1.0 ) - 100, 255.0 * std::rand() / ( RAND_MAX + 1.0 ), 7, "Matyi Entropy" );
+
+        heroes.push_back ( me );
+        heroes.push_back ( other1 );
+        heroes.push_back ( other2 );
+        heroes.push_back ( other4 );
+        heroes.push_back ( other5 );
+}
+            ]]>
+        </programlisting>
+        <para>
+            A dobozok mozgatásának kiszámítása a <function>BrainbThread.h</function> fájlban van megadva. 
+        </para> 
+        <programlisting language="c++"><![CDATA[
+    void move ( int maxx, int maxy, int env ) {
+
+        int newx = x+ ( ( ( double ) agility*1.0 ) * ( double ) ( std::rand() / ( RAND_MAX+1.0 ) )-agility/2 ) ;
+        if ( newx-env > 0 && newx+env < maxx ) {
+            x = newx;
+        }
+        int newy = y+ ( ( ( double ) agility*1.0 ) * ( double ) ( std::rand() / ( RAND_MAX+1.0 ) )-agility/2 );
+        if ( newy-env > 0 && newy+env < maxy ) {
+            y = newy;
+        }
+
+    }
+    ]]>
+        </programlisting>           
     </section>        
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 </chapter>                

@@ -196,7 +196,17 @@ A blokk egy olyan programegység, amely csak egy másik programegységben helyez
 <para>
     Paraméterkiértékelés során először mindig a formális paraméter lista lesz az elsődleges, majd ezután rendeljük hozzá az aktuális paramétereket. Annak módszerét, hogy melyik formális paraméterhez, melyik aktuális paraméter fog tartozni, megkülönböztethetjük sorrendi kötés vagy név szerinti kötés szerint.
 Sorrendi kötésnél, mint ahogy a nevében is benn van, felsorolás sorrendjében rendelődnek hozzá. A név szerinti kötésnél pedig, az aktuális paraméter listában megadjuk a formális paraméter lista nevét és mellette pedig valamilyen szintaktikával az aktuális paramétert.
-A paraméter átadás is különböző módon történhet (érték-, cím-, eredmény-, érték-eredmény-, név-, szöveg szerint). Érték szerinti paraméterátadás       
+A paraméter átadás is különböző módon történhet (érték-, cím-, eredmény-, érték-eredmény-, név-, szöveg szerint).       
+        </para>
+        <para>
+            7. Blokk és hatáskör
+        </para>
+        <para>
+            A blokkok olyan programegységek, amelyek csak egy másik prgoramegység belsejében helyezkedhetnek el. Formálisan 3 részből áll: kezdet, törzs és vég. A kezdetet ésa véget egy-egy speciális karaktersorozat vagy alapszó jelzi és a törzsben helyezkednek el a deklarációs és végrehajtható utasítások. Fontos azonban, hogy a blokknak nem lehetnek paraméterei és aktivizálni úgy lehet szekvenciális vezérléssel vagy GOTO usaítással lehet. A blokkok 
+            szerepe a nevek hatáskörének eltárolásában van.
+        </para>
+        <para>
+            A hatáskör a nevekhez kapcsolódó fogalom. Ezzel hivatkozunk az adott programra, annak nevének használatával. Az eljárásorientált nyelvekben a programegységekhez, fordítási egységekhez kapcsolódik. Egy név hatáskörének megállapítását hatáskörkezelésnek hívjuk, aminek két típusa van: Statikus és dinamikus. A statikus hatáskörkezelés esetén a fordító egy szabad nevet keres, ha talál, akkor kilép a tartalmazó programegységbe és megnézi hogy ez a név lokális e ott. Ha nem talál szabad nevet, akkor vagy a programozónak kell deklarálni egyet vagy automatikusan történik a deklaráció az egys programnyelvekben. A dinamikus hatáskörkezelést pedig a futtató rendszer végzi, ami ha talál egy szabad nevet a programegységben, akkor megkeresi a lokális nevet is, ha azt nem találja meg, akkor futási hiba keletkezik.
         </para>
     </section>        
     <section>
@@ -262,8 +272,53 @@ A paraméter átadás is különböző módon történhet (érték-, cím-, ered
             }
             </programlisting>
         </para>
-                    <para>
-                A fenti programban látható, hogy a referencianeve elé egy &amp; jellel deklaráltuk a referenciát.
-            </para>
+        <para>
+            A fenti programban látható, hogy a referencianeve elé egy &amp; jellel deklaráltuk a referenciát.
+        </para>
+        <para>
+            Objektumok és osztályok
+        </para>
+        <para>
+            Az objektumorientált szemlélet akkor alakult ki, amikor a programok egyre bonyolultabbak, átláthatalanabbak lettek és ennek megoldására
+            találták ki az objektum orientált programozást. Ennek lényege, hogy a rendszer funkcióit egymással együttműködő objektumok valósítják meg.
+            Tehát mindig van egy osztályunk és az osztályon belül különböző objektumok lehetnek. Ezek összessége jelenti az egységbe zárást. Például tagfüggvények esetében, megadhatjuk őket osztálydefinícióban vagy pedig struktúradefinícióban. Ez utóbbira egy példa:
+        </para>
+        <programlisting language="c++"><![CDATA[
+            struct Point {
+                unsigned int x;
+
+                int setX(unsigned int value);
+            };
+
+            int Point::setX(unsigned int value) {
+                if(value <= MAX_X) {
+                    x = value;
+                    return 0;
+                }
+                return -1;
+            }
+            ]]>
+        </programlisting>
+        <para>
+            Itt tehát egy hatókör operátort használunk, azaz dupla kettőspontot. Az osztály nevét és a hatóköroperátort a függvény neve elé írva tudatjuk a fordítóval, hogy a Point osztályon belül a setX függvényről van szó.
+        </para>
+        <para>
+            C++ sablonok
+        </para>
+        <para>
+            Sablonnak nevezzük azokat az osztálysablonokat és függvénysablonokat, amikor bizonyos elemeket a függvény/osztály definiálásakor nem adjuk meg, hanem paraméterként kezelünk. A függvénysablont úgy kell elképzelni, hogy például ha egy számsorozat legnagyobb értékét akarjuk kiíratni, akkor elég előhívni a max() függvényt, aminek csak a paramétereket kell átadni. A C++ esetében a függvénysablon implementációja a következőképpen történik: 
+        </para>
+        <programlisting language="c++"><![CDATA[
+            template <class T> inline T max(T lhs, T rhs) {
+                return lhs >rhs ? lhs: rhs;
+            }
+            ]]>
+        </programlisting>
+        <para>
+        Tehát először mindig a template kulcsszóval kezdődik, majd ezután &lt; &gt; között felsoroljuk a sablonparamétereket vesszővel elválasztva. Jelen esetünkben egy sablonparaméter szerepel, aminek a T nevet adtuk. Az inline-t itt azért használjuk, mert a függvénytörzsünk rövid. Az elkészült függvénysablont ezután így tudjuk felhasználni: <function>int n = max(3,5)</function>. Fontos, hogy nem lehet az egyik paraméter double, a másik pedig int típusú, mert a kód ebben az esetben nem fordul le.
+    </para>
+        <para>
+            16-58, 223-230
+        </para>
     </section>        
 </chapter>                
