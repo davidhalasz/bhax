@@ -11,33 +11,173 @@
             Python
         </para>
         <para>
-            Megoldás videó: <link xlink:href="https://youtu.be/j7f9SkJR3oc">https://youtu.be/j7f9SkJR3oc</link>      
+            Felhasznált irodalom:
+            <itemizedlist mark='opencircle'>
+                <listitem>
+                    <para>
+                        <citation>BIOINTELLIGENCE</citation>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <citation>NEURALIS</citation>
+                    </para>
+                </listitem>
+            </itemizedlist>     
         </para>
         <para>
-            Megoldás forrása: <link xlink:href="https://github.com/tensorflow/tensorflow/releases/tag/v0.9.0">https://github.com/tensorflow/tensorflow/releases/tag/v0.9.0</link> (/tensorflow-0.9.0/tensorflow/examples/tutorials/mnist/), <link xlink:href="https://progpater.blog.hu/2016/11/13/hello_samu_a_tensorflow-bol">https://progpater.blog.hu/2016/11/13/hello_samu_a_tensorflow-bol</link>  
+            Megoldás forrása: <link xlink:href=""></link>   
         </para>
         <para>
-            Tanulságok, tapasztalatok, magyarázat...
+            Ebben a feladatban egy olyan programot vizsgálunk meg, amely egy adott 28x28 méretű kép alapján megtippeli, hogy hanyas szám látható rajta.
+            Ezt egy mesterséges neurális hálók segítségével éri el. Ezek működése egy természetbeli folyamat modellezésén alapulnak: az emberi agyhoz tartozó neuronok és azok folyamatait utánozzák.
+            A neurális hálózatok működése általában két fázisból áll. Az első a tanulási fázis, ami két további nagy csoportba sorolható: felügyelt és felügyelet nélküli tanulás. Felügyelt tanulás során 
+            valamilyen külső segítség, mint például betanító személy vesz részt a folyamatban, hogy a háló által adott kimenet és az elvárt érték közötti különbség alapján módosítsa a súlyokat.
+            A felügyelet nélküli módszer esetén pedig a háló meglévő adatok vagy minták alapján dolgozik és tanul tovább. A második fázis az előhívási fázis, ahol az első szakaszban kapott információ-feldolgozó rendszert
+            használjuk fel. Ez a folyamat az tanulási fázishoz képest gyorsan lefut.
         </para>
-    </section>        
+        <para>
+            Jelen példánkban a program futtatásához szükségünk lesz a Python magas szintű programozási nyelvre és a Tensorflow nyílt forráskódú Python csomagra. A Python alapjait 1989-ben tették le és az egyik legnépszerűbb programozási nyelv.
+            Előnye, hogy más népszerű programnyelvekben (C, JAVA, stb.) megírt ugyanaz a program Pythonban sokkal rövidebb, ezért a fejlesztési idő is kevesebb. Felhasználása széleskörű és ingyenes. Rengeteg feladatok megoldásához használható fel: 
+            tudományos alkalmazások, webfejlesztés, pár- vagy akár több sorból álló projektek, üzleti- és hálózati aklamazások is. Ez a programnyelv rengeteg beépített kiegészítő csomaggal és szolgáltatással rendelkezik, mint például a már említett Tensorflow.
+            Ez a Python csomag numerikus számításokat végez gráfok használatával. Ez nagy segítséget jelent a neurális hálózatok felasználása során, ahol a gráf csomópontjai a neuronok lesznek, és a kapcsolatokat pedig a gráf élei reprezentálják, ezzel létrehozva egy rugalmas szerkezetet.
+            A TensorFlow segítségével készített programokat akár mobiltelefonon is lehet futtatni, úgy hogy kihasználja a rendelkezésre álló processzorokat és grafikus kártyát. A TensorFlow csomagot a Google Brain csapata alkotta meg, kezdetben azzal a céllal, hogy kutassák a gépi tanulást és a neurális hálókat.
+            Az elkészített program azonban más területen is felhasználhatóvá vált, ezért egy javított változattal, ahol már pontosabb neurális hálózatokat tudtak elkészíteni, létrejött a DistBelief szabadalmaztatott gépitanuló rendszer.
+            Ennek a programnak a használata annyira elterjedt a cégen belül, hogy a Google informatikusai egyszerűsítették, ezzel gyorsabbá téve a csomagot, végül ebből lett a TensorFlow. 
+        </para>
+        <para>
+            Ahhoz, hogy Ubuntu rendszerünkön használni tudjuk a TensorFlow-t, először telepítenünk kell a gépünkre pip python alapú csomagkezelő rendszert, a python 3-ast és a matplotlip grafikonrajzoló és képmegjelenítőt. Ezeket az alábbi parancsok terminálba történő beírásával tehetjük meg:
+        </para>
+        <screen>
+            sudo apt update
+            sudo apt install python3-dev python3-pip
+            sudo apt-get install python3-matplotlib
+            sudo pip3 install -U virtualenv
+        </screen>
+        <para>
+            Ha ezzel megvagyunk, akkor a virtuális környezetben fogjuk feltelepíteni a TensorFlow csomagot:
+        </para>
+        <screen>
+            virtualenv --system-site-packages -p python3
+            source ./venv/bin/activate
+            (venv) $ pip install --upgrade pip
+            (venv) $ pip install --upgrade tensorflow
+            (venv) $ python -c "import tensorflow as tf; tf.enable_eager_execution(); print(tf.reduce_sum(tf.random_normal([1000, 1000])))"
+        </screen>
+        <para>
+            Ezután ebben a virtuális környezetben <function>cd</function> parancssal megkeressük a a szoftmax.py fájl helyét és a <function>python szoftmax.py</function> beírásával történik a program elindítása. Most nézzük meg magát a programot. 
+            Először importáljuk a szükséges könyvtárakat az <function>import</function> segítségével:
+        </para>
+        <programlisting language="python"><![CDATA[
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
-<!--
-    <section>
-        <title>Szoftmax R MNIST</title>
+import argparse
+
+from tensorflow.examples.tutorials.mnist import input_data
+
+import tensorflow as tf
+old_v = tf.logging.get_verbosity()
+tf.logging.set_verbosity(tf.logging.ERROR)
+
+import matplotlib.pyplot
+
+FLAGS = None
+        ]]>
+        </programlisting>
         <para>
-            R            
+            Következő lépésként a változókat deklaráljuk. Itt az x változónak azt adjuk meg, hogy a képek adatállománya hány dimenziós vektor legyen. Jelen esetben 784 dimenzó lesz, mert a képünk mérete 28x28, és ahhoz, hogy bármennyi képet olvashassunk be, meg kell adni, hogy "None". 
+            A <function>W</function> és a <function>b</function> változókban a <function>tf.Variable()</function> függvénnyel súlyokat és bias értékeket adunk meg. Ezek kezdeti értéke most nulla, azaz zeros lesz. Az <function>y</function> változóban lesz a modellünk által megjósolt adat, az
+            <function>y_</function> pedig egy újabb placeholder lesz, amit majd a <function>cross_entropy</function> változóba implementáljuk. Itt fogjuk megmérni, hogy a jóslatunk mennyire elégtelen a valóságos helyzet leírására. Ahhoz, hogy csökkentsük a hibahatárt, a 
+             <function>tf.train.GradientDescentOptimizer</function> és a <function>minimize</function> függvényeket használjuk. Az elsővel adjuk meg a csökkentés mértékét, az utóbbival pedig, annak a változónak a nevét, amit csökkenteni szeretnénk. Ez a <function>train_step</function> változóban lesznek megadva.
         </para>
+        <programlisting language="python"><![CDATA[
+def main(_):
+  mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
+
+  # Create the model
+  x = tf.placeholder(tf.float32, [None, 784])
+  W = tf.Variable(tf.zeros([784, 10]))
+  b = tf.Variable(tf.zeros([10]))
+  y = tf.matmul(x, W) + b
+
+  # Define loss and optimizer
+  y_ = tf.placeholder(tf.float32, [None, 10])
+
+  cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels = y_, logits = y))
+  train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+
+  sess = tf.InteractiveSession()
+      ]]>
+        </programlisting>
         <para>
-            Megoldás videó:
+            A <function>for i in range(1000)</function> azt jelenti, hogy for ciklusban 1000-szer futtatjuk le, azaz a tanítás ennyiszer fog lefutni. Majd kiíratjuk, hogy a modellünk milyen értéket adott meg, közben a képet is látjuk, így összehasonlíthatjuk az adatokat. Ha bezárjuk a képet, látni fogunk újabb képet, aminek adatait szintén összehasonlíthatjuk.
         </para>
+        <programlisting language="python"><![CDATA[
+  # Train
+  tf.initialize_all_variables().run(session=sess)
+  print("-- A halozat tanitasa")  
+  for i in range(1000):
+    batch_xs, batch_ys = mnist.train.next_batch(100)
+    sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
+    if i % 100 == 0:
+      print(i/10, "%")
+  print("----------------------------------------------------------")
+
+  # Test trained model
+  print("-- A halozat tesztelese")  
+  correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
+  accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))  
+  print("-- Pontossag: ", sess.run(accuracy, feed_dict={x: mnist.test.images,
+                                      y_: mnist.test.labels}))
+  print("----------------------------------------------------------")
+  
+  print("-- A MNIST 42. tesztkepenek felismerese, mutatom a szamot, a tovabblepeshez csukd be az ablakat")
+  
+  img = mnist.test.images[42]
+  image = img
+
+  matplotlib.pyplot.imshow(image.reshape(28, 28), cmap=matplotlib.pyplot.cm.binary)
+  matplotlib.pyplot.savefig("4.png")  
+  matplotlib.pyplot.show()
+
+  classification = sess.run(tf.argmax(y, 1), feed_dict={x: [image]})
+
+  print("-- Ezt a halozat ennek ismeri fel: ", classification[0])
+  print("----------------------------------------------------------")
+
+  print("-- A MNIST 11. tesztkepenek felismerese, mutatom a szamot, a tovabblepeshez csukd be az ablakat")
+
+  img = mnist.test.images[11]
+  image = img
+  matplotlib.pyplot.imshow(image.reshape(28,28), cmap=matplotlib.pyplot.cm.binary)
+  matplotlib.pyplot.savefig("8.png")  
+  matplotlib.pyplot.show()
+
+  classification = sess.run(tf.argmax(y, 1), feed_dict={x: [image]})
+
+  print("-- Ezt a halozat ennek ismeri fel: ", classification[0])
+  print("----------------------------------------------------------")
+
+if __name__ == '__main__':
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--data_dir', type=str, default='/tmp/tensorflow/mnist/input_data',
+                      help='Directory for storing input data')
+  FLAGS = parser.parse_args()
+  tf.app.run()
+
+        ]]>
+        </programlisting>
         <para>
-            Megoldás forrása:                
+            Az alábbi képernyőmentés mutatja, mi történik a program futtatása után. Ezek szerint a hálózatunk tesztelése 0,9205 pontosságú lett és fel is ismerte a képen lévő számokat, hiba nélkül.
         </para>
-        <para>
-            Tanulságok, tapasztalatok, magyarázat...
-        </para>
+         <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/mnist1.png" width="100%" format="PNG"/>
+              </imageobject>
+        </mediaobject>
     </section>        
--->
     
     <section>
         <title>Mély MNIST</title>
@@ -54,23 +194,7 @@
             Tanulságok, tapasztalatok, magyarázat...
         </para>
     </section>        
-<!--
-    <section>
-        <title>Deep dream</title>
-        <para>
-            Keras            
-        </para>
-        <para>
-            Megoldás videó:
-        </para>
-        <para>
-            Megoldás forrása:                
-        </para>
-        <para>
-            Tanulságok, tapasztalatok, magyarázat...
-        </para>
-    </section>        
--->                  
+                
     <section>
         <title>Minecraft-MALMÖ</title>
         <para>

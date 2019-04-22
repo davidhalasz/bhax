@@ -91,5 +91,69 @@
             </publisher>
             <pubdate>2004</pubdate>
         </biblioentry> 
-    </bibliodiv>    
+    </bibliodiv>
+    <bibliodiv>
+        <title>Bio Intelligence</title>
+        <biblioentry>
+            <abbrev>BIOINTELLIGENCE</abbrev>
+            <authorgroup>
+                <author>
+                    <personname>
+                        <firstname>Dr. Buzáné dr. Kis Piroska</firstname>
+                    </personname>
+                </author>
+            </authorgroup>
+            <title>Ismerkedés a TensorFlowrendszerrel</title>
+            <publisher>
+                <publishername>
+                    <link xlink:href="http://biointelligence.hu/pdf/tf_bkp.pdf?fbclid=IwAR3PBRoiMwwI8QtfXBMnhmvP-NHK7ee5BROJ_qk0pzMqqlw1rkwtNx10wpA">http://biointelligence.hu/pdf/tf_bkp.pdf?fbclid=IwAR3PBRoiMwwI8QtfXBMnhmvP-NHK7ee5BROJ_qk0pzMqqlw1rkwtNx10wpA</link>
+                </publishername>
+            </publisher>
+        </biblioentry> 
+    </bibliodiv> 
+    <bibliodiv>
+        <title>Neurális hálózatok</title>
+        <biblioentry>
+            <abbrev>NEURALIS</abbrev>
+            <authorgroup>
+                <author>
+                    <personname>
+                        <firstname>Altrichter Márta</firstname>
+                    </personname>
+                </author>
+                <author>
+                    <personname>
+                        <firstname>Horváth Gábor</firstname>
+                    </personname>
+                </author>
+                <author>
+                    <personname>
+                        <firstname>Pataki Béla</firstname>
+                    </personname>
+                 </author>
+                  <author>
+                    <personname>
+                        <firstname>Strausz György</firstname>
+                    </personname>
+                     </author>
+                      <author>
+                    <personname>
+                        <firstname>Takács Gábor</firstname>
+                    </personname>
+                     </author>
+                      <author>
+                    <personname>
+                        <firstname>Valyon József</firstname>
+                    </personname>
+                </author>
+            </authorgroup>
+            <title>Neurális hálózatok</title>
+            <publisher>
+                <publishername>
+                    <link xlink:href="https://www.tankonyvtar.hu/hu/tartalom/tamop425/0026_neuralis_4_4/adatok.html">https://www.tankonyvtar.hu/hu/tartalom/tamop425/0026_neuralis_4_4/adatok.html</link>
+                </publishername>
+            </publisher>
+            <pubdate>2006</pubdate>
+        </biblioentry> 
+    </bibliodiv>       
 </bibliography>     
