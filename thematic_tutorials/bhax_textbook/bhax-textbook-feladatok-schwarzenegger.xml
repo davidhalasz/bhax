@@ -26,7 +26,7 @@
             </itemizedlist>     
         </para>
         <para>
-            Megoldás forrása: <link xlink:href=""></link>   
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/Schwarzenegger/szoftmax.py">https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/Schwarzenegger/szoftmax.py</link>   
         </para>
         <para>
             Ebben a feladatban egy olyan programot vizsgálunk meg, amely egy adott 28x28 méretű kép alapján megtippeli, hogy hanyas szám látható rajta.
@@ -206,8 +206,84 @@ if __name__ == '__main__':
             Megoldás forrása:                
         </para>
         <para>
-            Tanulságok, tapasztalatok, magyarázat...
+           A Minecraft Malmo program telepítéséhez szükségünk lesz egy pre-build csomagra, amit a https://github.com/Microsoft/malmo/releases oldalról tölthetjük le. A kicsomagolás után 
+           lépjünk be a Minecraft mappába és futtassuk a launchClient.sh fájlt. Ez a folyamat egy kis időbe fog telni, de 95%-nál elindul a program és ennél tovább nem fog növekedni. 
+           Ha ezzel megvagyunk lépjünk be a Python_Examples mappába és futtassuk a tutorial_1.py python fájlt.
         </para>
+        <screen>
+            cd Minecraft
+            ./launchClient.sh
+
+            # A python fájl futtatása
+            cd Python_Examples
+            python3  tutorial_1.py
+        </screen>
+        <para>
+            A tutorial_1.py fájlt tetszőlegesen szerkeszthetjük. Ha a programon belül megkeressük a <function>#loop until mission ends</function> 
+            kommentet és az alatta lévő while ciklusban ágenseket adunk meg a <function>agent_host.sendCommand</function> függvénnyel, akkor a tutorial_1.py program újboli futtatása során
+            amíg le nem jár a megadott idő, végrehajtja az általunk megadott utasításokat, jelen esetben azt, hogy mindig lépjen előre egyet, ugorjon és támadjon.
+        </para>
+        <programlisting language="python"><![CDATA[
+            # Loop until mission ends:
+            while world_state.is_mission_running:
+                print(".", end="")
+            
+                agent_host.sendCommand("move 1")  
+                agent_host.sendCommand("jump 1")
+                agent_host.sendCommand("attack 1") 
+                time.sleep(0.1)
+                world_state = agent_host.getWorldState()
+                for error in world_state.errors:
+                    print("Error:",error.text)
+
+            print()
+            print("Mission ended")
+            # Mission has ended.
+        ]]>
+        </programlisting>
+        <para>
+            A Minecraft élővilágát (bionome) a missionXML részben tudjuk megadni. Ha szeretnénk saját magunk szerkeszteni, akkor
+            használhatjuk a https://www.minecraft101.net/superflat/ oldalt, amit majd be kell másolnunk a a <function>FlatWorldGenerator</function> sorba.
+            Továbbá ennél a kódcsipetnél adjuk meg az időt is, jelen esetben az időlimit 360000 ms lesz. Ahhoz, hogy mindez meg legyen jelenítve a 
+            programban, meg kell adnunk hogy: <function>my_mission = MalmoPython.MissionSpec(missionXML,True)</function>.
+        </para>
+        <programlisting><![CDATA[
+        missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+            <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            
+              <About>
+                <Summary>gitlab.com/whoisZORZ</Summary>
+              </About>
+              
+              <ServerSection>
+                <ServerHandlers>
+                  <FlatWorldGenerator generatorString="3;1*minecraft:bedrock,7*minecraft:dirt,1*minecraft:grass;4;village,decoration,lake"/>
+				  <DrawingDecorator>
+						<DrawSphere x="-27" y="70" z="0" radius="30" type="air"/>
+				  </DrawingDecorator>
+                  <ServerQuitFromTimeUp timeLimitMs="360000"/>
+                  <ServerQuitWhenAnyAgentFinishes/>
+                </ServerHandlers>
+              </ServerSection>
+              
+              <AgentSection mode="Survival">
+                <Name>ZORZBot</Name>
+                <AgentStart/>
+                <AgentHandlers>
+                  <ObservationFromFullStats/>
+                  <ContinuousMovementCommands turnSpeedDegs="180"/>
+                </AgentHandlers>
+              </AgentSection>
+            </Mission>'''
+
+        my_mission = MalmoPython.MissionSpec(missionXML,True)
+        ]]>
+        </programlisting>
+        <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/minec.png" width="100%" format="PNG"/>
+              </imageobject>
+        </mediaobject>
     </section>        
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 </chapter>                
