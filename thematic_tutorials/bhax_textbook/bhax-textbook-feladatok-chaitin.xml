@@ -44,8 +44,153 @@
             Megoldás forrása: <link xlink:href="https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/GIMP_Lisp/Chrome">https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/GIMP_Lisp/Chrome</link>               
         </para>
         <para>
-            Tanulságok, tapasztalatok, magyarázat...
-        </para>    
+            Ebben a feladatban olyan script-fu kiterjesztésről lesz szó, amivel a szövegre egy króm effektet nyomunk. 
+            Ahhoz, hogy használni tudjuk a <function>.scm</function> végződésű fájlokat a GIMP programban, először át kell másolnunk a GIMP saját scripts 
+            mappájába. Ha ezzel megvagyunk, akkor már csak el kell indítanunk a GNU programot, és a menüsorból válasszuk ki a Fálj/létrehozás/BHAX menüpontokat.
+            Itt lesznek majd felsorolva az általunk átmásolt szkriptek. Ha valamiért mégse működne a szkript, vagy hibaüzenetet dob ki, akkor az azért lehet mert 
+            nem a megfelelő GIMP programverziót használjuk. Nekünk mindenképpen a GIMP 2.10-es verzióra van szükségünk, ezt egyszerűen a <function>snap install gimp</function> 
+            parancssor terminálba történő beírásával telepíthetjük.
+        </para>
+        <para>
+            Mi most nézzük meg a <function>Chrome3_border2</function> szkriptet. Az elindítás után megjelenik egy ablak, ahol megadhatjuk a szöveget, a króm effektet, színét és méretét.
+            Ezután a fájl/exportálás menüponttal lementhetjük az elkészült képet:
+        </para>
+        <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/gimp1.png" width="70%" format="PNG"/>
+              </imageobject>
+        </mediaobject>
+        <para>
+            A program felépítését általában 3 részre lehet osztani: A szkript elemek definiálása, az alap beállítások megadása és végül hogy hol legyen a szkript elérhető a programon belül.
+            A script elemek definiálása során a script-fu-bhax-chrome-border nevet adjuk, melynek paraméterei a sorba a következő: text (szöveg), font (betűtípus), fontsize (betűméret), width (hosszúság), height (magasság), new width (új hosszúság), color (szín), gradient (átmenet), border-size (szegély mérete). 
+            Itt deklaráljuk tehát a lisp programozási nyelvvel az adatokat. Ezután pontosvesszővel kezdve a <function>script-fu-bhax-chrome-border</function>-nek megadunk egy alap beállítást 
+            , azaz paramétereit, például a szöveg legyen most "PROGRAMOZÁS", a betűstílus Sans, a betűméret 160px és így tovább.
+        </para>
+        <para>
+            Ahhoz, hogy a GIMP porgramon belül elő is tudjuk hívni a scriptet, regisztrálnunk kell. Ehhez a script-fu-menu-register függvényt hívjuk segítségül. 2 paramétert kell átadni neki: az egyik 
+            a script neve, amit már fentebb definiáltunk és hogy melyik menüpontból érhessük majd el a programon belül. 
+        </para>
+        <programlisting><![CDATA[
+//SZKRIPT ELEMEK DEFINIÁLÁSA
+
+(define (color-curve)
+    (let* (
+        (tomb (cons-array 8 'byte))
+    )
+        (aset tomb 0 0)
+        (aset tomb 1 0)
+        (aset tomb 2 50)
+        (aset tomb 3 190)
+        (aset tomb 4 110)
+        (aset tomb 5 20)
+        (aset tomb 6 200)
+        (aset tomb 7 190)
+    tomb)    
+)
+
+;(color-curve)
+
+(define (elem x lista)
+
+    (if (= x 1) (car lista) (elem (- x 1) ( cdr lista ) ) )
+
+)
+
+(define (text-wh text font fontsize)
+(let*
+    (
+        (text-width 1)
+        (text-height 1)
+    )
+ 
+    (set! text-width (car (gimp-text-get-extents-fontname text fontsize PIXELS font)))    
+    (set! text-height (elem 2  (gimp-text-get-extents-fontname text fontsize PIXELS font)))    
+    
+    (list text-width text-height)
+    )
+)
+
+;(text-width "alma" "Sans" 100)
+
+(define (script-fu-bhax-chrome-border text font fontsize width height new-width color gradient border-size)
+(let*
+    (
+        (text-width (car (text-wh text font fontsize)))
+        (text-height (elem 2 (text-wh text font fontsize)))
+        (image (car (gimp-image-new width (+ height (/ text-height 2)) 0)))
+        (layer (car (gimp-layer-new image width (+ height (/ text-height 2)) RGB-IMAGE "bg" 100 LAYER-MODE-NORMAL-LEGACY)))
+        (textfs)
+        (layer2) 
+    )
+        
+    (gimp-image-insert-layer image layer 0 0)
+        
+    (gimp-image-select-rectangle image CHANNEL-OP-ADD 0 (/ text-height 2) width height)
+    (gimp-context-set-foreground '(255 255 255))
+    (gimp-drawable-edit-fill layer FILL-FOREGROUND )
+    
+    (gimp-image-select-rectangle image CHANNEL-OP-REPLACE border-size (+ (/ text-height 2) border-size) (- width (* border-size 2)) (- height (* border-size 2)))
+    (gimp-context-set-foreground '(0 0 0))
+    (gimp-drawable-edit-fill layer FILL-FOREGROUND )
+    
+    (gimp-image-select-rectangle image CHANNEL-OP-REPLACE (* border-size 3) 0 text-width text-height)
+    (gimp-drawable-edit-fill layer FILL-FOREGROUND )    
+    
+    (gimp-selection-none image)
+    
+    ;step 1
+    (gimp-context-set-foreground '(255 255 255))
+   
+    (set! textfs (car (gimp-text-layer-new image text font fontsize PIXELS)))
+    (gimp-image-insert-layer image textfs 0 0)   
+    (gimp-layer-set-offsets textfs (* border-size 3) 0)
+   
+    (set! layer (car(gimp-image-merge-down image textfs CLIP-TO-BOTTOM-LAYER)))
+   
+    ;step 2   
+    (plug-in-gauss-iir RUN-INTERACTIVE image layer 25 TRUE TRUE)
+   
+    ;step 3
+    (gimp-drawable-levels layer HISTOGRAM-VALUE .18 .38 TRUE 1 0 1 TRUE)
+   
+    ;step 4   
+    (plug-in-gauss-iir RUN-INTERACTIVE image layer 2 TRUE TRUE)
+
+    ;step 5    
+    (gimp-image-select-color image CHANNEL-OP-REPLACE layer '(0 0 0))
+    (gimp-selection-invert image)
+
+    ;step 6        
+    (set! layer2 (car (gimp-layer-new image width (+ height (/ text-height 2)) RGB-IMAGE "2" 100 LAYER-MODE-NORMAL-LEGACY)))
+    (gimp-image-insert-layer image layer2 0 0)
+
+    ;step 7        
+	(gimp-context-set-gradient gradient) 
+	(gimp-edit-blend layer2 BLEND-CUSTOM LAYER-MODE-NORMAL-LEGACY GRADIENT-LINEAR 100 0 REPEAT-NONE 
+        FALSE TRUE 5 .1 TRUE width 0 width (+ height (/ text-height 2)))
+    
+    ;step 8        
+    (plug-in-bump-map RUN-NONINTERACTIVE image layer2 layer 120 25 7 5 5 0 0 TRUE FALSE 2)
+   
+    ;step 9       
+    (gimp-curves-spline layer2 HISTOGRAM-VALUE 8 (color-curve))
+            
+    (gimp-image-scale image new-width (/ (* new-width (+ height (/ text-height 2))) width))
+      
+    (gimp-display-new image)
+    (gimp-image-clean-all image)
+    )
+)
+
+//ALAP BEÁLLÍTÁS
+;(script-fu-bhax-chrome-border "Bátf41 Haxor Stream" "Sans" 160 1920 1080 400 '(255 0 0) "Crown molding" 7)
+
+//SCRIPT HELYÉNEK MEGADÁSA
+(script-fu-menu-register "script-fu-bhax-chrome-border" 
+    "<Image>/File/Create/BHAX"
+)
+        ]]>
+        </programlisting>    
     </section>        
 
     <section>
@@ -62,7 +207,12 @@
         </para>
         <para>
             
-        </para>            
+        </para>
+        <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/mandala.png" width="70%" format="PNG"/>
+              </imageobject>
+        </mediaobject>            
     </section>        
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 </chapter>                
