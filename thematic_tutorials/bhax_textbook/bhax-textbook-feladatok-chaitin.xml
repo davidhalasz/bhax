@@ -14,11 +14,24 @@
             Megoldás videó: <link xlink:href="https://youtu.be/z6NJE2a1zIA">https://youtu.be/z6NJE2a1zIA</link>      
         </para>
         <para>
+            A matematikában az n szám faktoriálisának nevezzük az első n pozitív egész szám szorztatát. A programozási nyelvben ez a függvény megoldható iteratív és rekurzív módon is. 
             A feladat megoldásához szükségünk lesz a GNU képszerkesztő programra, amit az Ubuntu szoftverletöltő központből tölthető le.
             Miután elindítottuk a programot, az ablak felső menüsorából válasszuk ki az <function>Szűrők -> ScriptFu -> Konzol</function> 
-            menüpontot.             
+            menüpontot. Most vizsgáljuk meg először iteratívan a programot. A define segítségével elnevezzük a függvényt factorial-nak. 
+            Ez a függvény azért iteratív, mert egy számlálót helyezünk el és ciklusonként folyamatosan megismételjük 
+            a folyamatot, egészen addig, amíg el nem éri az adott n számot.              
         </para>
+        <screen>
+            (define (factorial n)
+                (define (iter product counter)
+                    (if (> counter n)
+                        product
+                        (iter (* counter product) (+ counter 1))
+                    ))
+                (iter 1 1))
+        </screen>
         <para>
+            Most vizsgáljuk meg rekurzívan. Egy függvényt akkor nevezünk rekurzívnak, ha a függvény törzsében újra meghívjuk magát a függvényt. 
             A rekurzív faktoriális megoldásához írjuk be, hogy: <function>(define (fakt n) (if (&lt; n 1) 1 (* n(fakt(- n 1 )))))</function> 
             A define azt jelenti, hogy jelen esetben a függvényhívás neve <function>(fakt n)</function> lesz.  Ezután if-el megvizsgáljuk, hogy a beírt szám nagyobb-e 1-nél.
             Ha igen, akkor írassuk ki az egyest, ellenkező esetben végezzük el rekurzívan a faktoriális számítást. Így tehát ha beírjuk, hogy <function>(fakt 4)</function>

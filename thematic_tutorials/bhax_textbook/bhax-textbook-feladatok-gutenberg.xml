@@ -299,7 +299,32 @@ A paraméter átadás is különböző módon történhet (érték-, cím-, ered
                 }
             hiba:
                 számold fel a zavart
-        </screen>    
+        </screen>
+        <para>
+            9. kivételkezelés
+        </para>
+        <para>
+            A kivételkezelési eszközrendszerrel végezhetjük el a megszakítások kezelését. A kivételek okozzák a megszakításokat és a kivételkezelést a program végzi, ha a kivétel bekövetkezik.
+            A Java-ban a kivételkezelés Adaszerű elveket vall. Először is a program működése közben módszerek hívódnak meg, amely során ha bekövetkezik egy esemény, akkor egy kivétel-objektum jön létre.
+            Ez a kivétel-objektum két részből áll: kivétel-osztályok és azok kivétel-példányai. Ha ez az objektum létrejön, akkor a módszer eldobja a kivételt, ami a Java virtuális gép hatáskörébe kerül át, majd az 
+            utasítás befejezése után bekövetkezik a kivételkezelés. A Java virtuális gép (JVM) feladata lesz a megfelelő kivételkezelő megkeresése, aminek feltétele, hogy a kivételkezelő típusa megegyezzem a kivétel típusával, továbbá
+             a kivételkezelő őse a kivétel típusának.
+            A Javaban a kivételkezelő tulajdonképpen egy blokk, ami tetszőleges kódrészlethez köthető. A kivételeknek pedig két nagy csoportja van: 
+        </para>
+        <itemizedlist mark='opencircle'>
+            <listitem>
+                <para>
+                    Ellenőrzött kivétel: egy metódusban felléphet és a programozónak mindig specifikálnia kell, vagy ell kell kapnia őket. Mindig ezt javasolt használni. Használata mindig a módszer fejének végén történik a 
+                    <function>THROWS kivételnév_lista</function> utasítás segítségével. Itt lesznek felsorolva az ellenőrzött, de nem kezelt kivételek. Az objektumok eldobása a THROW utasítás segítségével történik, de csak a java.lang 
+                    csomagban definiált Throwable obektumaira vonatkoznak ezek. 
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Nem ellenőrzött kivétel: akkor van szó erről, amikor egy ellenőrzés vagy kellemetlen vagy túl nagy kódrészletet eredményezne, esetleg a programozó nem tud mit kezdeni a kivételekkel. Ilyenkor az ellenőrzés elengedésre kerül.
+                </para>
+            </listitem>
+        </itemizedlist>  
     </section>        
     <section>
         <title>Programozás</title>
@@ -431,6 +456,66 @@ A paraméter átadás is különböző módon történhet (érték-, cím-, ered
             Ezek közül a leggyakrabban használt konverzió a statikus. A konstans típuskonverzióra jellemző, hogy egyedül ez képes konstans típust nem konstanssá tenni, illetve volatie típust nem azzá. 
             A dinamikus típuskonverzió az öröklési hierarchián lefelé történő konverziókhoz használjuk. Ez futási időben ellenőrzi, hogy végrehajtható e a konverzióe, ezért egy virtuális függvény kell tartalmaznia. 
             Az újraértelmező típuskonverzió pedig az implementáció konverziók esetén alkalmazható. Általában a pointer típusát változtatjuk meg ebben az esetben.
+        </para>
+        <para>
+            <emphasis role="strong">Kivételkezelés</emphasis>
+        </para>
+        <para>
+            A C++ nyelvben a kivételkezelés nemcsak hiba, hanem bármilyen kivételes eset esetén használható. Lényege, hogy ha hibát detektálunk valahol, akkor a program futása a kivételkezelő ágon folytatódik tovább. 
+            Az alábbi kódrészletben ha a program futtatása során, a felhasználó 0-át ad meg, akkor hibát dobunk. Ehhez egy try-catch blokkot használunk. A try blokkba írjuk a normál kódot és a catch ágba a hibakezelő kódot. 
+            Ha helyes számot adtunk meg, akkor a try blokkban valamennyi utasítás lefut, kiíratjuk a szöveget, majd a catch blokkot átlépve folytatódik tovább folyamat. Ha a védett blokkban hibát találunk, akkor a Throw kulcsszóval kivételt 
+            dobunk, ami jelen esetben egy const char* típusú szöveg. Ezután egyből a catch ágba kerül, itt fontos megjegyezni, hogy több catch ág is lehet. Annak eldöntése, hogy melyik lesz aktiválva, a catch-nak átadott paraméter típusától függ. 
+            Ha a paraméter kompatibilis a kapott kivétellel, akkor azt mondjuk, hogy elkapja a dobott kivételt. Ezután lefut a catch törzse, majd innen folytatódik tovább a folyamat. Ha egy kivételt nem kapunk el, akkor az egy kezeletlen kivétel. Ebben 
+            az esetben az alapértelmezett könyvtári terminate függvény hívódik meg.
+        </para>
+        <programlisting language="c++"><![CDATA[
+            #include <iostream>
+            using namespace std;
+
+            int main() {
+                try {
+                    double d;
+                    cout << "Adj meg egy nem nulla számot: ";
+                    cin >> d;
+                    if (d == 0)
+                        throw "A beírt szám nem lehet nulla.";
+                    cout << "A szám reciproka: " << 1/d << endl;
+                }
+                catch (const char* exc) {
+                    cout << "Hiba! A hibaüzenet: " << exc << endl;
+                }
+                cout << "Done." << endl;
+            }
+            ]]>
+        </programlisting>
+        <para>
+            A hívási verem visszacsévélésének nevezzük azt a folyamatot, amikor egy kivétel dobásakor annak elkapásáig a függvények hívási láncában felfelé haladva az egyes függvények lokális változói felszabadulnak. Példa: 
+        </para>
+        <programlisting language="c++"><![CDATA[
+            int main() {
+                try {
+                    f1();
+                }
+                catch (const char* errorText) {
+                    cerr << errorText << end1;
+                }
+            }
+
+            void f1() {
+                Fifo fifo; 
+                f2();
+                ...
+            }
+
+            void f2() {
+                int i = 1;
+                throw "error1";
+            }
+            ]]>
+        </programlisting>
+        <para>
+            Először tehát az f2() függvény kivételt dob, ezért az f2()-ben definiált i likális változó felszabadul. Az f1()-ben lefoglalt Fifo fifo objektum is felszabadul és meghívódik a destruktora, majd végül lefut a main függvényben 
+            lévő catch blokk.
         </para>
     </section>        
 </chapter>                

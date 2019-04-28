@@ -185,14 +185,13 @@ if __name__ == '__main__':
             Python            
         </para>
         <para>
-            Megoldás videó:
+           Ennél a feladatnál fel szeretném használni a passzolási lehetőséget, amit az MNIST program minimum level 6 szint elérésével lehetett kapni. Az általam elért eredményt az alábbi kép tartalmazza:      
         </para>
-        <para>
-            Megoldás forrása:                
-        </para>
-        <para>
-            Tanulságok, tapasztalatok, magyarázat...
-        </para>
+        <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/sminst2.png" width="60%" format="PNG"/>
+              </imageobject>
+        </mediaobject>
     </section>        
                 
     <section>
@@ -206,7 +205,7 @@ if __name__ == '__main__':
             Megoldás forrása:                
         </para>
         <para>
-           A Minecraft Malmo program telepítéséhez szükségünk lesz egy pre-build csomagra, amit a https://github.com/Microsoft/malmo/releases oldalról tölthetjük le. A kicsomagolás után 
+           A Minecraft Malmo program telepítéséhez szükségünk lesz egy pre-build csomagra, amit a <link xlink:href="https://github.com/Microsoft/malmo/releases">https://github.com/Microsoft/malmo/releases</link> oldalról tölthetjük le. A kicsomagolás után 
            lépjünk be a Minecraft mappába és futtassuk a launchClient.sh fájlt. Ez a folyamat egy kis időbe fog telni, de 95%-nál elindul a program és ennél tovább nem fog növekedni. 
            Ha ezzel megvagyunk lépjünk be a Python_Examples mappába és futtassuk a tutorial_1.py python fájlt.
         </para>
