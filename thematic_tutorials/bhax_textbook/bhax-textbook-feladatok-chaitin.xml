@@ -14,12 +14,18 @@
             Megoldás videó: <link xlink:href="https://youtu.be/z6NJE2a1zIA">https://youtu.be/z6NJE2a1zIA</link>      
         </para>
         <para>
+            A LISP 1950-es évek második felében jött létre. Ez egy olyan interpreteres, interaktív nyelvi rendszer, ameyet beépített függvények alkotnak. Az évek során számos nyelvjárással gazdagodott. A legelterjedtebb változatai a Common Lisp és a Scheme nyelvek.
+            Ebben a feladatban most ennek a nyelvnek a segítségével írunk egy programot, ami kiírja egy adott szám faktoriális értékét.
             A matematikában az n szám faktoriálisának nevezzük az első n pozitív egész szám szorztatát. A programozási nyelvben ez a függvény megoldható iteratív és rekurzív módon is. 
             A feladat megoldásához szükségünk lesz a GNU képszerkesztő programra, amit az Ubuntu szoftverletöltő központből tölthető le.
-            Miután elindítottuk a programot, az ablak felső menüsorából válasszuk ki az <function>Szűrők -> ScriptFu -> Konzol</function> 
-            menüpontot. Most vizsgáljuk meg először iteratívan a programot. A define segítségével elnevezzük a függvényt factorial-nak. 
-            Ez a függvény azért iteratív, mert egy számlálót helyezünk el és ciklusonként folyamatosan megismételjük 
-            a folyamatot, egészen addig, amíg el nem éri az adott n számot.              
+            Miután elindítottuk a programot, az ablak felső menüsorából válasszuk ki az <function>Szűrők -> Script-Fu -> Konzol</function> 
+            menüpontot. Most vizsgáljuk meg először iteratívan a programot. 
+            Ez a program azért iteratív, mert egy számlálót helyezünk el és ciklusonként folyamatosan megismételjük 
+            a folyamatot, egészen addig, amíg el nem éri az adott n számot. A nyelvben nincs különbség kifejezések és utasítások között, így mindent kifejezés formájában írunk le.
+            Ha megfigyeljük az alábbi kódot, akkor szembetűnő lehet számunkra a rengeteg zárójel. Ez azért van, mert a LISP-ben egy listát zárójelekkel határolunk.
+            A define segítségével elnevezzük a függvényt factorial-nak és a mellete lévő n pedig majd a program futtatása során egy általunk megadott szám lesz.
+            Másik szokatlan dolog még, hogy a számtani műveletek megadása során prefix jelölést használunk, azaz jelen esetben a <function>></function> jel mindig az első és utána jönnek a számok.
+            Ha bemásoltuk a programot a Script-fu-ba és beírjuk még, hogy <function>(factorial 4)</function>, akkor megkapjuk az eredményt.
         </para>
         <screen>
             (define (factorial n)
@@ -33,9 +39,9 @@
         <para>
             Most vizsgáljuk meg rekurzívan. Egy függvényt akkor nevezünk rekurzívnak, ha a függvény törzsében újra meghívjuk magát a függvényt. 
             A rekurzív faktoriális megoldásához írjuk be, hogy: <function>(define (fakt n) (if (&lt; n 1) 1 (* n(fakt(- n 1 )))))</function> 
-            A define azt jelenti, hogy jelen esetben a függvényhívás neve <function>(fakt n)</function> lesz.  Ezután if-el megvizsgáljuk, hogy a beírt szám nagyobb-e 1-nél.
+            Jelen esetben a függvényhívás neve <function>(fakt n)</function> lesz.  Ezután if-el megvizsgáljuk, hogy a beírt szám nagyobb-e 1-nél.
             Ha igen, akkor írassuk ki az egyest, ellenkező esetben végezzük el rekurzívan a faktoriális számítást. Így tehát ha beírjuk, hogy <function>(fakt 4)</function>
-            Akkor megkapjuk eredményül a 24-et.
+            akkor megkapjuk eredményül a 24-et.
         </para>
         <mediaobject>
               <imageobject>
@@ -74,15 +80,11 @@
               </imageobject>
         </mediaobject>
         <para>
-            A program felépítését általában 3 részre lehet osztani: A szkript elemek definiálása, az alap beállítások megadása és végül hogy hol legyen a szkript elérhető a programon belül.
+            A program felépítését általában 3 részre lehet osztani: A fő függvény, ami a munkát végzi, az alap beállítások megadása és végül hogy hol legyen elérhető a kiegészítő modul a programon belül.
             A script elemek definiálása során a script-fu-bhax-chrome-border nevet adjuk, melynek paraméterei a sorba a következő: text (szöveg), font (betűtípus), fontsize (betűméret), width (hosszúság), height (magasság), new width (új hosszúság), color (szín), gradient (átmenet), border-size (szegély mérete). 
-            Itt deklaráljuk tehát a lisp programozási nyelvvel az adatokat. Ezután pontosvesszővel kezdve a <function>script-fu-bhax-chrome-border</function>-nek megadunk egy alap beállítást 
-            , azaz paramétereit, például a szöveg legyen most "PROGRAMOZÁS", a betűstílus Sans, a betűméret 160px és így tovább.
+            Itt deklaráljuk tehát a lisp programozási nyelvvel az adatokat. A GIMP saját könyvtárait használjuk arra, hogy az képkezelő adatokat megadhassuk. Ez a függvényhívás mindig <function>gimp</function> szóval kezdődik, mint például: <function>gimp-text-get-extents-fontname</function>.
         </para>
-        <para>
-            Ahhoz, hogy a GIMP porgramon belül elő is tudjuk hívni a scriptet, regisztrálnunk kell. Ehhez a script-fu-menu-register függvényt hívjuk segítségül. 2 paramétert kell átadni neki: az egyik 
-            a script neve, amit már fentebb definiáltunk és hogy melyik menüpontból érhessük majd el a programon belül. 
-        </para>
+        
         <programlisting><![CDATA[
 //SZKRIPT ELEMEK DEFINIÁLÁSA
 
@@ -194,10 +196,20 @@
     (gimp-image-clean-all image)
     )
 )
-
-//ALAP BEÁLLÍTÁS
-;(script-fu-bhax-chrome-border "Bátf41 Haxor Stream" "Sans" 160 1920 1080 400 '(255 0 0) "Crown molding" 7)
-
+ ]]>
+        </programlisting> 
+        <para>
+            A <function>script-fu-bhax-chrome-border</function>-nek megadunk egy alap beállítást, azaz paramétereit, például a szöveg legyen most "PROGRAMOZÁS", a betűstílus Sans, a betűméret 160px és így tovább.
+        </para>
+<programlisting><![CDATA[
+;(script-fu-bhax-chrome-border "PROGRAMOZÁS" "Sans" 160 1920 1080 400 '(255 0 0) "Crown molding" 7)
+ ]]>
+        </programlisting> 
+        <para>
+            Ahhoz, hogy a GIMP porgramon belül elő is tudjuk hívni a scriptet, regisztrálnunk kell a modult. Ehhez a script-fu-menu-register függvényt hívjuk segítségül. 2 paramétert kell átadni neki: az egyik 
+            a script neve, amit már fentebb definiáltunk és hogy melyik menüpontból érhessük majd el a programon belül. 
+        </para>
+        <programlisting><![CDATA[
 //SCRIPT HELYÉNEK MEGADÁSA
 (script-fu-menu-register "script-fu-bhax-chrome-border" 
     "<Image>/File/Create/BHAX"
@@ -219,13 +231,187 @@
             Megoldás forrása: <link xlink:href="https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/GIMP_Lisp/Mandala">https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/GIMP_Lisp/Mandala</link>               
         </para>
         <para>
-            
+            Ebben a feladatban olyan programot vizsgálunk meg, amelynek segítségével egy mandalát rajzolunk a Gimp-ben. 
         </para>
+        <para>
+            A <function>let*</function> egy beépített kulcsszó, ennek segítségével lehet lokális változókat megadni. Például az alábbi kódcsipetben definiáltuk a text-width változót, ahol majd a szöveg méretét adjuk meg.
+        </para>
+        <programlisting><![CDATA[
+(define (elem x lista)
+
+    (if (= x 1) (car lista) (elem (- x 1) ( cdr lista ) ) )
+
+)
+
+(define (text-width text font fontsize)
+(let*
+    (
+        (text-width 1)
+    )
+    (set! text-width (car (gimp-text-get-extents-fontname text fontsize PIXELS font)))    
+
+    text-width
+    )
+)
+
+(define (text-wh text font fontsize)
+(let*
+    (
+        (text-width 1)
+        (text-height 1)
+    )
+    ;;;
+    (set! text-width (car (gimp-text-get-extents-fontname text fontsize PIXELS font)))    
+    ;;; ved ki a lista 2. elemét
+    (set! text-height (elem 2  (gimp-text-get-extents-fontname text fontsize PIXELS font)))    
+    ;;;    
+    
+    (list text-width text-height)
+    )
+)
+
+        ]]>
+        </programlisting>
+        <para>
+            A fő függvénynek a <function>script-fu-bhax-mandala</function> nevet adtuk, aminek 8 paramétere van. Itt is lokális változókat adunk meg. Az első változónk neve <function>image</function> lesz és ebben a kódsorban a <function>car</function>
+             azt mondja, hogy az utána következő listában a kiveszi az első elemet. Fontos, hogy itt az első elem nem a <function>gimp-image-new</function> lesz, mert ez egy függvényhívás, ezért az utána következő elemet veszi ki.
+
+        </para>
+        <programlisting><![CDATA[
+(define (script-fu-bhax-mandala text text2 font fontsize width height color gradient)
+(let*
+    (
+        (image (car (gimp-image-new width height 0)))
+        (layer (car (gimp-layer-new image width height RGB-IMAGE "bg" 100 LAYER-MODE-NORMAL-LEGACY)))
+        (textfs)
+        (text-layer)
+        (text-width (text-width text font fontsize))
+        ;;;
+        (text2-width (car (text-wh text2 font fontsize)))
+        (text2-height (elem 2 (text-wh text2 font fontsize)))
+        ;;;
+        (textfs-width)
+        (textfs-height)
+        (gradient-layer)
+    )
+
+    (gimp-image-insert-layer image layer 0 0)
+
+    (gimp-context-set-foreground '(0 255 0))
+    (gimp-drawable-fill layer FILL-FOREGROUND)
+    (gimp-image-undo-disable image) 
+
+    (gimp-context-set-foreground color)
+
+    (set! textfs (car (gimp-text-layer-new image text font fontsize PIXELS)))
+    (gimp-image-insert-layer image textfs 0 -1)
+    (gimp-layer-set-offsets textfs (- (/ width 2) (/ text-width 2))  (/ height 2))
+    (gimp-layer-resize-to-image-size textfs)
+
+    (set! text-layer (car (gimp-layer-new-from-drawable textfs image)))
+    (gimp-image-insert-layer image text-layer 0 -1)
+    (gimp-item-transform-rotate-simple text-layer ROTATE-180 TRUE 0 0)
+    (set! textfs (car(gimp-image-merge-down image text-layer CLIP-TO-BOTTOM-LAYER)))
+
+    (set! text-layer (car (gimp-layer-new-from-drawable textfs image)))
+    (gimp-image-insert-layer image text-layer 0 -1)
+    (gimp-item-transform-rotate text-layer (/ *pi* 2) TRUE 0 0)
+    (set! textfs (car(gimp-image-merge-down image text-layer CLIP-TO-BOTTOM-LAYER)))
+
+    (set! text-layer (car (gimp-layer-new-from-drawable textfs image)))
+    (gimp-image-insert-layer image text-layer 0 -1)
+    (gimp-item-transform-rotate text-layer (/ *pi* 4) TRUE 0 0)
+    (set! textfs (car(gimp-image-merge-down image text-layer CLIP-TO-BOTTOM-LAYER)))
+    
+    (set! text-layer (car (gimp-layer-new-from-drawable textfs image)))
+    (gimp-image-insert-layer image text-layer 0 -1)
+    (gimp-item-transform-rotate text-layer (/ *pi* 6) TRUE 0 0)
+    (set! textfs (car(gimp-image-merge-down image text-layer CLIP-TO-BOTTOM-LAYER)))    
+    
+    (plug-in-autocrop-layer RUN-NONINTERACTIVE image textfs)
+    (set! textfs-width (+ (car(gimp-drawable-width textfs)) 100))
+    (set! textfs-height (+ (car(gimp-drawable-height textfs)) 100))
+        
+	(gimp-layer-resize-to-image-size textfs)
+    
+    (gimp-image-select-ellipse image CHANNEL-OP-REPLACE (- (- (/ width 2) (/ textfs-width 2)) 18) 
+        (- (- (/ height 2) (/ textfs-height 2)) 18) (+ textfs-width 36) (+ textfs-height 36))
+	(plug-in-sel2path RUN-NONINTERACTIVE image textfs)
+        
+    (gimp-context-set-brush-size 22)
+    (gimp-edit-stroke textfs)
+    
+    (set! textfs-width (- textfs-width 70))
+    (set! textfs-height (- textfs-height 70))
+    
+    (gimp-image-select-ellipse image CHANNEL-OP-REPLACE (- (- (/ width 2) (/ textfs-width 2)) 18) 
+        (- (- (/ height 2) (/ textfs-height 2)) 18) (+ textfs-width 36) (+ textfs-height 36))
+	(plug-in-sel2path RUN-NONINTERACTIVE image textfs)
+        
+    (gimp-context-set-brush-size 8)
+    (gimp-edit-stroke textfs)
+        
+    (set! gradient-layer (car (gimp-layer-new image width height RGB-IMAGE "gradient" 100 LAYER-MODE-NORMAL-LEGACY)))
+    
+    (gimp-image-insert-layer image gradient-layer 0 -1)
+	(gimp-image-select-item image CHANNEL-OP-REPLACE textfs)
+	(gimp-context-set-gradient gradient) 
+	(gimp-edit-blend gradient-layer BLEND-CUSTOM LAYER-MODE-NORMAL-LEGACY GRADIENT-RADIAL 100 0 
+	REPEAT-TRIANGULAR FALSE TRUE 5 .1 TRUE (/ width 2) (/ height 2) (+ (+ (/ width 2) (/ textfs-width 2)) 8) (/ height 2))
+	
+	(plug-in-sel2path RUN-NONINTERACTIVE image textfs)
+
+    (set! textfs (car (gimp-text-layer-new image text2 font fontsize PIXELS)))
+    (gimp-image-insert-layer image textfs 0 -1)
+    (gimp-message (number->string text2-height))
+    (gimp-layer-set-offsets textfs (- (/ width 2) (/ text2-width 2)) (- (/ height 2) (/ text2-height 2)))
+		
+    ;(gimp-selection-none image)
+    ;(gimp-image-flatten image)
+    
+    (gimp-display-new image)
+    (gimp-image-clean-all image)
+    )
+)
+
+        ]]>
+        </programlisting> 
+        <para>
+        Ahhoz, hogy a kiegészítő modul alapbeállításokkal rendelkezzen, a <function>script-fu-register</function>-ben adjuk meg. Például az első paraméter, azaz a <function>Text</function> most "Programozás" lesz, a <function>Font</function> "Sans" és így tovább.
+        A menübe történő implementálás itt is ugyanúgy történik, ahogy az előző említettem. 
+        </para>
+        <programlisting><![CDATA[
+(script-fu-register "script-fu-bhax-mandala"
+    "Mandala9"
+    "Creates a mandala from a text box."
+    "Norbert Bátfai"
+    "Copyright 2019, Norbert Bátfai"
+    "January 9, 2019"
+    ""
+    SF-STRING       "Text"      "Programozás"
+    SF-STRING       "Text2"     "BHAX"
+    SF-FONT         "Font"      "Sans"
+    SF-ADJUSTMENT   "Font size" '(100 1 1000 1 10 0 1)
+    SF-VALUE        "Width"     "1000"
+    SF-VALUE        "Height"    "1000"
+    SF-COLOR        "Color"     '(255 0 0)
+    SF-GRADIENT     "Gradient"  "Deep Sea"
+)
+(script-fu-menu-register "script-fu-bhax-mandala" 
+    "<Image>/File/Create/BHAX"
+)
+
+        ]]>
+        </programlisting> 
         <mediaobject>
               <imageobject>
                 <imagedata fileref="img/mandala.png" width="70%" format="PNG"/>
               </imageobject>
-        </mediaobject>            
+        </mediaobject>
+        <programlisting><![CDATA[
+        
+        ]]>
+        </programlisting>               
     </section>        
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 </chapter>                
