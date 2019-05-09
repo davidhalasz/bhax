@@ -28,6 +28,10 @@
         <para>
             Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/Schwarzenegger/szoftmax.py">https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/Schwarzenegger/szoftmax.py</link>   
         </para>
+         <caution>
+            <title>Megjegyzés</title>
+            <para>A feladatban tutoráltam Fürjes-Beke Pétert</para>
+        </caution>
         <para>
             Ebben a feladatban egy olyan programot vizsgálunk meg, amely egy adott 28x28 méretű kép alapján megtippeli, hogy hanyas szám látható rajta.
             Ezt egy mesterséges neurális hálók segítségével éri el. Ezek működése egy természetbeli folyamat modellezésén alapulnak: az emberi agyhoz tartozó neuronok és azok folyamatait utánozzák.
@@ -172,11 +176,14 @@ if __name__ == '__main__':
         <para>
             Az alábbi képernyőmentés mutatja, mi történik a program futtatása után. Ezek szerint a hálózatunk tesztelése 0,9205 pontosságú lett és fel is ismerte a képen lévő számokat, hiba nélkül.
         </para>
+        <figure>
+        <title>Hálózat tesztelése</title>
          <mediaobject>
               <imageobject>
                 <imagedata fileref="img/mnist1.png" width="100%" format="PNG"/>
               </imageobject>
         </mediaobject>
+        </figure>
     </section>        
     
     <section>
@@ -187,11 +194,14 @@ if __name__ == '__main__':
         <para>
            Ennél a feladatnál fel szeretném használni a passzolási lehetőséget, amit az MNIST program minimum level 6 szint elérésével lehetett kapni. Az általam elért eredményt az alábbi kép tartalmazza:      
         </para>
+        <figure>
+        <title>SMNIST Eredmény</title>
         <mediaobject>
               <imageobject>
                 <imagedata fileref="img/sminst2.png" width="60%" format="PNG"/>
               </imageobject>
         </mediaobject>
+        </figure>
     </section>        
                 
     <section>
@@ -202,7 +212,7 @@ if __name__ == '__main__':
             Megoldás videó: <link xlink:href="https://youtu.be/bAPSu3Rndi8">https://youtu.be/bAPSu3Rndi8</link>      
         </para>
         <para>
-            Megoldás forrása:                
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/Schwarzenegger/tutorial_1.py">https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/Schwarzenegger/tutorial_1.py</link>               
         </para>
         <para>
            A Minecraft Malmo program telepítéséhez szükségünk lesz egy pre-build csomagra, amit a <link xlink:href="https://github.com/Microsoft/malmo/releases">https://github.com/Microsoft/malmo/releases</link> oldalról tölthetjük le. A kicsomagolás után 
@@ -278,11 +288,14 @@ if __name__ == '__main__':
         my_mission = MalmoPython.MissionSpec(missionXML,True)
         ]]>
         </programlisting>
+        <figure>
+        <title>Minecraft</title>
         <mediaobject>
               <imageobject>
                 <imagedata fileref="img/minec.png" width="100%" format="PNG"/>
               </imageobject>
         </mediaobject>
+        </figure>
     </section>        
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 </chapter>                

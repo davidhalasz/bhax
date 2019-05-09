@@ -123,11 +123,14 @@ main (int argc, char **argv)
             A fenti kódcsipet a <function>polargentszt.cpp</function> fájlban található. Ez lesz a fő fájl, azaz majd ezt kell lefordítanunk és futtatni. 
             For ciklussal megadjuk, hogy a program tízszer fusson le és írassa ki a kapott számításokat. Így tehát a program futtatása után megkapjuk a terminálban a következő kimenetet:
         </para>
+        <figure>
+        <title>A polargenteszt eredménye</title>
         <mediaobject>
               <imageobject>
                 <imagedata fileref="img/polargenteszt.png" width="60%" format="PNG"/>
               </imageobject>
         </mediaobject>
+        </figure>
         <para>
             Most nézzük meg ugyanezt a programot Java-ban. Ha összehasonlítjuk az előző programmal, akkor láthatjuk, hogy szembetűnő változás nincs. 
             Talán csak annyi, hogy a Java verzió sokkal letisztultabbnak tűnik. A Java alapból osztályokkal dolgozik, tehát itt programozni csak az objektum orientált paradigma mentén lehet. 
@@ -176,11 +179,14 @@ public class PolarGenerator {
             állományában a <function>java/util/Random.java</function> forrásban. Ennek a kódcsipetnek a megoldása nagyon hasonlít a miénkhez, amit az alábbi 
             képen is megfigyelhetjük:
         </para>
+        <figure>
+        <title>A JAVA JDK kódcsipete</title>
         <mediaobject>
               <imageobject>
                 <imagedata fileref="img/javasrc.png" width="90%" format="PNG"/>
               </imageobject>
         </mediaobject>
+        </figure>
     <para>
         A JDK-ban a <function>haveNextNextGaussian</function> és a <function>nextNextGaussian</function> a fenti nextGaussian() függvény felett van definiálva,
         mégpedig úgy,hogy a változók private módban vannak megadva, azaz csak a saját osztálya számára lesz látható, más olyszály azonban nem fog tudni hozzáférni az adathoz:
@@ -412,11 +418,14 @@ szabadit (BINFA_PTR elem)
         A program futtatása és a kapott eredményt az alábbi képen láthatjuk. Eszerint a b.txt-ben található 11 karakterből álló bináris sorból végül 6-ot tároltunk el
         és a fánk mélysége 3 lett. 
     </para>
+    <figure>
+    <title>Az LZW fa C-ben</title>
     <mediaobject>
             <imageobject>
                 <imagedata fileref="img/binfac.png" width="60%" format="PNG"/>
             </imageobject>
     </mediaobject>
+    </figure>
     </section>        
         
     <section>
@@ -434,11 +443,14 @@ szabadit (BINFA_PTR elem)
             Ellentétben a lineáris adatstruktúrákkal, amelyeknek csak egy logikai módja van, a fabejárás történhet 
             pre- és postorder módon. Az alábbi kis ábra és a hozzá tartozó szöveges magyarázat szemlélteti az in-, post és preorder közötti különbséget:
         </para>
+        <figure>
+    <title>Fabejárás</title>
          <mediaobject>
             <imageobject>
                 <imagedata fileref="img/prepost.png" width="40%" format="PNG"/>
             </imageobject>
         </mediaobject>
+        </figure>
         <para>
             <itemizedlist mark='opencircle'>
                 <listitem>
@@ -487,11 +499,14 @@ kiir (BINFA_PTR elem)
     <para>
         A program futtatása után az alábbi lesz az eredmény:
     </para>
+    <figure>
+    <title>Az LZW preorder bejárása</title>
     <mediaobject>
             <imageobject>
                 <imagedata fileref="img/preorder.png" width="60%" format="PNG"/>
             </imageobject>
     </mediaobject>
+    </figure>
     <para>
         Végül pedig nézzük meg a postorder eredményét:
     </para>
@@ -517,11 +532,14 @@ kiir (BINFA_PTR elem)
 ...
     ]]>
     </programlisting>
+    <figure>
+    <title>Az LZW postorder bejárása</title>
     <mediaobject>
             <imageobject>
                 <imagedata fileref="img/postorder.png" width="60%" format="PNG"/>
             </imageobject>
     </mediaobject>
+    </figure>
     </section>        
                         
     <section>
@@ -533,8 +551,16 @@ kiir (BINFA_PTR elem)
         <para>
             Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/welch/binfa/binfa%20c++/z3a7.cpp">https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/welch/binfa/binfa%20c++/z3a7.cpp</link>                 
         </para>
+        <caution>
+            <title>Megjegyzés</title>
+            <para>A feladat megoldásában tutorként részt vett: Fürjes-Beke Péter</para>
+        </caution>
         <para>
-            Ebben a feladatban a C binfás programunkat fogjuk átírni C++ verzióba. Jelen esetünkben van egy <function>LZWBinFa</function> osztályunk,azon belül egy <function>Csomopont</function> osztály továbbá egy <function>void usage (void)</function> és az elmaradhatatlan <function>int main()</function> függvényünk is. Az LZWBinFa fa egy pointer, amely mindig az épülő LZW fa azon csomópontjára mutat, amit az input feldolgozása során az LZW algoritmus logikája diktál. 
+            Ebben a feladatban a C binfás programunkat fogjuk átírni C++ verzióba. Jelen esetünkben van egy <function>LZWBinFa</function> osztályunk,azon belül egy <function>Csomopont</function> osztály továbbá egy <function>void usage (void)</function> és az elmaradhatatlan <function>int main()</function> 
+            függvényünk is. Az LZWBinFa fa egy pointer, amely mindig az épülő LZW fa azon csomópontjára mutat, amit az input feldolgozása során az LZW algoritmus logikája diktál. 
+            A kódcsipetben  láthatunk egy <function>void operator</function>-t, aminek célja, hogy a bemenetként kapott 
+            elemeket beépítjük a fába. Itt döntjük el, hogy a kapott paraméter 0 vagy 1-es-e és attól függően foglalunk le
+            a <function>new</function> paranccsal új tárterületet.
         </para>
         <programlisting language="c++"><![CDATA[
 #include <iostream>
@@ -610,7 +636,8 @@ public:
         A Csomopont osztályba implementáljuk 
         a Csomopont konstruktort, ami paraméter nélküli lesz és itt hozza létre a '/' karakterrel kezdődő gyökér csomópontját. Ez lesz tehát az alapértelmezett, 
         de, ha valami betűvel hívjuk, akkor '/' helyett azt teszi be és a két gyermekre mutató mutatót pedig mindkét esetben nullára állítjuk. Ezután a <function>nullasGyermek</function> és <function>egyesGyermek</function>
-        függvényekben kérdezzük le az aktuális csomópont bal és jobb oldali gyermekét, <function>ujNullasGyermek</function> és a <function>ujEgyesGyermek</function> függvényekben. Pontosan ugyanúgy ahogy már a C programunknál megismertük. Ami számunkra most újdonság, az, hogy  a Csomopont osztályban van egy private típusú kódrészlet is.
+        függvényekben kérdezzük le az aktuális csomópont bal és jobb oldali gyermekét, <function>ujNullasGyermek</function> és a <function>ujEgyesGyermek</function> függvényekben. 
+        Pontosan ugyanúgy ahogy már a C programunknál megismertük. Ami számunkra most újdonság, az, hogy  a Csomopont osztályban van egy private típusú kódrészlet is.
         Ez azt jelenti, hogy az LZWBinfa ezekhez az adatokhoz nem közvetlenül fér hozzá, hanem csak lekérdező üzenetekkel érheti el őket.
     </para>
     <programlisting language="c++"><![CDATA[
@@ -658,6 +685,15 @@ private:
         Csomopont (const Csomopont &);
         Csomopont & operator= (const Csomopont &);
     };
+]]>
+</programlisting>
+<para>
+Ezután létrehozunk egy fa mutatót, ami mindig a csomópontra mutat.
+Van még nekünk egy protected osztályunk is, aminek szerepe, hogy az LZWBinFa osztályai el tudják érni az itt lévő adatokat, de ezen kívül más nem fér hozzá. 
+Ez tartalmazza a mélység, átlag és szórás kiszámításához szükséges függvényeket.
+</para>
+
+<programlisting language="c++"><![CDATA[
 
     Csomopont *fa;
     int melyseg, atlagosszeg, atlagdb;
@@ -704,10 +740,10 @@ protected:
 ]]>
 </programlisting>
 <para>
-    Az osztály definálása után meghatátozzuk a mélységet, átlagot, a szórást és a kiír függvényeket, amik megegyeznek a C programból ismertekkel. Ezeket a függvényeket rekurzívan valósítjuk meg.
+    Az LZWBinFa osztályon kívül meghatározzuk a mélységet, átlagot, a szórást és a kiír függvényeket, amik megegyeznek a C programból ismertekkel. 
+    Ezeket a függvényeket rekurzívan valósítjuk meg. Az osztályon belüli függvényeket az LZWBinFa:: előtaggal érhetjük el.
 </para>
 <programlisting language="c++"><![CDATA[
-
 int
 LZWBinFa::getMelyseg (void)
 {
@@ -789,6 +825,15 @@ LZWBinFa::rszoras (Csomopont * elem)
         }
     }
 }
+
+]]>
+</programlisting>
+<para>
+    Ezután megvizsgáljuk, hogy a user által megadott argumentumok megfelelnek-e e feltételeknek. Ha nem felel meg, akkor hibaüzenetet íratunk ki. Ellenkező 
+    esetben while ciklussal beolvassuk a bemenetet és a második while ciklusban dolgozzuk fel a fát. Ha a beolvasott karakter a <function>0x3e</function>, azaz 
+    akkor kommentben igazzá tesszük, ha sortörés (<function>0x0a</function>) akkor pedig hamissá.
+</para>
+<programlisting language="c++"><![CDATA[
 
 void
 usage (void)
@@ -905,11 +950,15 @@ main (int argc, char *argv[])
         }
         ]]>    
         </programlisting>
+        <figure>
+        <title>Mutató a gyökér</title>
         <mediaobject>
             <imageobject>
                 <imagedata fileref="img/z3a8.png" width="40%" format="PNG"/>
             </imageobject>
+        
     </mediaobject>
+    </figure>
     </section>                     
 
     <section>
@@ -938,7 +987,8 @@ main (int argc, char *argv[])
         ]]>    
         </programlisting>
         <para>
-          Ha megfigyeljük a kódcsipetet, akkor a forráskódban látható, hogy tulajdonképppen copy-paste a <function>kiFile</function> kiíró kódsorok, cska a változó nevét változtattukmeg binFa3-ra, ugyanis fentebb deklaráltunk egy ugyanilyen nevű változót, amihez hozzárendeltük a move() függvényt. Paraméterként a binFa-t adtuk meg.
+          Ha megfigyeljük a kódcsipetet, akkor a forráskódban látható, hogy tulajdonképppen copy-paste a <function>kiFile</function> kiíró kódsorok, csak a változó nevét változtattuk meg binFa3-ra, 
+          ugyanis fentebb deklaráltunk egy ugyanilyen nevű változót, amihez hozzárendeltük a move() függvényt. Paraméterként a binFa-t adtuk meg.
         </para>
         <programlisting language="c++"><![CDATA[
         LZWBinFa ( LZWBinFa && regi ) {

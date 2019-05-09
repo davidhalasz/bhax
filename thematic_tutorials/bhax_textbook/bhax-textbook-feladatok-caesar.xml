@@ -212,12 +212,16 @@ while ((olvasott_bajtok = read (0, (void *) buffer, BUFFER_MERET)))
         <para>
             A program működését az alábbi képen lehet látni:
         </para>
-        <mediaobject>
-              <imageobject>
-                <imagedata fileref="img/titkos.png" width="100%" format="PNG"/>
-              </imageobject>
-        </mediaobject>
-    </section>        
+        <figure>
+            <title>C Exor titkosítás</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/titkos.png" width="100%" format="PNG"/>
+                </imageobject>
+            </mediaobject>
+        </figure>
+    </section>     
+
     <section>
         <title>Java EXOR titkosító</title>
         <para>
@@ -412,11 +416,14 @@ tiszta_lehet (const char *titkos, int titkos_meret)
         <para>
             Ha a program helyesen működik, akkor a terminálban az alábbit kellene kapnunk a program elindítása után:
         </para>
-        <mediaobject>
-              <imageobject>
-                <imagedata fileref="img/tores.png" width="100%" format="PNG"/>
-              </imageobject>
-        </mediaobject>
+        <figure>
+            <title>C Exor törés</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/tores.png" width="100%" format="PNG"/>
+                </imageobject>
+            </mediaobject>
+        </figure>
     </section>        
     <section>
         <title>Neurális OR, AND és EXOR kapu</title>
@@ -451,13 +458,17 @@ plot(nn.or)
         </programlisting>
         <para>
             Lényegében ezeket kell majd bemásolni az R szimulációba és megjelenik az alábbi ábra a képernyőn. Itt látható, hogy az ERROR: 2e-06
-             , ami azt jelenti, hogy a számítási hibahatár 0.0000002, ami nagyon kicsi, íy ez az érték elfogadható.
+             , ami azt jelenti, hogy a számítási hibahatár 0.0000002, ami nagyon kicsi, így ez az érték elfogadható.
         </para> 
+        <figure>
+        <title>Neurális OR eredménye</title>
         <mediaobject>
               <imageobject>
                 <imagedata fileref="img/n1.png" width="100%" format="PNG"/>
               </imageobject>
+
         </mediaobject>
+        </figure>
         <para>
             A következő példánál már egy új sort adunk hozzá (AND) és ugyanúgy futtatjuk a programot, ahogy a fenti kódcsipetnél csináltuk.
             Itt az OR és az AND két külön adat lesz, tehát a program nem veszi őket figyelembe számításnál, csak az a1 és az a2 adataival számol.
@@ -480,11 +491,14 @@ compute(nn.orand, orand.data[,1:2])
         <para>
             És most jön az EXOR. Ha a kódcsipetet bemásoljuk az R szimulációba, akkor az alábbit kapjuk.
         </para>
+        <figure>
+        <title>Neurális OR, AND eredménye</title>
         <mediaobject>
               <imageobject>
                 <imagedata fileref="img/n3.png" width="100%" format="PNG"/>
               </imageobject>
         </mediaobject>
+        </figure>
         <para>
             Figyeljük meg a hibahatárt. A 0.5-es hiba nagyon nagy, a program nem tud egyértelmű választ adni, ezért szükségünk 
             lesz többrétegű neuronokra a probléma megoldására, amit az alábbi kódnál mutatom be:
@@ -507,12 +521,14 @@ compute(nn.exor, exor.data[,1:2])
             Ezzel a töbrétegű neuronok hozzáadásával a hibahatár 0.000001 lesz. További különbség az eddigi ábrához képest, hogy 
             a 2 input és az output között megjelennek a neurunok, azaz 6, 4 és 6 kör lesz oszloponként.
         </para>
+        <figure>
+        <title>Neurális EXOR eredménye</title>
         <mediaobject>
               <imageobject>
                 <imagedata fileref="img/n5.png" width="100%" format="PNG"/>
               </imageobject>
         </mediaobject>
-              
+        </figure>
     </section>        
     <section>
         <title>Hiba-visszaterjesztéses perceptron</title>
