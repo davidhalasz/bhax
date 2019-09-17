@@ -1,0 +1,100 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Berners-Lee!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+
+    <section>
+        <title>Nyékyné Gaizler Judit: Java 2 Útikalauz programozóknak 5.0</title>
+        <para>
+            A Java egy teljesen objektumorientált nyelv, mely jelölésrendszerében hasonlít a C++ nyelvhez, azzal a különbséggel, hogy a 
+            Java nyelvet teljesen az alapjaitól építették fel, míg a C++ a C nyelv továbbfejlesztett változata.
+            Ebben a nyelvben nincsenek mutatók és a program osztályokból épül fel. Az osztályok pedig adattagokból 
+            és metódusokból állnak. A programozó rendelkezésére pedig rengeteg előre megírt osztály áll, amely a Java fejlesztői környezet 
+            részét alkotják. Ezekkel az előre megírt osztályokkal rengeteg időt spórolhatunk meg és ez a program-újrafelhasználás az 
+            objektum-orientált programozás egyik alapelve. A Java egyik előnye még a hordozhatóság, ami más operációs rendszereken történő gond nélküli futtatását 
+            teszi lehetővé. A platformfüggetlenség eléréséhez a a fordítóprogram Java bájtkódra fordítja le a forráskódot, amit a Java irtuális gép (JVM) tovább fordít az 
+            adott gép kódjára. A fordítás a parancssorban a <function>javac</function> utasítással történik, majd az így kapott fájlt a <function>java</function> utasítással futtathatjuk. 
+
+        </para>
+        <para>
+            A Javában a változók értékét teljes egészében a változó deklarált típusa határozza meg.
+             Ha a változót primitív típusúnak deklaráljuk (logikai, char, byte, short, int, long, float vagy double), akkor 
+             mindig megad egy értéket. A tömbök, osztályok és az interfészek pedig mindig referenciatípusúak lesznek. Itt nincsenek globális változók és függvények, helyette minden adat 
+             és művelet valamilyen objetumhoz tartozik. Itt nincsenek mutatók és objektumo, ez utóbbi a dinamikus tárterületen jönnek létre és hivatkozásokon keresztül érhetjük el őket. 
+            A C++ esetében bármilyen típus (primitív vagy összetett) 
+            érték vagy referencia alapján határozható meg. Ebben a nyelvben mutatókat és hivatkozásokat is használhatunk.
+        </para>
+        <para>
+            A vezérlés a C++ nyelvhez hasonlóan történik itt is. A legszembetűnőbb különbség az, hogy a Java-ban nincs <function>goto</function> utasítás. Pontosabban maga a goto kulcsszó ismert és le is van foglalva, 
+            de nincs jelentése, így használata esetén hibát fogunk kapni. Ez nagyban hozzájárul a biztonságosabb 
+            programok írásához. Helyette használhatjuk a <function>break</function> utasítást ciklusok elhagyására, vagy <function>continue</function> utasítással folytathatjuk azt. 
+            Fontos még megjegyezni, hogy a C++ nyelvvel ellentétben a Java-ban nem deklarálhatunk változót az if utasítás fejében.
+        </para>
+        <para>
+            A memóriakezelés a Java egyik nagy erőssége, mert nekünk csak létre kell hoznunk az objektumokat és amikor már nincs rájuk szükségük, egyszerűen csak 
+            a szemétgyűjtő rendszerre hagyjuk a lefoglalt memória automatikus felszabadítását. Ez kétféle módon történthet: egyik a <function>new</function> operátor használatával,
+             azaz amikor új objektumot hozunk létre, vagy pedig <function>finalize</function> metódus használatával, ami akkor szabadít fel egy objektumot, 
+             mielőtt az adott tárterület újrafelhasználásra kerülne. Itt nincs lehetőség az adott objektum memóriaigény lekérdezésre, 
+             mivel a Java-ban minden a virtuális gépen történik, ezért ennek kiszámítására sose kapnánk pontos választ. Ezzel 
+             szemben a C++ nyelvben manuálisan tetszőleges memóriablokkokat foglalhatunk le és pointerek használatával közvetlenül történik.
+        </para>
+        <para>
+            A C++ standard könyvtára korlátozott számú alap- és általános célú összetevőket tartalmaz. A Java lényegesen nagyobb szabványos könyvtárral rendelkezik és 
+            amit a java.lang csomag tartalmaz. Mivel ez a csomag olyan alapvető típusokat definiál, amik a programok futtatásához szükség van,
+             ezért minden Java programba automatikusan importálódik. Az alcsomagokat és az abban lévő osztályokat, metódusokat pont operátorral 
+             érhetjük el. Például a
+        </para> 
+        <programlisting>java.lang.System.out.println("Helló Világ!");</programlisting>
+        <para>
+            esetében a <function>println</function> segítségével íratjuk ki a szöveget, ami az <function>out</function> objektum egy metódusa.
+            Az <function>out</function> a <function>System</function> osztály egy adattagja, ami a <function>java.lang</function> csomag egy osztálya.
+        </para>
+        <para>
+            Mint minden objektum-orientált nyelv, így a C++ és a Java is támogatja az öröklődést, de mindkét esetben eltérő módon történik. 
+            A C++ támogatja a többszörös öröklődést, ahol egy osztály tetszőleges számú osztálytól örökölhet. Ezzel szemben a Javában nincsen többszörös öröklődés, ugyanis 
+            minden osztálynak csak egyetlen őse lehet. Egy osztály egy már meglévőből történő származtatása az <function>extends</function> kulcsóval történhet és nem tesz különbséget a protected, 
+            privát és publikus öröklődés között. 
+            Interfészek esetén is az extends kulcsszót használjuk és itt már támogatja a Java a többszörös öröklődést is. Ezek implementálásához az <function>implements</function> 
+            kulcsszót kell használni.
+        </para>
+        <para>
+            A Java-ban is van kivételkezelé, ahol a try-catch-throw mellett finally kifejezést is használjuk. Csak Throwable osztályú kivételeket lehet dobni. 
+            A gyári könyvtárakban sok a Throwable-től öröklő osztály szerepel: az Error és az Exception osztályok leszármazottai.
+        </para>
+    </section>
+    
+    <section>
+        <title>Forstner Bertalan, Ekler Péter, Kelényi Imre: Bevezetés a mobilprogramozásba. Gyors prototípus fejlesztés Python és Java nyelven</title>
+        <para>
+            Eddigi tanulmányaim során még nem foglalkoztam Python-nal, ezért csak annyit tudtam róla, hogy könnyen megtanulható nyelv és ráadásul kevesebb időbe telik 
+            egy program felépítése a C/C++ vagy Java nyelvhez képest, így kíváncsi voltam erre a könyvre.
+            Ebből a könyvből megtudtam, hogy a Python is egy magas szintű objektumorientált nyelv. Teljesen platformfüggetlen és 
+            nincs szükség fordításra, elegendő csak futtatni az alkalmazást. Objektumorientált nyelvként rengeteg előre megírt modulokat 
+            hasznosíthatunk újra. Annak ellenére, hogy a Pythonnal felépatett programok sokkal tömörebbek, mint például egy C program, még így is 
+            könnyen olvashatóak. Ezekkel a tulajdonságokkal rengeteg időt spórolhatunk meg.
+        </para>
+        <para>
+            Ami szokatlan volt számomra, hogy a Ptyhon nyelvben nem használunk sorvégi ";" jelet, ugyanis itt minden egyes sor egy utasítás. 
+            Az állításokat pedig kapcsos zárójel helyett behúzásokkal jelezzük. Fontos, hogy a szkript első utasítása nem lehet behúzott és mindenhol egységesen kell kezelni a tabot.
+        </para>
+        <para>
+            Típusok és változók tekintetében a következőket tudtam meg: minden adat objektum és ennek típusa határozza meg, hogy milyen műveleteket végezhetünk az adatokon. 
+            Nem kell megadnunk a változók típusát, mert a rendszer futási időben automatikusan kitalálja azt. Adattípusok lehetnek 
+            a számok, sztringek, ennesek, listák és szótárak. Az ennesek objektumok gyűjteményei, vesszővel elválasztva és zárójelben írva. 
+            A listát szögletes zárójelek közé írjuk, szintén vesszővel elválasztva. A szótárt pedig kapcsos zárójelek között vesszővel elválasztva írjuk. Ez utóbbinál kulcsokkal azonosított elemeket használunk, 
+            ami engem a Vue.js-re emlékeztet. Változók megadása a többi nyelvhez hasonlóan "=" jel használatával történik. Java-hoz hasonlóan 
+            itt is automatikus garbage collector működik, azaz a memória felszabadítással nem kell foglalkoznunk.
+        </para>
+        <para>
+            Ciklusok és elágazások során nem használunk kapcsos zárójeleket, például az if sor után kettőspontot írunk, majd
+            egy új sorban, tabulátort használva adjuk meg az utasítást. Függvényeket pedig a <function>def</function> kulcsszóval adhatunk meg. 
+            A függvények az eddigi nyelvekhez hasonlóan rendelkezhetnek paraméterekkel. Ugyanígy megadhatunk osztályokat is, amelyek példányai az objektumok, sőt az 
+            osztályok örökölhetnek más osztályoktól is. A Python másik nagy előnye még továbbá, hogy szabványos modulok állnak renelkezésünkre. 
+            Ezeknek a moduloknak a célja a fejlesztés megkönnyítése, például felhasználói felületeket, hálózatokat, vagy a kamerát stb. kezelhetjük.
+        </para>
+    </section>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>                
