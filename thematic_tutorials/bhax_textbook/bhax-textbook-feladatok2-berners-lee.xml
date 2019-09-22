@@ -90,7 +90,32 @@
         </para>
         <para>
             Ciklusok és elágazások során nem használunk kapcsos zárójeleket, például az if sor után kettőspontot írunk, majd
-            egy új sorban, tabulátort használva adjuk meg az utasítást. Függvényeket pedig a <function>def</function> kulcsszóval adhatunk meg. 
+            egy új sorban, tabulátort használva adjuk meg az utasítást:
+        </para>
+         <programlisting language="python"><![CDATA[
+            if szam < 0:
+                print 'kisebb, mint 0'
+            elif szam > 0:
+                print 'Nagyobb mint 0'
+            else: 
+                print 'Pontosan 0'
+            ]]>
+        </programlisting>
+        <para>
+            A Pythonban is megtalálható a kivételkezelés, ami a try kulcsszóval kezdődik, ami után szerelepnie kell a kódblokknak, hiba esetén az exceptre 
+            ugrik a vezérlés. Beleírhatunk még egy else ágat is.
+        </para>
+        <programlisting language="python"><![CDATA[
+            try:
+                utasítások
+            except [kifejezés]:
+                utasítások
+            [else:
+                utasítások]
+            ]]>
+        </programlisting>
+        <para>
+            Függvényeket pedig a <function>def</function> kulcsszóval adhatunk meg. 
             A függvények az eddigi nyelvekhez hasonlóan rendelkezhetnek paraméterekkel. Ugyanígy megadhatunk osztályokat is, amelyek példányai az objektumok, sőt az 
             osztályok örökölhetnek más osztályoktól is. A Python másik nagy előnye még továbbá, hogy szabványos modulok állnak renelkezésünkre. 
             Ezeknek a moduloknak a célja a fejlesztés megkönnyítése, például felhasználói felületeket, hálózatokat, vagy a kamerát stb. kezelhetjük.
