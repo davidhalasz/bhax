@@ -15,7 +15,7 @@ példánytag, amely a nem visszaadottat tárolja és egy logikai tag, hogy van-e
 az algot.) és az OpenJDK, Oracle JDK-ban a Sun által adott OO szervezés ua.!
         </para>
         <para>
-            Megoldás forrása:                
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/OO/PolarGenerator.java">PolarGenerator.java</link>                 
         </para>
         <para>
             Ebben a feladatban a polártranszformációs generátort nézzük meg Java verzióban, melynek célja, 
@@ -104,6 +104,12 @@ public class PolarGenerator {
         attribútum pointer, referencia vagy tagként tartalmazott legyen).
         Miután már áttettük Java nyelvre, tegyük be egy Java Servletbe és a böngészőből GET-es kéréssel
         (például a böngésző címsorából) kapja meg azt a mintát, amelynek kiszámolja az LZW binfáját!
+    </para>
+    <para>
+       Első Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/Homokozo/LZWBinFa.java">LZWBinFa.java</link>                 
+    </para>
+    <para>
+        Második Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/Homokozo/LZWJavaServlet.java">LZWJavaServlet.java</link>                 
     </para>
     <para>
         A programunk először az osztályok importálásával kezdődik. A <function>PrintWriter</function> segítségével íratjuk ki a szövegeket, a <function>BufferedReader</function> az osztályok 
