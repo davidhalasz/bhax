@@ -409,6 +409,12 @@ class LZWBinFa {
         példányokat poolozza!
     </para>
     <para>
+        Első Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/Gagyi/Gagyi1.java">Gagyi1.java</link>                 
+    </para>
+    <para>
+        Második Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/Gagyi/Gagyi2.java">Gagyi2.java</link>                 
+    </para>
+    <para>
         A feladat lényege, hogy megmutassuk, hogy két-két azonos szám megadásával miért viselkedik eltérő módon ugyanaz a while ciklus.
         Az alábbi programban <function>x = -128</function> és <function>t = -128</function> lesz: 
     </para>
@@ -485,6 +491,9 @@ public class Gagyi2 {
             Yoda stílusban megírt programunkban a futtatás során hibát kapunk, ha valamit nem jól csináltunk, míg a hagyományos verzióban lefut ugyan, de nem fogunk kapni visszajelzést a hibáról. 
             Az alábbi szemlélteti a hagyományos és a Yoda conditions használatát:
         </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/Yoda/Yoda.java">Yoda.java</link>                 
+        </para>
         <programlisting language="java"><![CDATA[ 
         //Hagyományos, ahogy eddig programoztunk
         if(midiChlorian == 2000) { /* ... */ }
@@ -524,7 +533,7 @@ class Yoda {
             melyet szeretném, ha átélnél).
         </para>
         <para>
-            Megoldás forrása:                
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/BBP/BBP.java">BBP.java</link>                 
         </para>
         <para>
             A BBP algoritmust Bailey, Borwei és Plouffe 1995-ben publikálta, mellyel kiszámítható a Pí tetszőleges számjegye
