@@ -93,42 +93,27 @@
             Ciklusok és elágazások során nem használunk kapcsos zárójeleket, például az if sor után kettőspontot írunk, majd
             egy új sorban, tabulátort használva adjuk meg az utasítást:
         </para>
-<<<<<<< HEAD
          <programlisting language="python"><![CDATA[
-=======
-        <programlisting>
->>>>>>> a57e460ec45b9abdfd0c8e233ee025ed24aaf74a
             if szam < 0:
                 print 'kisebb, mint 0'
             elif szam > 0:
                 print 'Nagyobb mint 0'
             else: 
-<<<<<<< HEAD
                 print 'Pontosan 0'
             ]]>
-=======
-                print 'Pontosam 0'
->>>>>>> a57e460ec45b9abdfd0c8e233ee025ed24aaf74a
         </programlisting>
         <para>
             A Pythonban is megtalálható a kivételkezelés, ami a try kulcsszóval kezdődik, ami után szerelepnie kell a kódblokknak, hiba esetén az exceptre 
             ugrik a vezérlés. Beleírhatunk még egy else ágat is.
         </para>
-<<<<<<< HEAD
         <programlisting language="python"><![CDATA[
-=======
-        <programlisting>
->>>>>>> a57e460ec45b9abdfd0c8e233ee025ed24aaf74a
             try:
                 utasítások
             except [kifejezés]:
                 utasítások
             [else:
                 utasítások]
-<<<<<<< HEAD
             ]]>
-=======
->>>>>>> a57e460ec45b9abdfd0c8e233ee025ed24aaf74a
         </programlisting>
         <para>
             Függvényeket pedig a <function>def</function> kulcsszóval adhatunk meg. 
