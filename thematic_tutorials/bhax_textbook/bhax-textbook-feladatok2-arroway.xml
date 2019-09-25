@@ -384,19 +384,147 @@ class LZWBinFa {
     ]]>
     </programlisting>
 
+
     <para>
         A main függvénynél fontos kiemelni a kivételkezelést, ami a Java-nál alapnak számít a használata. 
         Jelen esetünkben ezt a main függvény fejlécében adtuk meg (<function>throws FileNotFoundException, IOException</function>), ami automatikusan a <function>java.io.FileInputStream</function> osztályhoz kapcsolódik,
          ami a fájlkezelést felügyeli.
+        Ha futtatjuk  a programot, akkor egy b.txt fájlba lesz elmentve az eredmény, ahogy az alábbi képen látható:
     </para>
+    <figure>
+        <title>Java Binfa</title>
+        <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/java/binfa_java.png" width="80%" format="PNG"/>
+              </imageobject>
+        </mediaobject>   
+    </figure>
     <para>
-        Most pedig nézzük meg a Java Servlet verziót.
+        Most pedig nézzük meg a Java Servlet verziót. Ehhez előbb fel kell telepítanünk a Tomcat szervert, ami a <link xlink:href="http://tomcat.apache.org/">http://tomcat.apache.org/</link> 
+        oldalról lehet letölteni. Kicsomagolás után lépjünk be a <function>bin</function> mappába, majd a terminálban a 
+        <function>sudo ./catalina.sh start;</function> parancssorral tudjuk elindítani. Ha a böngészőbe beírjuk, hogy localhost:8080 
+        és bejön az Apache Tomcat oldal, akkor mindent jól csináltunk eddig. A lefordított java class-okat a /webapps/ROOT/WEB-INF/classes mappába kell bemásolni.
+        és az /webapps/ROOT/WEB-INF/web.xml fájlbe is bekell írnunk a következőket:
     </para>
+    <programlisting language="xml"><![CDATA[
+<servlet>
+   <servlet-name>LZWJavaServlet</servlet-name>
+   <servlet-class>LZWJavaServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+   <servlet-name>LZWJavaServlet</servlet-name>
+   <url-pattern>/LZWJavaServlet</url-pattern>
+</servlet-mapping>
+ ]]>
+    </programlisting>
+
+    <para>
+        Mivel most a böngészőben szeretnénk egyszerű módon megjeleníteni a binfát, ezért most 
+        kitöröljük a fájkezeléssel kapcsolatos részeket a programunkból, helyette <function>CreateStringBuffer()</function>
+        osztályt fogjuk használni, mely egy string értéket vár (<function>bemenet</function>). Ez lényegében majd a böngésző 
+        címsorában kap fontos szerepet, amikor egy szöveget adunk meg bemenetként.
+    </para>
+
     <programlisting language="java"><![CDATA[
+    public void CreateStringBuffer(String bemenet)
+{
+    for(int i = 0; i < bemenet.length(); ++i){
+        int c = bemenet.charAt(i);
+        if(c == 0x0a){
+            break;
+        }
+    }
+    boolean kommentben = false;
+        
+        
+    for(int i = 0; i < bemenet.length(); ++i)
+    {
+        int c = bemenet.charAt(i);
+ 
+        if (c == 0x3e) {	
+                kommentben = true;
+                continue;
+            }
+        if (c == 0x0a) {	
+            kommentben = false;
+            continue;
+        }
+        if (kommentben) {
+            continue;
+        }
+        if (c == 0x4e)
+        {
+            continue;
+        }
+       
+        for (int j = 0; j < 8; ++j) {
+           
+            if ((c & 0x80) == 128) 
+            {
+                hozzarendel('1');
+            } else 
+            {
+                hozzarendel('0');
+            }
+            c <<= 1;
+        }
+    }
+    
+    kiir();
+    kimenet.append("depth = " + getMelyseg() + "<br>\n");
+    kimenet.append("mean = " + getAtlag()+ "<br>\n");
+    kimenet.append("var = " + getSzoras() + "<br>\n");
+    }
 
     ]]>
     </programlisting>
+    <para>
+        A programunk utolsó metódusa egy doGet függvény, amivel GET kérést küldhetünk a szervernek, ami a már fentebb említett bemenethez kapcsolódik.
+        Ezután már csak azt kell megadnunk, hogy nézzen ki a weboldalunk. Aki fejlesztett már weboldalt, annak ismerős lehet a HTML, mivel 
+        lényegében itt is ezt használjuk, csak itt a HTML kódotkat a Java <function>out.println</function> függvényével íratjuk ki.
+    </para>
+    <programlisting language="java"><![CDATA[
+public void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+      
+      // Set response content type
+      response.setContentType("text/html");
+      
+    if(request.getParameter("bemenet") == null){
+        return;
+    }
+    else
+      CreateStringBuffer(request.getParameter("bemenet"));
     
+    PrintWriter out = response.getWriter();
+    String title = "LZWBinFa";
+    String docType =
+         "<!doctype html public \"-//w3c//dtd html 4.0 " + "transitional//en\">\n";
+         
+    out.println(docType +
+         "<html>\n" +
+            "<head><title>" + title + "</title></head>\n" +
+            "<body>\n" +
+               "<h1 align = \"center\">" + title + "</h1>\n" + 
+                 kimenet + 
+            "</body>" +
+         "</html>"
+      );
+   }
+    ]]>
+    </programlisting>
+    <para>
+    Ha ezzel megvagyunk, beírhatjuk a böngészőbe, hogy: <function>http://localhost:8080/LZWJavaServlet?bemenet=szöveg</function> , ahol 
+    a szöveg szó tetszőleges lehet. A kapott erdmény pedig így néz ki: 
+    </para>
+    <figure>
+        <title>LZWJavaServlet.class megjelenítése</title>
+                    <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/java/servlet.png" width="80%" format="PNG"/>
+              </imageobject>
+        </mediaobject> 
+        </figure>
     </section>
     
     <section>
@@ -537,7 +665,8 @@ class Yoda {
         </para>
         <para>
             A BBP algoritmust Bailey, Borwei és Plouffe 1995-ben publikálta, mellyel kiszámítható a Pí tetszőleges számjegye
-             hexadecimális számrendszerben az előző számjegyek ismerete nélkül. Java nyelven a BBP algoritmus megvalósításának megoldása:
+             hexadecimális számrendszerben az előző számjegyek ismerete nélkül. Nézzük meg a java programunkat.
+             Először kiszámítjuk ezt: {16^d Pi} = {4*{16^d S1} - 2*{16^d S4} - {16^d S5} - {16^d S6}} . Itt a {} jel a törtet jelöli.
         </para>
         <programlisting language="java"><![CDATA[
 public class PiBBP {
@@ -573,7 +702,13 @@ public class PiBBP {
         
         d16PiHexaJegyek = sb.toString();
     }
-   
+
+    ]]>
+    </programlisting>
+   <para>
+        Itt a {16^d Sj} részletet számítjuk ki, ahol a d paraméter segítségével a +1 hexa jegytől számítjuk és a j pedig az Sj indexe lesz.
+   </para>
+   <programlisting language="java"><![CDATA[]
     public double d16Sj(int d, int j) {
         
         double d16Sj = 0.0d;
