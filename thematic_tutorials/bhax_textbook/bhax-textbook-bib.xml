@@ -155,5 +155,48 @@
             </publisher>
             <pubdate>2006</pubdate>
         </biblioentry> 
-    </bibliodiv>       
+    </bibliodiv>
+    <bibliodiv>
+            <title>Programozás Technika</title>
+            <biblioentry>
+                <abbrev>PROTECHNIKA</abbrev>
+                <authorgroup>
+                    <author>
+                        <personname>
+                            <firstname>Kusper Gábor</firstname>
+                        </personname>
+                    </author>
+                    <author>
+                        <personname>
+                            <firstname>Radványi Tibor</firstname>
+                        </personname>
+                    </author>
+                </authorgroup>
+                <title>Programozás Technika</title>
+                <publisher>
+                    <publishername>
+                        <link xlink:href="https://www.tankonyvtar.hu/hu/tartalom/tamop425/0038_informatika_Projektlabor/ch01s03.html">https://www.tankonyvtar.hu/hu/tartalom/tamop425/0038_informatika_Projektlabor/ch01s03.html</link>
+                    </publishername>
+                </publisher>
+            </biblioentry> 
+        </bibliodiv>    
+        <bibliodiv>
+                <title>A Szoftver mérése</title>
+                <biblioentry>
+                    <abbrev>MERES</abbrev>
+                    <authorgroup>
+                        <author>
+                            <personname>
+                                <firstname>Dr. Mileff Péter</firstname>
+                            </personname>
+                        </author>
+                    </authorgroup>
+                    <title>A Szoftver mérése</title>
+                    <publisher>
+                        <publishername>
+                            <link xlink:href="https://users.iit.uni-miskolc.hu/~mileff/intszvr/ISZRM_4.pdf">https://users.iit.uni-miskolc.hu/~mileff/intszvr/ISZRM_4.pdfl</link>
+                        </publishername>
+                    </publisher>
+                </biblioentry> 
+        </bibliodiv>                   
 </bibliography>     
