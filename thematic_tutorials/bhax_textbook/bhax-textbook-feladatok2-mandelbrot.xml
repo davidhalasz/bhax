@@ -1,0 +1,26 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Mandelbrot!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    
+    <section>
+        <title></title>
+        <para>
+           
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>                 
+        </para>
+        <para>
+            
+        </para>
+        <programlisting  language="java"><![CDATA[
+
+
+        ]]>
+        </programlisting>
+    </section>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>  

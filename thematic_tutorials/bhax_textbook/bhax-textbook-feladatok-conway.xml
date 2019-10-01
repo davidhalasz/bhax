@@ -325,11 +325,14 @@ AntThread::AntThread ( Ants* ants, int*** grids,
             jelöltek jelentik a halálozást, mivel 2-nél kisebb és 3-nál több szomszéddal rendelkeznek. Ezek a következő generációban tehát fehér hátterűek lesznek. Vannak még továbbá üres cellák, zöld szegéllyel, ezeknek
             pontosan 3 élő sejttel rendelkező szomszédjuk van, így a következő lépésben itt fognak új sejtek születeni.  
         </para>
+        <figure>
+        <title>A sejtek alakulása</title>
         <mediaobject>
               <imageobject>
                 <imagedata fileref="img/conwaymagy.png" width="100%" format="PNG"/>
               </imageobject>
         </mediaobject>
+        </figure>
         <para>
             Ezt a szimulációt fogjuk megvalósítani java-ban, melynek neve <function>Sejtautomata.java</function>.
             Először is létrehozzuk a <function>Sejtautomata</function> osztályt, majd azon belül deklaráljuk a változókat és értékeket rendelünk hozzá. Például megadunk két boolean típusú változót, mellyel azt fogjuk meghatározni,
@@ -881,11 +884,14 @@ SejtSzal::~SejtSzal()
     <para>
         A program futtatása a következő: a <function>qmake -project</function> létrehoz egy .pro végződésű fájlt, amibe bele kell írni, hogy <function>QT += widgets</function>. Majd a parancssorba beírjuk hogy <function>qmake *.pro</function>, ami létrehoz egy Makefile-t. <function>make</function> parancssal bináris fájlt hozunk létre, majd futtatjuk a szoksásos g++ programot. Ha mindent jól csináltunk, a következő képernyőt kell kapnunk:
     </para>
+    <figure>
+        <title>A QT c++ program elindulása</title>
     <mediaobject>
         <imageobject>
             <imagedata fileref="img/gt.png" width="60%" format="PNG"/>
         </imageobject>
-    </mediaobject>        
+    </mediaobject>
+    </figure>        
     </section>        
     <section>
         <title>BrainB Benchmark</title>
@@ -979,11 +985,14 @@ SejtSzal::~SejtSzal()
             A program futtatása után, ha az egeret képesek leszünk tartani egy adott kék ponton több, mint 1,2 másodpercig, akkor a program folyamatosan új
             dobozokat jelenít meg, és egyre gyorsabban is mozognak: 
         </para>
+        <figure>
+        <title>BrainB Benchmark</title>
         <mediaobject>
               <imageobject>
                 <imagedata fileref="img/brainb.png" width="60%" format="PNG"/>
               </imageobject>
         </mediaobject>
+        </figure>
         <para>
             Ezeknek a dobozoknak a létrehozása és mozgatása a BrainBThread.cpp és a BrainBThread.h fájlokban vannak implementálva. A BrainThread.cpp-ban a a konstruktornak átadjuk paraméterként a szélességet és a magasságot. Itt a Hero lesz a karakter, azaz jelen esetünkben 5 karakter van megadva, ezek fognak tehát majd megjelenni először a képernyőn. Ezeket a <function>heroes</function> nevű verembe pakoljuk be a <function>push.back()</function> függvénnyel, melynek paraméterként adjuk át az általunk kreált Hero-k neveit egyenként. 
         </para>

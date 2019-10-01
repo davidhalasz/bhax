@@ -215,8 +215,116 @@ A paraméter átadás is különböző módon történhet (érték-, cím-, ered
             <citation>KERNIGHANRITCHIE</citation>
         </para>
         <para>
-            Megoldás videó: <link xlink:href="https://youtu.be/zmfT9miB-jY">https://youtu.be/zmfT9miB-jY</link>
-        </para>        
+           Vezérlési szerkezetek
+        </para>
+        <para>
+            A C nyelvben, ha a kifejezéseket pontosvessző követi őket, akkor utasítássá válnak. A pontosvessző ebben az esetben csak utasításlezárást jelent. A kapcsos zárójelekkel pedig az utasításokat egyetlen összetett blokkba foghatunk össze, de a blokkot lezáró kapcsos zárójelnél nincs pontosvessző. 
+        </para>
+        <para>
+            Az if-else utasítással azt fejezzük ki, hogy a program hogyan döntsön egy adott folyamat során. Tehát először jön az if (kifejezés), ami ha teljesül akkor a kapcsos zárójelben lévő utasítást hajtja végre. Ellenkező esetben
+            az else ág hajtódik végre, ez utóbbi azonban elhagyható, ha nem szeretnénk hogy a program csináljon valamit. Egy példa az if-else utasításra:
+        </para>
+        <programlisting><![CDATA[
+            int a = 1;
+
+            if (a == 1) {
+                a = 3;
+            } else {
+                a = 4;
+            } 
+        ]]>
+        </programlisting> 
+        <para>
+            Az elseif utasítás annyiban különbözik az előzőhöz képest, hogy itt nem csak 2, hanem több döntési lehetőséget adunk meg. A többszörös elágazás először if-el kezdődik, majd annyi else if ágat adunk, amennyit szeretnénk, végül else elágazással fejezzük be.
+            ilyenkor a program végig megvizsgálja, hogy hol teljesül a feltétel és igaz esetén végrehajtja azt. Formálisan így néz ki:
+        </para>
+        <screen>
+            if (kifejezés)
+                utasítás
+            else if (kifejezés)
+                utasítás
+            else if (kifejezés)
+                utasítás
+            else
+                utasítás
+        </screen>
+        <para>
+            A switch utasítás is többirányú, itt megvizsgálja, hogy egy adott kifejezés értéke megegyezik-e valamelyik case állandó értékével, ha van ilyen, akkor végrehatjta az utasítást, ellenkező esetben a default-ra ugrik, vagy ha nincs default, akkor nem történik semmi.
+            Formális felépítése:
+        </para>
+        <screen>
+            switch (kifejezés) {
+                case 'állandó kifejezés': utasítás
+                                            break;
+                case 'állandó kifejezés':
+                case 'állandó kifejezés': utasítás
+                                            break;
+                case 'állandó kifejezés':
+                case 'állandó kifejezés':
+                default: utasítás
+                    break;
+            }
+        </screen> 
+        <para>
+            A case állandó kifejezés értékeinek különböznie kell egymástól, továbbá minden utasítás végén egy break áll, aminek hatására azonnal kilép a switch utasításból.
+        </para>   
+        <para>
+            A while ciklus során a gép először kiértékeli a kifejezést, aminek ha értéke nem nulla, akkor végrehajtja az utasítást. Ez a folyamat addig ismétlődik, amíg a kifejezés nulla nem lesz.
+        </para>
+        <screen>
+            while (kifejezés)
+                utasítás
+        </screen>
+        <para>
+            For ciklus során is ugyanez történik, de itt 3 kifejezés szerepel. Általában a kif1 és a kif3 értékadás vagy függvényhívás, a kif2 pedig relációs kifejezés. Ha elhagyjuk valamelyik kifejezést, akkor a for ciklussal végtelen ciklust érünk el.
+        </para>
+        <screen>
+            for (kif1; kif2; kif3)
+                utasítás
+        </screen> 
+        <para>
+            A do-while utasítás során előbb mindig végrehajtja az utasítást és csak utána értékeli ki a kifejezést. Ez is addig fut le, amíg hamis nem lesz.
+        </para> 
+        <para>
+           A goto utasítással megoldhatóak az olyan problémák, amikor mélyen egymása ágyazott ciklusokkból szeretnénk kilépni. Ilyenkor az egyik ciklusba betesszük a goto utasítást, ami egy másik helyre fog majd mutatni, ott folytatna a folyamatot. 
+           Ezt az utasítást nagyon ritkán használjuk.
+        </para> 
+        <screen>
+            for ( . . . )
+                for ( . . . ) {
+                    . . .
+                    if (zavar)
+                        goto hiba;
+                    . . .
+                }
+            hiba:
+                számold fel a zavart
+        </screen>
+        <para>
+            9. kivételkezelés
+        </para>
+        <para>
+            A kivételkezelési eszközrendszerrel végezhetjük el a megszakítások kezelését. A kivételek okozzák a megszakításokat és a kivételkezelést a program végzi, ha a kivétel bekövetkezik.
+            A Java-ban a kivételkezelés Adaszerű elveket vall. Először is a program működése közben módszerek hívódnak meg, amely során ha bekövetkezik egy esemény, akkor egy kivétel-objektum jön létre.
+            Ez a kivétel-objektum két részből áll: kivétel-osztályok és azok kivétel-példányai. Ha ez az objektum létrejön, akkor a módszer eldobja a kivételt, ami a Java virtuális gép hatáskörébe kerül át, majd az 
+            utasítás befejezése után bekövetkezik a kivételkezelés. A Java virtuális gép (JVM) feladata lesz a megfelelő kivételkezelő megkeresése, aminek feltétele, hogy a kivételkezelő típusa megegyezzem a kivétel típusával, továbbá
+             a kivételkezelő őse a kivétel típusának.
+            A Javaban a kivételkezelő tulajdonképpen egy blokk, ami tetszőleges kódrészlethez köthető. A kivételeknek pedig két nagy csoportja van: 
+        </para>
+        <itemizedlist mark='opencircle'>
+            <listitem>
+                <para>
+                    Ellenőrzött kivétel: egy metódusban felléphet és a programozónak mindig specifikálnia kell, vagy ell kell kapnia őket. Mindig ezt javasolt használni. Használata mindig a módszer fejének végén történik a 
+                    <function>THROWS kivételnév_lista</function> utasítás segítségével. Itt lesznek felsorolva az ellenőrzött, de nem kezelt kivételek. Az objektumok eldobása a THROW utasítás segítségével történik, de csak a java.lang 
+                    csomagban definiált Throwable obektumaira vonatkoznak ezek. 
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Nem ellenőrzött kivétel: akkor van szó erről, amikor egy ellenőrzés vagy kellemetlen vagy túl nagy kódrészletet eredményezne, esetleg a programozó nem tud mit kezdeni a kivételekkel. Ilyenkor az ellenőrzés elengedésre kerül.
+                </para>
+            </listitem>
+        </itemizedlist>  
     </section>        
     <section>
         <title>Programozás</title>
@@ -224,7 +332,7 @@ A paraméter átadás is különböző módon történhet (érték-, cím-, ered
             <citation>BMECPP</citation>
         </para>
         <para>
-            A C és C++ nyelv közötti különbségek
+            <emphasis role="strong">A C és C++ nyelv közötti különbségek</emphasis>
         </para>
         <para>
             Ha egy függvénynek nem adunk meg paramétert, akkor tetszőleges számú paraméterrel hívhatjuk meg.  A C++ nyelvben meg kell adnunk a void-ot, 
@@ -276,7 +384,7 @@ A paraméter átadás is különböző módon történhet (érték-, cím-, ered
             A fenti programban látható, hogy a referencianeve elé egy &amp; jellel deklaráltuk a referenciát.
         </para>
         <para>
-            Objektumok és osztályok
+            <emphasis role="strong">Objektumok és osztályok</emphasis>
         </para>
         <para>
             Az objektumorientált szemlélet akkor alakult ki, amikor a programok egyre bonyolultabbak, átláthatalanabbak lettek és ennek megoldására
@@ -300,13 +408,16 @@ A paraméter átadás is különböző módon történhet (érték-, cím-, ered
             ]]>
         </programlisting>
         <para>
-            Itt tehát egy hatókör operátort használunk, azaz dupla kettőspontot. Az osztály nevét és a hatóköroperátort a függvény neve elé írva tudatjuk a fordítóval, hogy a Point osztályon belül a setX függvényről van szó.
+            Itt tehát egy hatókör operátort használunk, azaz dupla kettőspontot. Az osztály nevét és a hatóköroperátort a függvény neve elé írva tudatjuk a fordítóval, hogy a 
+            Point osztályon belül a setX függvényről van szó.
         </para>
         <para>
-            C++ sablonok
+            <emphasis role="strong">C++ sablonok</emphasis>
         </para>
         <para>
-            Sablonnak nevezzük azokat az osztálysablonokat és függvénysablonokat, amikor bizonyos elemeket a függvény/osztály definiálásakor nem adjuk meg, hanem paraméterként kezelünk. A függvénysablont úgy kell elképzelni, hogy például ha egy számsorozat legnagyobb értékét akarjuk kiíratni, akkor elég előhívni a max() függvényt, aminek csak a paramétereket kell átadni. A C++ esetében a függvénysablon implementációja a következőképpen történik: 
+            Sablonnak nevezzük azokat az osztálysablonokat és függvénysablonokat, amikor bizonyos elemeket a függvény/osztály definiálásakor nem adjuk meg, hanem paraméterként kezelünk. A függvénysablont úgy kell elképzelni, 
+            hogy például ha egy számsorozat legnagyobb értékét akarjuk kiíratni, akkor elég előhívni a max() függvényt, aminek csak a paramétereket kell átadni. A C++ esetében a függvénysablon 
+            implementációja a következőképpen történik: 
         </para>
         <programlisting language="c++"><![CDATA[
             template <class T> inline T max(T lhs, T rhs) {
@@ -315,10 +426,96 @@ A paraméter átadás is különböző módon történhet (érték-, cím-, ered
             ]]>
         </programlisting>
         <para>
-        Tehát először mindig a template kulcsszóval kezdődik, majd ezután &lt; &gt; között felsoroljuk a sablonparamétereket vesszővel elválasztva. Jelen esetünkben egy sablonparaméter szerepel, aminek a T nevet adtuk. Az inline-t itt azért használjuk, mert a függvénytörzsünk rövid. Az elkészült függvénysablont ezután így tudjuk felhasználni: <function>int n = max(3,5)</function>. Fontos, hogy nem lehet az egyik paraméter double, a másik pedig int típusú, mert a kód ebben az esetben nem fordul le.
+        Tehát először mindig a template kulcsszóval kezdődik, majd ezután &lt; &gt; között felsoroljuk a sablonparamétereket vesszővel elválasztva. Jelen esetünkben egy sablonparaméter 
+        szerepel, aminek a T nevet adtuk. Az inline-t itt azért használjuk, mert a függvénytörzsünk rövid. Az elkészült függvénysablont ezután így tudjuk felhasználni: 
+        <function>int n = max(3,5)</function>. Fontos, hogy nem lehet az egyik paraméter double, a másik pedig int típusú, mert a kód ebben az esetben nem fordul le.
     </para>
         <para>
-            16-58, 223-230
+           <emphasis role="strong">Típuskonverziók</emphasis>
+        </para>
+        <para>
+            A C++ típuskonverziói hasonlítanak a C nyelvre, de azrét vannak külnbségek: sokkal biztonságosabbak, új objektumorientált elemek tartoznak a típuskonverzióikhoz és a referenciatípusra is vonatkoznak a konverziós szabályok.
+        </para>
+        <para>
+            <emphasis role="strong">A beépített típusok közötti típuskonverziók</emphasis> esetén a C nyelvben létezik enum és int közötti konverzió, míg C++ esetén ki kell írnunk a típuskonverziót.
+            A pointerekhez hasonlóan a referenciák is egy memóriaterületre hivatkoznak, így ha nem szeretnénk megváltozttni az átadott értéket, de lemásolni sem, ezért a referenciát konstansnak deklaráljuk
+        , ezzel elérve a referencia szerinti átadását másolás nélkül. 
+        </para>
+        <para>
+            <emphasis role="strong">felhasználói típusok konverziója</emphasis> kétféle lehet: független típusok közötti és öröklési hierarchia mentén. <emphasis role="strong">A független típusok közötti</emphasis> konverzió 
+            két lehetőséget kínál. Egyik eset az, amikor egy másik típusról a mi osztályunk típusára konvertálunk, ezt nevezzük konverziós konstruktornak. A másik pedig a konverziós operátor,
+            amikor az osztályunkról konvertálunk egy másik típusra.
+        </para>
+        <para>
+            Az <emphasis role="strong">öröklési hierarchia mentén</emphasis> történő konverzió során a leszármazottról a szülőre történik a folyamat. Ekkor mindig a másoló konstruktor fog meghívódni.
+            Mivel másolókonstruktor mindig van, ezért ez a típusú konverzió automatikusan végrehajtódik. A szülőről a leszármazotttra nincs ilyen jellegű konverzió, de ha mégis szükségünk lenne rá, akkor a leszármazottban konverziós 
+            konstruktort kell írnunk.
+        </para>
+        <para>
+            <emphasis role="strong">A C++ típuskonverziós operátorai</emphasis> lehetnek: static_cast (statikus típuskonverzió), const_cast (konstans típuskonverzió), dynamic_cast (dinamikus típuskonverzió), reinterpret_cast (újraértelmező típuskonverzió).
+            Ezek közül a leggyakrabban használt konverzió a statikus. A konstans típuskonverzióra jellemző, hogy egyedül ez képes konstans típust nem konstanssá tenni, illetve volatie típust nem azzá. 
+            A dinamikus típuskonverzió az öröklési hierarchián lefelé történő konverziókhoz használjuk. Ez futási időben ellenőrzi, hogy végrehajtható e a konverzióe, ezért egy virtuális függvény kell tartalmaznia. 
+            Az újraértelmező típuskonverzió pedig az implementáció konverziók esetén alkalmazható. Általában a pointer típusát változtatjuk meg ebben az esetben.
+        </para>
+        <para>
+            <emphasis role="strong">Kivételkezelés</emphasis>
+        </para>
+        <para>
+            A C++ nyelvben a kivételkezelés nemcsak hiba, hanem bármilyen kivételes eset esetén használható. Lényege, hogy ha hibát detektálunk valahol, akkor a program futása a kivételkezelő ágon folytatódik tovább. 
+            Az alábbi kódrészletben ha a program futtatása során, a felhasználó 0-át ad meg, akkor hibát dobunk. Ehhez egy try-catch blokkot használunk. A try blokkba írjuk a normál kódot és a catch ágba a hibakezelő kódot. 
+            Ha helyes számot adtunk meg, akkor a try blokkban valamennyi utasítás lefut, kiíratjuk a szöveget, majd a catch blokkot átlépve folytatódik tovább folyamat. Ha a védett blokkban hibát találunk, akkor a Throw kulcsszóval kivételt 
+            dobunk, ami jelen esetben egy const char* típusú szöveg. Ezután egyből a catch ágba kerül, itt fontos megjegyezni, hogy több catch ág is lehet. Annak eldöntése, hogy melyik lesz aktiválva, a catch-nak átadott paraméter típusától függ. 
+            Ha a paraméter kompatibilis a kapott kivétellel, akkor azt mondjuk, hogy elkapja a dobott kivételt. Ezután lefut a catch törzse, majd innen folytatódik tovább a folyamat. Ha egy kivételt nem kapunk el, akkor az egy kezeletlen kivétel. Ebben 
+            az esetben az alapértelmezett könyvtári terminate függvény hívódik meg.
+        </para>
+        <programlisting language="c++"><![CDATA[
+            #include <iostream>
+            using namespace std;
+
+            int main() {
+                try {
+                    double d;
+                    cout << "Adj meg egy nem nulla számot: ";
+                    cin >> d;
+                    if (d == 0)
+                        throw "A beírt szám nem lehet nulla.";
+                    cout << "A szám reciproka: " << 1/d << endl;
+                }
+                catch (const char* exc) {
+                    cout << "Hiba! A hibaüzenet: " << exc << endl;
+                }
+                cout << "Done." << endl;
+            }
+            ]]>
+        </programlisting>
+        <para>
+            A hívási verem visszacsévélésének nevezzük azt a folyamatot, amikor egy kivétel dobásakor annak elkapásáig a függvények hívási láncában felfelé haladva az egyes függvények lokális változói felszabadulnak. Példa: 
+        </para>
+        <programlisting language="c++"><![CDATA[
+            int main() {
+                try {
+                    f1();
+                }
+                catch (const char* errorText) {
+                    cerr << errorText << end1;
+                }
+            }
+
+            void f1() {
+                Fifo fifo; 
+                f2();
+                ...
+            }
+
+            void f2() {
+                int i = 1;
+                throw "error1";
+            }
+            ]]>
+        </programlisting>
+        <para>
+            Először tehát az f2() függvény kivételt dob, ezért az f2()-ben definiált i likális változó felszabadul. Az f1()-ben lefoglalt Fifo fifo objektum is felszabadul és meghívódik a destruktora, majd végül lefut a main függvényben 
+            lévő catch blokk.
         </para>
     </section>        
 </chapter>                

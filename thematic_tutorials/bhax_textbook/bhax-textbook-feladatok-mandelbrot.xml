@@ -119,16 +119,22 @@ std::cout << (double) delta / CLOCKS_PER_SEC << " sec" << std::endl;
         <para>
             A program elindítása és a végeredmény az alábbi két képen látható:
         </para>
+        <figure>
+        <title>A mandelpngt.c++ elindítása</title>
         <mediaobject>
               <imageobject>
                 <imagedata fileref="img/mandelterm.png" width="100%" format="PNG"/>
               </imageobject>
         </mediaobject>
+        </figure>
+        <figure>
+        <title>A mandel.png eredménye</title>
         <mediaobject>
               <imageobject>
                 <imagedata fileref="img/mandel.png" width="80%" format="PNG"/>
               </imageobject>
         </mediaobject>
+        </figure>
     </section>        
         
     <section>
@@ -231,16 +237,22 @@ std::cout << "Szamitas\n";
         <para>
             A program elindítása után egy nem egy fekete-fehér képet, hanem sokkal színesebb eredményt kapunk:        
         </para>
+        <figure>
+        <title>A 3.1.2.cpp rogram elindítása</title>
         <mediaobject>
               <imageobject>
                 <imagedata fileref="img/mandelterm2.png" width="100%" format="PNG"/>
               </imageobject>
         </mediaobject>
+        </figure>
+        <figure>
+        <title>A 3.1.2.cpp eredménye</title>
         <mediaobject>
               <imageobject>
                 <imagedata fileref="img/mandel2.png" width="80%" format="PNG"/>
               </imageobject>
         </mediaobject>
+        </figure>
     </section>        
                 
     <section>
@@ -342,17 +354,20 @@ for ( int y = 0; y < magassag; ++y )
           }]]>
     </programlisting>
     <para>
-        Ezután elkészítjuk a Julua-Halmazos képet:
+        Ezután elkészítjuk a Julaa-Halmazos képet:
     </para>
-    <mediaobject>
+    <figure>
+        <title>Biomorf képe</title>
+        <mediaobject>
               <imageobject>
                 <imagedata fileref="img/bmorf.png" width="60%" format="PNG"/>
               </imageobject>
-        </mediaobject>          
+        </mediaobject>   
+    </figure>       
     </section>                     
 
     <section>
-        <title>A Mandelbrot halmaz CUDA megvalósítása !!</title>
+        <title>A Mandelbrot halmaz CUDA megvalósítása</title>
         <para>
             Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/CUDA/mandelpngc_60x60_100.cu">https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/CUDA/mandelpngc_60x60_100.cu</link>
         </para>
@@ -541,9 +556,10 @@ main (int argc, char *argv[])
             Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/mandelbrot/nagyitas">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/mandelbrot/nagyitas</link>
         </para>
 
-        <para>
-           Tutorial: Fürjes-Benke Péter
-        </para>
+        <caution>
+            <title>Megjegyzés</title>
+            <para>A feladat megoldásában tutorként részt vett: Fürjes-Beke Péter</para>
+        </caution>
         <para>
              Mielőtt elkezdenénk a programot, először szükséges telepíteni a libqt4-dev csomagot, mert enélkül nem fog elindulni a program.
              A mappában egy helyen kell szerepelnie az alábbi négy fájlnak, ami a képen is látható, miután elindítottam az ls -l parancsot.
@@ -551,24 +567,32 @@ main (int argc, char *argv[])
              Miután ez megtörtént, ezt a .pro végződésű fájl-ba bele kell másolni ezt a sort: <function>QT += widgets</function>. Ezután lehet a parancssorba
              beírni, hogy <function>qmake *.pro</function>
         </para>
+        <figure>
+        <title>Makefile létrehozása</title>
          <mediaobject>
               <imageobject>
                 <imagedata fileref="img/zoom.png" width="70%" format="PNG"/>
               </imageobject>
         </mediaobject>
+        </figure>
         <para>
             Ez a parancs létrehozza a Makefile-t, amit a make parancs használatával egy bináris fájlt hozunk létre, aminek a neve megegyezik az aktuális mappánk nevével.
             Ezt kell elindítanunk, ugyanúgy ahogy bármely más programot szoktunk. Haminden jól megy akkor az alábbi Mandelbrot-halmazt kell kapnunk:
         </para>
+        <figure>
+        <title>Mandelbrot halmaz alaphelyzetben</title>
         <mediaobject>
               <imageobject>
                 <imagedata fileref="img/zoom1.png" width="60%" format="PNG"/>
               </imageobject>
         </mediaobject>
+        </figure>
         <para>
             Nagyítani úgy tuunk, hogy az egérrel kijelülönk egy részt, majd a program automatikusan oda zoomol. Ha a kép életlennek tűnik, akkor meg kell nyomnunk
             az "n" billentyűt, ugyanis ilyenkor a program számítást végez és élesíti a képet.
         </para>
+        <figure>
+        <title>Mandelbrot halmaz nagyítva</title>
         <mediaobject>
               <imageobject>
                 <imagedata fileref="img/zoom2.png" width="60%" format="PNG"/>
@@ -577,10 +601,11 @@ main (int argc, char *argv[])
                 <phrase>Nagyítás után</phrase>
               </textobject>
         </mediaobject>  
+        </figure>
     </section>                     
                                                                                                                                                                             
     <section>
-        <title>Mandelbrot nagyító és utazó Java nyelven !!</title>
+        <title>Mandelbrot nagyító és utazó Java nyelven</title>
         <para>
             Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/mandelbrot/java">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/mandelbrot/java</link>
         </para>
@@ -594,8 +619,8 @@ main (int argc, char *argv[])
         <para>
          A nagyítást végző kódsorokat <function>MandelbrotHalmazNagyító.java</function> programon belül a MandelbrotHalmazNagyító osztályban hozzuk létre.
          A MouseAdapter implementálja a Mouselistenert. A MousePressed osztály a MouseEvent paramétereit várja, ami akkor lép működésbe, ha egy pontra történik az egér klikkelés.
-         Ilyenkor az osztályon belül lekéri a nagyítandó kijelölt rerület bal felső sarkának helyét.
-         Alaphelyzetben a szélesség (mx) és a magasság (my) értékei 0, ami megváltozik ha az egérrel kijelülönk egy területet.
+         Ilyenkor az osztályon belül lekéri a nagyítandó kijelölt terület bal felső sarkának helyét.
+         Alaphelyzetben a szélesség (mx) és a magasság (my) értékei 0, ami megváltozik ha az egérrel kijelölünk egy területet.
         </para>
         <programlisting language="java"><![CDATA[
 // Egér kattintó események feldolgozása:
