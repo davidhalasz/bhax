@@ -330,6 +330,9 @@ int main (int argc, char **argv) {
             darab jegyét határozzuk meg C, C++, Java és C# nyelveken és vessük össze a futási időket!
         </para>
         <para>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_liskov/BBP">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_liskov/BBP</link>
+        </para>
+        <para>
             Ebben a feladatban az előző fejezetben megismert BBP algoritmussal fogunk dolgozni. A különböző nyelven megírt programokat 
             most nem célom bemásolni és ismertetni, mert lényeges különbségek nincsenek benne és itt most inkább a kapott eredmények az érdekesek számunkra. 
             Mindegyik programban a for ciklus fejlécében a <function>d</function> változó értékét kell változtatni, úgy, hogy az 1-es után hat/hét/nyolc darab számjegy álljon. 
