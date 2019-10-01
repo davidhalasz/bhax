@@ -7,20 +7,581 @@
     </info>
     
     <section>
-        <title></title>
+        <title>Liskov helyettesítés sértése</title>
         <para>
-           
+            Írjunk olyan OO, leforduló Java és C++ kódcsipetet, amely megsérti a Liskov elvet! Mutassunk rá a 
+            megoldásra: jobb OO tervezés.
+        </para>
+        <para>
+            Felhasznált irodalom: <citation>PROTECHNIKA</citation>           
+        </para>
+        
+        <para>
+            A Liskov féle behellyettesítési elv (LSP) egy olyan programozási technológia, amely során a program viselkedése 
+            nem változik meg attól, hogy az ős osztály egy példánya helyett a jövőben valamelyik gyermek osztályának példányát 
+            használom. Eredeti angol megfogalmazása: „If for each object o1 of type S there is an object o2 of type T such that 
+            for all programs P defined in terms of T, the behavior of P is unchanged when o1 is substituted for o2 then S is a subtype of T”. 
+            Az LSP tehát akkor érvényesül, ha az az altípus egyes műveleteinek
+        
+            <itemizedlist mark='opencircle'>
+                <listitem>
+                    <para>
+                        argumentumai bővebb típusra cserélhetőek
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        visszatérési értéke szűkebb típusú lehet
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        kivételkezelése nem dobhat más típust, mint az őstípus megfelelő műveletei, kivéve, ha a kivétel típusát szűkítettük
+                    </para>
+                </listitem>
+            </itemizedlist>
+        
+            Egy programban érvényesül még az LSP, ha teljesül még:
+        
+            <itemizedlist mark='opencircle'> 
+                <listitem>
+                    <para>
+                        az altípusban nem erősebbek az előfeltételek, mint az őstípusban,
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        az altípusban az utófeltételek nem gyengébbek, mint az őstípusban,
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        az őstípus invariánsainak az altípusban is invariánsnak kell maradniuk,
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        az altípus új műveletei nem módosíthatják, az őstípusból is elérhető állapotot, csak az újonnan bevezetett részeket.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        
+            Példaként nézzünk meg egy Java kódcsipetet, ami megsérti a Liskov elvet. Bevezetésként egy olyan programról lesz szó, ahol az ősosztály a 
+            Madár lesz, amihez két gyermek tartozik: a sas és a pingvin. A téma pedig a repülési képesség lesz. 
+        </para>
+        <programlisting  language="java"><![CDATA[
+// ez a T az LSP-ben
+class Madar {
+    public void repul() {
+        System.out.println("Tud repülni.\n");
+     }
+}
+
+
+// itt jönnek az LSP-s S osztályok
+class Sas extends Madar {
+    public void repul() {
+        System.out.println("A sas repül.\n");
+    }
+}
+
+class Pingvin extends Madar {
+
+}
+
+class LiskovSertJava {
+    public static void repulok(Madar r) {
+        r.repul();
+    }
+    public static void main(String[] args) {
+        Madar sas = new Sas();
+        Madar pingvin = new Pingvin(); 
+        
+        repulok(sas);
+        repulok(pingvin); // sérül az LSP, mert a repulok() függvény röptetné a Pingvint, ami ugye lehetetlen.
+    }
+}
+
+        ]]>
+        </programlisting>
+        <figure>
+            <title>Az LSP megsértése</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/liskovsert.png" width="80%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            A fenti képen láthatjuk, hogy a sas tud repülni, de emellett kiírja, hogy az adott osztályhoz tartozó pingvin is "Tud repülni.". Ez pedig 
+            téves, ami az LSP sérülésének eredméye. Ez azért lehetséges, mert minden gyermek a <function>repulok()</function> metódust is örökli a <function>Madar</function> ősosztályból. 
+            Ahhoz, hogy ne sértsük a LSP-t, át kell írnunk a programunkat úgy, hogy az ősosztály gyermekei maradjanak madarak, de ne minden madár 
+            tudjon repülni, ehhez pedig használnunk kell egy interface deklarációt, aminek a neve jelen esetben a <function>Madar</function>, ami egy absztrakt típusú lesz. Továbbá lesznek még 
+            <function>TudRepulni</function> és <function>NemTudRepulni</function> public típusú interfészek is, amik már más csomagokból is elérhetővé válnak.
+            Ezeket az interfészeket a <function>implements</function> kulcsszóval implementálhatjuk. Egy osztály tetszőleges számú interfészt implementálhat, 
+            ezáltal többszörös öröklődéshez hasonló dolog jöhet létre. A <function>Sas</function> osztályba implementáljuk a <function>TudRepulni</function> interfészt, majd a kapcsos 
+            zárójelek közé tesszük be az előző programunkból ismert <function>repul()</function> metódust. A <function>Pingvin</function> osztály értelemszerűen, megkapja a <function>NemTudRepulni</function> 
+            interfészt. Itt most nem adunk meg semmilyen tulajdonságot. 
+        </para>
+        <programlisting  language="java"><![CDATA[
+interface Madar {
+
+}
+
+interface TudRepulni extends Madar {
+    public void  repul();
+}
+
+interface NemTudRepulni extends Madar {
+    
+}
+
+class Sas implements TudRepulni {
+    public void repul() {
+        System.out.println("A sas repül.");
+    }
+}
+
+class Pingvin implements NemTudRepulni {
+    public void repul() {
+        System.out.println("A pingvin nem repül.");
+    }
+}
+
+class LiskovJava {
+    public static void repulok(TudRepulni r) {
+        r.repul();
+    }
+
+    public static void main(String[] args) {
+        Sas sasR = new Sas();
+        Pingvin pingvinR = new Pingvin();
+
+        repulok(sasR);
+        //repulok(pingvinR); 
+    }
+}
+        ]]>
+        </programlisting>
+        <figure>
+            <title>Az LSP betartása</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/liskovjava.png" width="80%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            A program futtatása után már pontosan azt az eredményt kapjuk, amit vártunk. Ha a programuk végén kivesszük a kommentjelet 
+            a <function>repulok(pingvinR)</function> előtt, akkor a fordítás során 
+            hibaüzenetet fogunk kapni, mert a pingvin nem örökölheti a repülési képességet az LSP miatt. Most pedig ugyanezt nézzük meg c++ verzióban is. Először kezdjük a 
+            Liskov elv megsértésével:
+        </para>
+        <programlisting  language="java"><![CDATA[
+#include <iostream>
+
+// ez a T az LSP-ben
+class Madar {
+public:
+     virtual void repul() {
+          std::cout << "Tud repülni.\n";
+     };
+};
+
+// ez a két osztály alkotja a "P programot" az LPS-ben
+class Program {
+public:
+     void fgv ( Madar &madar ) {
+          madar.repul();
+     }
+};
+
+// itt jönnek az LSP-s S osztályok
+class Sas : public Madar
+{};
+
+class Pingvin : public Madar // ezt úgy is lehet/kell olvasni, hogy a pingvin tud repülni
+{};
+
+int main ( int argc, char **argv )
+{
+     Program program;
+     Madar madar;
+     program.fgv ( madar );
+
+     Sas sas;
+     program.fgv ( sas );
+
+     Pingvin pingvin;
+     program.fgv ( pingvin ); // sérül az LSP, mert a P::fgv röptetné a Pingvint, ami ugye lehetetlen.
+
+}
+        ]]>
+        </programlisting>
+    </section>
+    <section>
+        <title>Szülő-gyerek</title>
+        <para>
+            Írjunk Szülő-gyerek Java és C++ osztálydefiníciót, amelyben demonstrálni tudjuk, hogy az ősön
+            keresztül csak az ős üzenetei küldhetőek!
         </para>
         <para>
             Megoldás forrása: <link xlink:href=""></link>                 
         </para>
         <para>
-            
+            Ebben a feladatban olyan programot mutatok be, amivel demonstrálni lehet, hogy az ős osztály csak a 
+            azt tudja elérni a gyermekén, ami már az ősosztályban definiáltunk. 
         </para>
         <programlisting  language="java"><![CDATA[
+class Teacher {
 
+    protected String tName;
+    
+    public void setName(String name) {
+        tName = name;
+    }
+}
 
+class Student extends Teacher {
+
+    public String getName() {
+        return tName;
+    }
+}
+    
+class School {
+    public static void main (String args[]) {
+
+        Teacher t = new Student();
+        t.setName("Tanár");
+        
+        Student s = new Student();
+        s.setName("Diák");
+        
+        System.out.println(s.getName() + " " + t.getName());
+    }
+}
         ]]>
         </programlisting>
-    </section>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+        <para>
+            Ez a program tehát hibát fog jelezni a <function>Teacher t = new Student();</function> 
+            miatt, mert a program nem engedi, hogy az altípust szupertípusként használjuk.
+        </para>
+        <figure>
+            <title>A School.java program fordítása</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/school.png" width="80%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            És most ugyanez c++ nyelven, ahol a fordítás során a következő hibaüzenetet kapjuk: 
+            <function>‘class Teacher’ has no member named ‘getName’;</function>
+        </para>
+        <programlisting  language="java"><![CDATA[
+#include<iostream>
+#include <string>
+
+class Teacher {
+    
+    public:
+        
+        std::string t_name;
+
+        Teacher(std::string name) {
+            t_name = name;
+        }
+
+        std::string teachName(){
+            return t_name;
+        }
+};
+    
+class Student : public Teacher {
+    public:
+        Student(std::string s_name): Teacher(s_name) {
+            t_name = s_name;
+        }
+
+        std::string getName(){
+            return t_name;
+        }
+};
+
+int main (int argc, char **argv) {
+    std::string stName = "Thomas";
+
+    Teacher* t = new student(stName);
+    Student* s = new Student(stName);
+    
+    std::cout << s->getName() << t->getName() << std::endl;
+}
+        ]]>
+        </programlisting>
+    </section> 
+
+    <section>
+        <title>Anti OO</title>
+        <para>
+            A BBP algoritmussal 4 a Pi hexadecimális kifejtésének a 0. pozíciótól számított 10<superscript>6</superscript>, 10<superscript>7</superscript>,10<superscript>8</superscript> 
+            darab jegyét határozzuk meg C, C++, Java és C# nyelveken és vessük össze a futási időket!
+        </para>
+        <para>
+            Ebben a feladatban az előző fejezetben megismert BBP algoritmussal fogunk dolgozni. A különböző nyelven megírt programokat 
+            most nem célom bemásolni és ismertetni, mert lényeges különbségek nincsenek benne és itt most inkább a kapott eredmények az érdekesek számunkra. 
+            Mindegyik programban a for ciklus fejlécében a <function>d</function> változó értékét kell változtatni, úgy, hogy az 1-es után hat/hét/nyolc darab számjegy álljon. 
+            A programok fordítása majd futtatása az alábbiak alapján történik:
+        </para>
+
+        <para>
+            C
+        </para>
+        <screen>
+g++ pi_bbp_bench.c  -o pi_bbp_bench -lm
+./pi_bbp_bench
+        </screen>
+
+        <para>
+            C++
+        </para>
+        <screen>
+g++ BBP_test.cpp -o bbpTest
+./bbpTest
+        </screen>
+
+        <para>
+        Java
+        </para>
+        <screen>
+javac PiBBPBench.java
+java PiBBPBench
+        </screen>
+
+        <para>
+            C#
+        </para>
+        <screen>
+mcs PiBBPBench.cs
+mono PiBBPBench.exe
+        </screen>
+        <para>
+            A programokat egy Asus K501UB laptopon teszteltem,
+            amiben egy Intel Core i5 6200U processzor és 12GB SDRAM található benne. 
+            A kapott eredményeket egy táblázatban foglaltam össze, amiben az figyelhető meg, hogy 
+            a legrosszabbul a C++ verzió teljesített, míg a legjobb eredményt a Java nyelven megírt programmal kaptuk meg.
+        </para>
+        <table frame='all'><title>BBP algoritmus eredménye</title>
+            <tgroup cols='5' align='center' colsep='1' rowsep='1'>
+                    <colspec colname='c1'/>
+                    <colspec colname='c2'/>
+                    <colspec colname='c3'/>
+                    <colspec colname='c4'/>
+                    <colspec colname='c5'/>
+                    <thead>
+                    <row>
+                      <entry></entry>
+                      <entry>C</entry>
+                      <entry>C++</entry>
+                      <entry>Java</entry>
+                      <entry>C#</entry>
+                    </row>
+                    </thead>
+                    <tbody>
+                    <row>
+                      <entry>10<superscript>6</superscript></entry>
+                      <entry>2.111283</entry>
+                      <entry>2.44803</entry>
+                      <entry>1.883</entry>
+                      <entry>1.922333</entry>
+                    </row>
+                    <row>
+                      <entry>10<superscript>7</superscript></entry>
+                      <entry>24.401839</entry>
+                      <entry>27.7696</entry>
+                      <entry>22.144</entry>
+                      <entry>22.595576</entry>
+                    </row>
+                    <row>
+                      <entry>10<superscript>8</superscript></entry>
+                      <entry>282.93285</entry>
+                      <entry>313.902</entry>
+                      <entry>248.324</entry>
+                      <entry>256.861381</entry>
+                    </row>
+                    </tbody>
+                </tgroup>
+        </table>
+    </section>
+
+    <section>
+        <title>Hello, Android!</title>
+        <para>
+           Élesszük fel az SMNIST for Humans projektet! 
+           <link xlink:href="https://gitlab.com/nbatfai/smnist/tree/master/forHumans/SMNISTforHumansExp3/app/src/main">https://gitlab.com/nbatfai/smnist/tree/master/forHumans/SMNISTforHumansExp3/app/src/main</link> 
+           Apró módosításokat eszközölj benne, pl. színvilág.
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>                 
+        </para>
+        <para>
+            Az SMNIST egy olyan java nyelven írt program, mely megvizsgálja, hogy milyen gyorsan hány pontot tudunk megszámolni. Minél több pontot érünk el, annál gyorsabban váltakoznak a pontok. 
+            Ha meg szeretnénk változtatni a feladatban szereplő programunk színvilágát, akkor azt az <function>SMNISTSurfaceView.java</function> programban tehetjük meg.
+        </para>
+        <programlisting language="java"><![CDATA[
+            int[] bgColor =
+            {
+                    android.graphics.Color.rgb(11, 180, 250),
+                    android.graphics.Color.rgb(11, 250, 180)
+            };
+            ]]>
+        </programlisting>
+        <para>
+            Jelenleg kék és zöld között váltakoznak a színek. A piros és a sárga színhez a következő módosításokra lesz szükségünk:
+        </para>
+        <programlisting language="java"><![CDATA[
+            int[] bgColor =
+            {
+                    android.graphics.Color.rgb(252, 2, 1),
+                    android.graphics.Color.rgb(252, 253, 1)
+            };
+            ]]>
+        </programlisting>
+    </section>
+
+    <section>
+        <title>Ciklomatikus komplexitás</title>
+        <para>
+            Számoljuk ki valamelyik programunk függvényeinek ciklomatikus komplexitását! Lásd a fogalom
+            tekintetében a <link xlink:href="https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_2.pdf">https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_2.pdf (77-79 fóliát)!</link> 
+        </para>
+        <para>Felhasznált irodalom: <citation>MERES</citation></para>
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>                 
+        </para>
+        <para>
+            A ciklomatikus komplexitás a gráfelméleten alapul és a program vezérlésének bonyolultságát méri. 
+            Képlete: <function>M = E - N + 2P</function> ahol az <function>E</function> a gráf éleinek száma, az <function>N</function> a gráfban lévő csúcsok száma és a <function>P</function> 
+            pedig az összefüggő komponensek száma. Lényegében a forráskódban az elágazásokból felépülő vezérfolyam-gráf pontjai és a köztük lévő élek alapján számítható. 
+            A program eredménye egy egész szám lesz és minél alacsonyabb az érték, annál kevésbé bonyolult a vizsgált program.
+        </para>
+        <table frame='all'><title>Ciklomatikus komplexitás</title>
+            <tgroup cols='2' align='center' colsep='1' rowsep='1'>
+                    <colspec colname='c1'/>
+                    <colspec colname='c2'/>
+                    <thead>
+                    <row>
+                      <entry>Ciklomatikus komplexitás</entry>
+                      <entry>Kockázati szint</entry>
+                    </row>
+                    </thead>
+                    <tbody>
+                    <row>
+                      <entry>1-10</entry>
+                      <entry>egyszerű program, kevés kockázat</entry>
+                    </row>
+                    <row>
+                      <entry>11-20</entry>
+                      <entry>Mérsékelten bonyolult program, mérsékelt kockázat</entry>
+                    </row>
+                    <row>
+                      <entry>21-50</entry>
+                      <entry>Bonyolult program, magas kockázat</entry>
+                    </row>
+                    <row>
+                      <entry>50+</entry>
+                      <entry>Nem tesztelhető program, nagyon magas kockázat</entry>
+                    </row>
+                    </tbody>
+                </tgroup>
+        </table>
+        <para>
+            A ciklomatikus komplexitásnak vannak hátrányai is. Mivel főleg a szoftver döntési komplexitását méri, ezért az olyan adatorientált programoknál, amiben nincsenek feltételes utasítások, 
+            akkor alacsony értéket fog kapni, de ettől még elég komplex és nehezen érthető marad a program. Továbbá a nem beágyazott és a mélyen beágyazott ciklusok ugyanolyan súllyal lesznek számolva, 
+            annak ellenére, hogy az utóbbit nehezebb megérteni.
+        </para>
+        <para>
+            Most pedig lássuk, hogyan is kell lefuttatni a tesztet. Először fel kell telepítenünk a maven-t, ami a <function>sudo apt install maven</function> 
+            parancssal ehetünk meg. Hozzunk létre egy egy maven projektet a
+        </para>
+        <screen>mvn archetype:generate -DgroupId=com.monolith -DartifactId=LZW -DinteractiveMode=false</screen>
+        <para>
+             parancs megadásával. Ez létrehoz egy projektet egy mappában, ezt nyissuk meg a Visual Studio Code-ban. Az src/main/java/com/BBP mappába másoljuk be a vizsgálni kívánt java 
+             fájlokat. Én most a LZWBinFA és a PiBBPBench programokat tettem be. Találni fogunk még egy pom.xml fájlt is, ebbe kell beillesztenünk a pluginokat, ami jelen esetben így néz ki:
+        </para>
+        
+        <programlisting language="xml"><![CDATA[
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.BBp</groupId>
+    <artifactId>BBP</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>BBP</name>
+    <url>http://maven.apache.org</url>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.8.2</version>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>javancss-maven-plugin</artifactId>
+                <version>2.1</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>12</maven.compiler.source>
+        <maven.compiler.target>12</maven.compiler.target>
+    </properties>           
+    
+</project>
+                ]]>
+        </programlisting>
+        <para>
+            Ha ezzel megvagyunk már csak futtetni kell, amit egyszerűen tehetünk meg a Visual Studio Code-ban, úgy hogy az Explorer 
+            oldalsávban látni fogjuk a <function>MAVEN PROJECTS</function> menüt, amin belül lesz a BBP. Itt érhetjük el jobb klikkel a site funkcióval 
+            a futtatást.
+        </para>
+        <figure>
+            <title>Program futtatása</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="img/java/site.png" width="70%" format="PNG"/>
+                        </imageobject>
+                    </mediaobject>   
+                </figure>
+                <para>
+                    Először feltelepíti a szükséges plugint, majd a site mappába teszi be a javancss.html fájlt. Ezt egyszerűen futtathatjuk a böngészőnkben. 
+                    Az eredmények táblázatokban lesznek betéve. Nekünk most a Methods táblázat az érdekes. Az LZWBinFa CCN értéke 14, ami mérsékelten bonyolut értékű program, míg 
+                    a PiBBPBench pedig 2-es értéket kapott, ami egész jó érték.
+                </para>
+            <figure>
+                <title>Ciklusos komplexitás eredménye</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="img/java/javacss.png" width="100%" format="PNG"/>
+                    </imageobject>
+                </mediaobject>   
+            </figure>
+    </section>     
 </chapter>                
