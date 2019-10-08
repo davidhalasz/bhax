@@ -7,20 +7,677 @@
     </info>
     
     <section>
-        <title></title>
+        <title>Reverse engineering UML osztálydiagram</title>
         <para>
-           
+            UML osztálydiagram rajzolása az első védési C++ programhoz. Az osztálydiagramot a forrásokból
+            generáljuk (pl. Argo UML, Umbrello, Eclipse UML) Mutassunk rá a kompozíció és aggregáció
+            kapcsolatára a forráskódban és a diagramon, lásd még: https://youtu.be/Td_nlERlEOs.
+            <link xlink:href="https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog1_6.pdf">https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog1_6.pdf (28-32 fólia)</link>  
         </para>
         <para>
             Megoldás forrása: <link xlink:href=""></link>                 
         </para>
         <para>
-            
+            Az UML osztálydiagram segítségével statikus nézetben dokumentálhatjuk programunk részegységeit, architekturális elemeit. 
+            Az osztálydiagramban lévő osztály fogalma nem teljesen azonos az 
+            objektumorientált nyelvekből ismertekkel, mert az UML-ben általánosabb értelemben használjuk. 
+            Az osztály a problématér fogalmait reprezentálja, ugyanakkor absztrakt típusként is leírható, melynek attribútumai és operációi vannak. 
+            3 fő részből áll: osztálynév, attribútumnév: típus és operáció(). Mindig 3 részre kell osztani, még akkor is, 
+            ha nem definiáljuk az attribútumokat vagy a metódusokat. Az osztálynévnek egyedinek kell lennie, mivel ez adja az osztály identitását. 
+            Az attribútumok a tulajdonságok felsorolását adja, melynek formája: <function>Láthatósági név : típus = alapérték</function>. Négy féle láthatóságot 
+            különböztetünk meg a következő karakterek valamelyikével: + (public), # (protected), ~ (csomagszintű), - (private). 
+            Az operációs részben az osztály példányain végezhető műveleteket soroljuk fel. Az operáció jelölése: <function>láthatósági név(param) : típus{comment}</function>
         </para>
-        <programlisting  language="java"><![CDATA[
+        <para>
+            Most pedig nézzük meg, hogyan tudunk UML osztálydiagramot generálni az első C++ védési programból. Ehhez az Umbrello programot telepítettem fel az Ubuntu 
+            szoftverközpontból. Nem mondanám tökéletes programnak, mert elsőre nehézkesnek éreztem a használatát. A c++ programunkat a menüsorban található "Programkód" -> "Kódimportálási varázsló" 
+            segítségével importálhatjuk. Nem tudom, hogy másnál is előjön ez a probléma, de nálam a felugró ablaknál az "Alkönyvtár felvétele" többszöri megnyomásával 
+            sikerült csak láthatóvá tenni a <function>z3a7.cpp</function> programot. Ennek kiválasztása után a bal oldalon megjelenik az <function>LZWBinFa</function> 
+            osztály, amit az egérrel a középső ablakra húzva megjelenik a sárga háttérszínű osztálydiagram, pirossal 3 részre osztva. Van még egy 
+            fontos dolog, amit érdemes egérrel szintén kitenni, az pedig az LZWBinFa-hoz tartozó csomópont osztály. Ezt úgy érjük el, hogy a bal oldalon található fastruktúra-nézetben 
+            az LZWBinfa előtt van egy nyíl, amit lefelé nyithatunk, ezután már csak meg kell keresnünk a csomopont osztályt.
+        </para>
+        <figure>
+            <title>A Csomopont osztály kiválasztása</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/csomopont-UML.png" width="40%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            Ha ezzel megvagyunk, utána alakíthatunk rajta, úgy hogy az egyes osztályokat tetszőleges helyre húzzuk, a jobb és átláthatóbb 
+            kinézet érdekében. A képen megfigyelhető még, hogy az LZWBinfa és a Csomopont között van egy piros vonal egyik végén egy kitöltött paralelogrammával. 
+            Ez azt jelenti, hogy Csomopont az LZWBinFa részosztálya. A paralelogramma mutatja, hogy melyik az erősebb, tehát ha az osztály megszűnik, akkor 
+            a részosztályok is "meghalnak", de ez fordítva már nem igaz. Ezt nevezzük "kompozíciónak".
+        </para>
+        <figure>
+            <title>Az osztálydiagram eredménye</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/LZWBinFa_UML.png" width="100%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+    </section> 
+    
+    <section>
+        <title>Forward engineering UML osztálydiagram</title>
+        <para>
+            UML-ben tervezzünk osztályokat és generáljunk belőle forrást!
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>                 
+        </para>
+        <para>
+            Ebben a feladatban az osztálydiagramból kell most C++ forrást generálni. Ehhez az előző feladatból ismert LZWBinFa osztálydiagramot használjuk. 
+            Az umberllo programunkban a menüsorban válasszuk ki a <function>Programkód -> Kódgenerálási varázslót</function>, majd a C++ nyelv kiválasztása után elkezdhetjük átalakítani. 
+            Végeredményben 2 fájlt kapunk: az egyik az <function>LZWBinFa.cpp</function> a másik pedig egy header fájl. Ha megnézzük, akkor a legmeglepőbb talán az, 
+            hogy a programunk főbb részei a header fájlba kerültek, míg az LZWBinFa.cpp-be csak 3 üres függvény került:
+        </para>
+        <para>
+            Az LZWBinFa.cpp
+        </para>
+        <programlisting language="C++"><![CDATA[ 
+#include "LZWBinFa.h"
+ 
+LZWBinFa::LZWBinFa () {
+initAttributes();
+}
+
+LZWBinFa::~LZWBinFa () { }
+
+void LZWBinFa::initAttributes () {
+}
+]]>
+        </programlisting>
+        <para>
+            Az LZWBinFa.h
+        </para>
+        <programlisting  language="C++"><![CDATA[
+#ifndef LZWBINFA_H
+#define LZWBINFA_H
+
+#include string
+
+class LZWBinFa
+{
+public:
+
+  LZWBinFa ();
+
+  virtual ~LZWBinFa ();
+
+  void operator_ (char b)
+  {
+  }
+
+  void kiir ()
+  {
+  }
+
+  int getMelyseg ()
+  {
+  }
+
+  double getAtlag ()
+  {
+  }
+
+  double getSzoras ()
+  {
+  }
+
+  std::ostream& operator_ (std::ostream& os, LZWBinFa& bf)
+  {
+  }
+
+  void kiir (std::ostream& os)
+  {
+  }
+
+protected:
+
+  Csomopont gyoker;
+  int maxMelyseg;
+  double atlag;
+  double szoras;
+
+public:
+
+  // Protected attribute accessor methods
+  //  
+
+protected:
+
+public:
+
+  void setGyoker (Csomopont new_var)   {
+      gyoker = new_var;
+  }
+
+  Csomopont getGyoker ()   {
+    return gyoker;
+  }
+
+  void setMaxMelyseg (int new_var)   {
+      maxMelyseg = new_var;
+  }
+
+  int getMaxMelyseg ()   {
+    return maxMelyseg;
+  }
+
+  void setAtlag (double new_var)   {
+      atlag = new_var;
+  }
+
+  double getAtlag ()   {
+    return atlag;
+  }
+
+  void setSzoras (double new_var)   {
+      szoras = new_var;
+  }
+
+  double getSzoras ()   {
+    return szoras;
+  }
+protected:
+
+  void rmelyseg (Csomopont* elem)
+  {
+  }
+
+  void ratlag (Csomopont* elem)
+  {
+  }
+
+  void rszoras (Csomopont* elem)
+  {
+  }
+
+private:
+
+  Csomopont* fa;
+  int melyseg;
+  int atlagosszeg;
+  int atlagdb;
+  double szorasosszeg;
+
+public:
+
+private:
+
+public:
+
+  void setFa (Csomopont* new_var)   {
+      fa = new_var;
+  }
+
+  Csomopont* getFa ()   {
+    return fa;
+  }
+
+  void setMelyseg (int new_var)   {
+      melyseg = new_var;
+  }
+
+  int getMelyseg ()   {
+    return melyseg;
+  }
+
+  void setAtlagosszeg (int new_var)   {
+      atlagosszeg = new_var;
+  }
+
+
+  int getAtlagosszeg ()   {
+    return atlagosszeg;
+  }
+
+  void setAtlagdb (int new_var)   {
+      atlagdb = new_var;
+  }
+
+  int getAtlagdb ()   {
+    return atlagdb;
+  }
+
+  void setSzorasosszeg (double new_var)   {
+      szorasosszeg = new_var;
+  }
+
+  double getSzorasosszeg ()   {
+    return szorasosszeg;
+  }
+private:
+
+   LZWBinFa (const LZWBinFa& )
+  {
+  }
+
+  LZWBinFa& operator_ (const LZWBinFa& )
+  {
+  }
+
+  void kiir (Csomopont* elem, std::ostream& os)
+  {
+  }
+
+  void szabadit (Csomopont* elem)
+  {
+  }
+
+  void initAttributes () ;
+
+};
+
+#endif // LZWBINFA_H
 
 
         ]]>
         </programlisting>
-    </section>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+        <para>
+            Mivel az osztálydiagramban nincs lehetőség elágazásokat és for/while ciklusokat megadni, ezért ezek kimaradtak a programunkból, de ezeket leszámítva 
+            hasonló lett az eredeti C++ programunkhoz.
+        </para>
+    </section>                          
+
+    <section>
+        <title>Egy esettan</title>
+        <para>
+            A BME-s C++ tankönyv 14. fejezetét (427-444 elmélet, 445-469 az esettan) dolgozzuk fel!
+        </para>
+        <para>
+            Tutor/felhasznált forrás: <link xlink:href="https://github.com/kovacsferencz98/Prog2/tree/master/Harmadik_het/Esettan">Kovács Ferenc</link> 
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>                 
+        </para>
+        <para>
+            Ebben a feladatban olyan programot fogunk írni, amellyel egy kereskedés számítógép-alkatrész és konfigurációk nyilvántartására lesz alkalmas. 
+            Támogatnia kell a termékek állományból való betöltését, képernyőre trténő listázását, állományba való kiírását és az árképzés rugalmas kialakítását. 
+            Mivel ez egy több fájlból álló nagyon összetett program, ezért csak néhány kódcsipetről fogok írni. Az összes fájl elérhető a gitlab tárhelyen. 
+            Kezdjük a <function>product.h</function> header fájllal, amiben a Product osztály található:
+        </para>
+        <programlisting  language="C++"><![CDATA[
+#ifndef PRODUCT_H
+#define PRODUCT_H
+
+#include <iostream>
+#include <ctime>
+
+class Product {
+protected:
+    int initialPrice;
+    time_t dateOfAcquisition;
+    std::string name;
+    virtual void printParams(std::ostream& os) const;
+    virtual void loadParamsFromStream(std::istream& is);
+    virtual void writeParamsToStream(std::ostream& os) const;
+
+public:
+    Product();
+    Product(std::string name, int initialPrice, time_t dateOfAcquisition);
+    virtual ~Product() {};
+    int getInitialPrice() const;
+    std::string getName() const;
+    time_t getDateOfAcquisition() const;
+    int getAge() const;
+    virtual int getCurrentPrice() const;
+    void print(std::ostream& os) const;
+    virtual std::string getType() const = 0;
+    virtual char getCharCode() const = 0;
+    friend std::istream& operator>>(std::istream& is, Product& product);
+    friend std::ostream& operator<<(std::ostream& os, Product& product);
+};
+
+#endif /* PRODUCT_H */
+        ]]>
+        </programlisting>
+        <para>
+            A protected tagváltozókhoz tartozik az <function>initialPrice, dateOfAcquisition és name</function>, tehát a külvilág csak olvasható formában férhet majd hozzá 
+            a beszerzési árhoz, a beszerzési dátumhoz és a terméknévhez, a többi tagváltozó pedig public lesz. Ez a header fájl a <function>Product.cpp</function> fájlba lesz implementálva. 
+            Itt lesznek majd megadva a konstruktorok. Ebben a file-ban például a GetAge() kiszámolja a termék árát az akutális dátum és a beszerzési dátum alapján:
+        </para>
+        <programlisting  language="C++"><![CDATA[
+int Product::getAge() const{
+    time_t currentTime;
+    time(&currentTime);
+    double timeDiffInSec = difftime(currentTime, dateOfAcquisition);
+    return (int)(timeDiffInSec/(3600*24));
+}
+
+            ]]>
+        </programlisting>
+        <para>
+            A <function>Product::Print()</function> függvénnyel írhatjuk ki a nevet és a típust, Van még egy másik kiíró függvény is, mégpedig a <function>Product::printParams()</function> 
+            Azért van szükség külön ezt létrehozni, mert a paraméterek típusfüggőek. Itt már a beszerzási árat <function>(initialPrice)</function>, a beszerzési dátumot <function>(strDateOfAcquisition)</function>, 
+            a kort (GetAge), és az aktuális árat (GetCurrentPrice) írja ki. Ahhoz, hogy összetett termékeket adhassunk hozzá, létre kell hoznunk egy 
+            CompositeProduct osztályt, amit a Product osztályból származtatjuk. 
+        </para>
+        <programlisting language="C++"><![CDATA[ 
+// File: CompositeProduct.h
+
+#ifndef COMPOSITEPRODUCT_H
+#define COMPOSITEPRODUCT_H
+
+#include <vector>
+#include <iostream>
+
+#include "Product.h"
+
+class CompositeProduct: public Product {
+    std::vector<Product*> parts;
+protected:
+    void printParams(std::ostream& os) const;
+    void loadParamsFromStream(std::istream& is);
+    void writeParamsToStream(std::ostream& os) const;
+public:
+    CompositeProduct();
+    ~CompositeProduct();
+    void addPart(Product* product);
+};
+
+#endif // COMPOSITEPRODUCT_H
+
+//File: CompositeProduct.cpp
+
+#include "CompositeProduct.h"
+#include "ProductFactory.h"
+
+using namespace std;
+
+CompositeProduct::CompositeProduct(): Product() {}
+
+CompositeProduct::~CompositeProduct() {
+    for(unsigned i = 0; i < parts.size(); i++)
+        delete parts[i];
+    parts.clear();
+}
+
+void CompositeProduct::addPart(Product *product) {
+    parts.push_back(product);
+}
+            ]]>
+        </programlisting>
+        <para>
+            A dinamikusan létrehozott termékobjektumok létrehozása felszabadádítása a <function>CompositeProduct::~CompositeProduct()</function> 
+            belüli delete kulcsszóval történik.
+            Termékek hozzáadását pedig a <function>CompositeProduct::addPart()</function> függvényen belüli <function>parts.push_back()</function> 
+            függvény végzi el.
+        </para>
+        <programlisting language="C++"><![CDATA[
+// FILE: ProductInventory.cpp
+
+#include "ProductInventory.h"
+#include "ProductFactory.h"
+
+using namespace std;
+
+ProductInventory::~ProductInventory() {
+    emptyProdcuts();
+}
+
+void ProductInventory::emptyProdcuts() {
+    for(unsigned i = 0; i < products.size(); ++i) {
+        delete products[i];
+    }
+
+    products.clear();
+}
+
+void ProductInventory::printProducts(std::ostream& os) const {
+    for(unsigned i = 0; i < products.size(); ++i) {
+        os << i << ".: ";
+        products[i]->print(os);
+        os << endl;
+    }
+}
+
+void ProductInventory::readInventory(std::istream &is) {
+    is >> ws;
+    while(is.good()) {
+        Product* product = ProductFactory::getInstance()->readAndCreateProduct(is);
+
+        if(product) {
+            is >> *product;
+            addProduct(product);
+        }
+    }
+
+    cout << "End of reading product items.";
+}
+
+void ProductInventory::writeInventory(std::ostream &os) const {
+    for(unsigned i = 0; i < products.size(); ++i)
+        os << *products[i] << endl;
+}
+
+void ProductInventory::addProduct(Product *product) {
+    if(product == NULL)
+        throw invalid_argument("ProductInventory::AddProduct - The product parameter can not be null.");
+    products.push_back(product);
+}
+            ]]>
+        </programlisting>
+        <para>
+            A termékek nyilvántartásához a ProductInventory osztályt hozzuk létre. Olyan metódusokra lesz itt szükség, 
+            mely támogatja a termékek listájának betöltését adatfolyamból, a betöltött termékek tárolását a memóriában, 
+            a memóriában tárolt termékek adatfolyamba írását és végül pedig a termékek formázott megjelenítését.
+        </para>
+        <para>
+            Ezeken kívül vannak még további fájlaink: például a <function>ProductFactory</function> osztályunkkal érhetjük el, hogy 
+            a termékek nevét nem szerepeltetjük a keretrendszer osztályainak kódjában. A <function>ProductInventoryTest</function> 
+            osztály pedig az alkalmazásunk tesztelését szolgálja. A programunk fordítása, majd futtatása után így a következő eredményt kapjuk: 
+        </para>
+        <figure>
+            <title>A programunk futtatása</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/product.png" width="100%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            Mivel egy igen összetett programról van szó, könnyen bele lehet zavarodni, hogy mi merre van, ezért 
+            lenne jó egy UML osztálydiagram, a jobb átláthatóság érdekében, amit az alábbi kép szemlélteti:
+        </para>
+        <figure>
+                <title>Programunk UML osztálydiagramja</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="img/java/Product_UML.png" width="100%" format="PNG"/>
+                    </imageobject>
+                </mediaobject>   
+            </figure>
+    </section>
+    
+    <section>
+            <title>BPMN</title>
+            <para>
+                Rajzoljunk le egy tevékenységet BPMN-ben!
+                <link xlink:href="https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_7.pdf">https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_7.pdf (34-47 fólia)</link>  
+            </para>
+            <para>
+                Megoldás forrása: <link xlink:href=""></link>                 
+            </para>
+            <para>
+                A BPMN (Business Process Model and Notification) egy egységes folyamatábra alapú jelölés üzleti folyamatok modellezéséhez. 
+                Ebben a feladatban én egy könyvrendelés folyamatát írtam le:
+            </para>
+            <figure>
+                <title>BPMN</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="img/java/bpmn.png" width="100%" format="PNG"/>
+                    </imageobject>
+                </mediaobject>   
+            </figure>
+            <para>
+                A képen látható, hogy 3 fő águnk van, a futárszolgálat pedig további két ágra bontható (futár és ügyfélszolgálat). Először a vevői folyamatok kezdődnek el. A vevő felkeresi a weboldalt, beleteszi a 
+                kiválasztott terméket a kosárba. A kiválasztás után rendelést meg kell erősítenie, ha mégse szeretné megrendelni a terméket, akkor a folyamat véget ér, ellenkező esetben online fizetésre kerül sor, 
+                amit a 2. ágban szereplő eladó feldolgoz. A feldolgozás után  termék becsomagolásra kerül, majd értesíti az ügyfélszolgálatot. A futár átveszi a terméket, majd kiszállítja a csomagot a vevő számára.
+            </para>
+    </section>             
+
+    <section>
+        <title>BPEL Helló, Világ! - egy visszhang folyamat</title>
+        <para>
+            Egy visszhang folyamat megvalósítása az alábbi teljes „videó tutoriál” alapján:
+            <link xlink:href=" https://youtu.be/0OnlYWX2v_I"> https://youtu.be/0OnlYWX2v_I</link> 
+        </para>
+        <para>
+            Ebben a feladatban egy videó alapján kellett megcsinálni egy visszhang folyamatot. Annak ellenére, hogy a feladat megoldását lehetett látni, még így sem volt egyszerű 
+            megoldani, nagyon sok idő telt el, mire rájöttem mi is lehet a hiba. Én először a legújabb eclipse verzióval próbáltam megoldani, de itt mindig hibaüzenetekbe ütköztem, ezért 
+            helyette a az Eclipse Oxygen verzót használtam és azzal már minden jól ment. 3 programot kell tehát letölteni:
+        </para>
+        <itemizedlist mark='opencircle'>
+            <listitem>
+                <para>
+                    Eclipse Oxygen JEE
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Apache ode.war 1.3.8
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Apache Tomcat 9.0.26
+                </para>
+            </listitem>
+        </itemizedlist>
+        <para>
+            Ha mindhárom programot leszedtük, akkor az Apache ode.war fájlt másoljuk be a tomcat/webapps mappába, majd telepítsük fel az eclipse-t. 
+            Az Eclipse menüsorában válasszuk a <function>Help</function> menüt, majd az <function>install new software</function> opciót. A <function>work with</function> 
+            -nél a lefelé mutató nyíllal válasszuk ki az Oygen-t, majd a <function>SOA Developmenten</function> belül a mindhárom BPEL szóval kezdődő alkalmazást. Ekkor majd úra kell indítani 
+            az Eclipse programot és automatikusan készítegy ode mappát a tomcat/webapps-on belül.
+        </para>
+        <para>
+            Ezután következik a server beállítása. Az eclipse alján a server ablakban kell ráklikkelni a linkre, ahol a felugró ablakban válasszuk ki z Apache/ode v1.x szervert, ahogy 
+            az alábbi képen is látszik:
+        </para>
+        <figure>
+            <title>Server beállítás</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/bpel/bpel_server.png" width="100%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            Ezután jön az ODE és a Tomcat home beállítása: Az ODE mappa a tomcat/webapps/ode mappa lesz, tehát ezt kell majd kikeresni, a Tomcat pedid maga a Tomcat mappa.
+             Okézzuk le és az eclipse alján lévő serverre klikkeljünk, majd felül az <function>open launch configuration</function>-re. A felugró ablak arguments fülnél töröljük ki ezt a részletet: 
+             <function>
+                 -Djava.endorsed.dirs ... common/endorsed"
+             </function>
+        </para>
+        <figure>
+            <title>Arguments config</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/bpel/arguments.png" width="100%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            Továbbá szükségünk van még a tomcat/bin mappában lévő tomcat-juli.jar fájl hozzáadására is, amit a <function>Classpath</function> fülnél az Add External JARs gombbal könnyen hozzáadhatunk. 
+        </para>
+        <figure>
+            <title>Arguments config</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/bpel/add_jar.png" width="80%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            Mostmár elkezdhetjük az új BPEL projektünket létrehozni. Klikeljünk a menüsorban a <function>File/New/Other/BPEL 2.0/BPEL Project</function> menüpontokra és adjunk nevet 
+            a projektünknek (HelloVilag) és a Target runtime legyen az általunk létrehozott Apache Ode 1.x Runtime. Ekkor megjelenik a bal oldali sávban a Projektünk neve, amire 
+            jobb klikkel elérhetjük a <function>New/Other/BPEL Process</function> menüpontot. Ekkor adjuk meg az alábbi képen lévő adatokat:
+        </para>
+        <figure>
+            <title>New process</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/bpel/new_process.png" width="80%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            A next gomb megnyomása után újabb ablak jön be. Itt csak a Template és a Service Address résznél kell változtatni: 
+        </para>
+        <figure>
+            <title>New process 2</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/bpel/processes2.png" width="70%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            Ekkor bejön egy folyamatábrához hasonlító model. Itt a <function>FIX_ME-Add_Business_Logic_Here</function> részre klikkelve, alul a properties fülnél tudunk adatokat változtatni. 
+            Nekünk most a Description résznél a Name <function>Assign</function> lesz. Majd klikkeljünk a Details menüpontra, ahol a 4. actions-t válasszuk ki. Ekkor jön be az 
+            alábbi képnél látható from-to ablakok, ahol válasszuk ki a narancssal kijelölt részeket:
+        </para>
+        <figure>
+            <title>New process 2</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/bpel/properties1.png" width="100%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            Térjünk vissza a bal oldali oldalsávra, ahol válasszuk ki a HelloVilagArtifacts.wsdl fájlt. A HelloVilagService alatti táblázatban válasszuk ki a 
+            localhost címet és ezt is szintén változtassuk meg:
+        </para>
+        <figure>
+            <title>Localhost address</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/bpel/address.png" width="80%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            Megint menjünk vissza az oldalsávra és most a <function>bpelContent</function> mappára jobbal klikkeljünk rá, majd: New/Other/BPEL Deployment Descriptor-t 
+            válasszuk ki. Ekkor bejön a Deploy.xml ablak,ahol a lefelé mutató nyíllal hozhatjuk be a beállítási lehetőségeket. Az én beállításom így néz ki: 
+        </para>
+        <figure>
+            <title>Deploy.xml</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/bpel/deploy.png" width="80%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            Ekkor elkezdhetjük elindítani a szervert. Először aServers ablakban jobb klikkel válasszuk ki az Add and Remove opciót, majd a HelloVilag programunkat addjuk hozzá 
+            a configured oldalhoz.
+        </para>
+        <figure>
+            <title>Add and Remove</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/bpel/addserver.png" width="80%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            Újra klikkeljünk a Serverünkre és indítsuk el a start menüponttal. A bal oldali sávban a HelloVilagArtifacts.wsdl-re klikkelve válasszuk a Web services/Test with Webs Services Explorer-t. 
+            Ekkor az operations alatti kétsoros táblázatban a Name alatti process-re klikkelve adhatunk meg egy szöveget az inputba, amit a Go gombbal küldhetünk el. Az eredményt alul látni fogjuk. 
+        </para>
+        <figure>
+            <title>Input</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/bpel/webservice.png" width="100%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+    </section>             
 </chapter>  
