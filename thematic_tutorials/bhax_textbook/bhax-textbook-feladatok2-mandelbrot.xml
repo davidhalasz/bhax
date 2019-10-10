@@ -67,221 +67,176 @@
             UML-ben tervezzünk osztályokat és generáljunk belőle forrást!
         </para>
         <para>
-            Megoldás forrása: <link xlink:href=""></link>                 
+            Megoldás forrásai: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_mandelbrot/UML/ForwardUML">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_mandelbrot/UML/ForwardUML</link>                 
         </para>
         <para>
-            Ebben a feladatban az osztálydiagramból kell most C++ forrást generálni. Ehhez az előző feladatból ismert LZWBinFa osztálydiagramot használjuk. 
-            Az umberllo programunkban a menüsorban válasszuk ki a <function>Programkód -> Kódgenerálási varázslót</function>, majd a C++ nyelv kiválasztása után elkezdhetjük átalakítani. 
-            Végeredményben 2 fájlt kapunk: az egyik az <function>LZWBinFa.cpp</function> a másik pedig egy header fájl. Ha megnézzük, akkor a legmeglepőbb talán az, 
-            hogy a programunk főbb részei a header fájlba kerültek, míg az LZWBinFa.cpp-be csak 3 üres függvény került:
+            Ebben a feladatban az osztálydiagramból kell most C++ forrást generálni. Én most egy egyszerű diagramot csináltam, amiből olyan program készülne, 
+            ami kiszámolná egy négyzet területét és kerületét. Az UML osztálydiagram így néz ki:
+        </para>
+        <figure>
+            <title>Az osztálydiagram eredménye</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/negyzet_uml.png" width="100%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            Ez 4 fájlt generál: <function>Negyszog.cpp, Negyszog.h, Negyzet.cpp és Negyzet.h</function>
         </para>
         <para>
-            Az LZWBinFa.cpp
+            Negyszog.cpp
         </para>
         <programlisting language="C++"><![CDATA[ 
-#include "LZWBinFa.h"
- 
-LZWBinFa::LZWBinFa () {
+#include "Negyszog.h"
+
+Negyszog::Negyszog () {
 initAttributes();
 }
 
-LZWBinFa::~LZWBinFa () { }
+Negyszog::~Negyszog () { }
 
-void LZWBinFa::initAttributes () {
+void Negyszog::initAttributes () {
 }
-]]>
+            ]]>
         </programlisting>
-        <para>
-            Az LZWBinFa.h
-        </para>
-        <programlisting  language="C++"><![CDATA[
-#ifndef LZWBINFA_H
-#define LZWBINFA_H
 
+        <para>
+            Negyszog.h
+        </para>
+        <programlisting language="C++"><![CDATA[ 
+
+#ifndef NEGYSZOG_H
+#define NEGYSZOG_H
+            
 #include string
+            
+class Negyszog {
+    public:
+            
+    Negyszog ();
+            
+    virtual ~Negyszog ();
+            
+    int a;
+    int b;
+    int c;
+    int d;
+    int kerulet;
+    int terulet;
+            
+    void setA (int new_var)   {
+        a = new_var;
+    }
+            
+    int getA ()   {
+        return a;
+    }
+            
+    void setB (int new_var)   {
+        b = new_var;
+    }
+            
+    int getB ()   {
+        return b;
+    }
+            
+    void setC (int new_var)   {
+        c = new_var;
+    }
+            
+    int getC ()   {
+        return c;
+    }
+            
+    void setD (int new_var)   {
+        d = new_var;
+    }
+            
+    int getD ()   {
+        return d;
+    }
+            
+    void setKerulet (int new_var)   {
+        kerulet = new_var;
+    }
+            
+    int getKerulet ()   {
+        return kerulet;
+    }
+            
+    void setTerulet (int new_var)   {
+        terulet = new_var;
+    }
+            
+    int getTerulet ()   {
+        return terulet;
+    }
+            
+    Negyszog (int a_oldal, int b_oldal, int c_oldal, int d_oldal){
+              
+    }
+            
+    protected: 
+            
+    public:
+...            
+            
+    private:
+            
+        void initAttributes () ;
+            
+    };
+            
+    #endif // NEGYSZOG_H
+            
+            ]]>
+        </programlisting>
 
-class LZWBinFa
-{
-public:
+        <para>
+            Negyzet.cpp
+        </para>
+        <programlisting language="C++"><![CDATA[ 
+#include "Negyzet.h" 
 
-  LZWBinFa ();
-
-  virtual ~LZWBinFa ();
-
-  void operator_ (char b)
-  {
-  }
-
-  void kiir ()
-  {
-  }
-
-  int getMelyseg ()
-  {
-  }
-
-  double getAtlag ()
-  {
-  }
-
-  double getSzoras ()
-  {
-  }
-
-  std::ostream& operator_ (std::ostream& os, LZWBinFa& bf)
-  {
-  }
-
-  void kiir (std::ostream& os)
-  {
-  }
-
-protected:
-
-  Csomopont gyoker;
-  int maxMelyseg;
-  double atlag;
-  double szoras;
-
-public:
-
-  // Protected attribute accessor methods
-  //  
-
-protected:
-
-public:
-
-  void setGyoker (Csomopont new_var)   {
-      gyoker = new_var;
-  }
-
-  Csomopont getGyoker ()   {
-    return gyoker;
-  }
-
-  void setMaxMelyseg (int new_var)   {
-      maxMelyseg = new_var;
-  }
-
-  int getMaxMelyseg ()   {
-    return maxMelyseg;
-  }
-
-  void setAtlag (double new_var)   {
-      atlag = new_var;
-  }
-
-  double getAtlag ()   {
-    return atlag;
-  }
-
-  void setSzoras (double new_var)   {
-      szoras = new_var;
-  }
-
-  double getSzoras ()   {
-    return szoras;
-  }
-protected:
-
-  void rmelyseg (Csomopont* elem)
-  {
-  }
-
-  void ratlag (Csomopont* elem)
-  {
-  }
-
-  void rszoras (Csomopont* elem)
-  {
-  }
-
-private:
-
-  Csomopont* fa;
-  int melyseg;
-  int atlagosszeg;
-  int atlagdb;
-  double szorasosszeg;
-
-public:
-
-private:
-
-public:
-
-  void setFa (Csomopont* new_var)   {
-      fa = new_var;
-  }
-
-  Csomopont* getFa ()   {
-    return fa;
-  }
-
-  void setMelyseg (int new_var)   {
-      melyseg = new_var;
-  }
-
-  int getMelyseg ()   {
-    return melyseg;
-  }
-
-  void setAtlagosszeg (int new_var)   {
-      atlagosszeg = new_var;
-  }
-
-
-  int getAtlagosszeg ()   {
-    return atlagosszeg;
-  }
-
-  void setAtlagdb (int new_var)   {
-      atlagdb = new_var;
-  }
-
-  int getAtlagdb ()   {
-    return atlagdb;
-  }
-
-  void setSzorasosszeg (double new_var)   {
-      szorasosszeg = new_var;
-  }
-
-  double getSzorasosszeg ()   {
-    return szorasosszeg;
-  }
-private:
-
-   LZWBinFa (const LZWBinFa& )
-  {
-  }
-
-  LZWBinFa& operator_ (const LZWBinFa& )
-  {
-  }
-
-  void kiir (Csomopont* elem, std::ostream& os)
-  {
-  }
-
-  void szabadit (Csomopont* elem)
-  {
-  }
-
-  void initAttributes () ;
-
-};
-
-#endif // LZWBINFA_H
-
-
-        ]]>
+Negyzet::Negyzet () {
+}
+            
+Negyzet::~Negyzet () { }
+                        
+            ]]>
         </programlisting>
         <para>
-            Mivel az osztálydiagramban nincs lehetőség elágazásokat és for/while ciklusokat megadni, ezért ezek kimaradtak a programunkból, de ezeket leszámítva 
-            hasonló lett az eredeti C++ programunkhoz.
+            Negyzet.h
         </para>
+        <programlisting language="C++"><![CDATA[ 
+#ifndef NEGYZET_H
+#define NEGYZET_H
+#include "Negyszog.h"
+            
+#include string
+            
+class Negyzet : public Negyszog {
+    public:
+            
+    Negyzet ();
+            
+    virtual ~Negyzet ();
+            
+    Negyzet (int a_oldal, int b_oldal, int c_oldal, int d_oldal)
+    {
+    }
+            
+    protected: 
+            
+    public:
+            
+...
+            
+    #endif // NEGYZET_H
+                        
+            ]]>
+        </programlisting>
     </section>                          
 
     <section>
@@ -290,10 +245,10 @@ private:
             A BME-s C++ tankönyv 14. fejezetét (427-444 elmélet, 445-469 az esettan) dolgozzuk fel!
         </para>
         <para>
-            Tutor/felhasznált forrás: <link xlink:href="https://github.com/kovacsferencz98/Prog2/tree/master/Harmadik_het/Esettan">Kovács Ferenc</link> 
+            Tutor/felhasznált forrás: <link xlink:href="https://github.com/kovacsferencz98/Prog2/tree/master/Harmadik_het/Esettan">Kovács Ferencz</link> 
         </para>
         <para>
-            Megoldás forrása: <link xlink:href=""></link>                 
+            Megoldás forrásai: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_mandelbrot/BME">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_mandelbrot/BME</link>                 
         </para>
         <para>
             Ebben a feladatban olyan programot fogunk írni, amellyel egy kereskedés számítógép-alkatrész és konfigurációk nyilvántartására lesz alkalmas. 
