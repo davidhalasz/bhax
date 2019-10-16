@@ -10,41 +10,413 @@
         <title>Encoding</title>
         <para>Fordítsuk le és futtassuk a Javat tanítok könyv MandelbrotHalmazNagyító.java forrását úgy, hogy a
             fájl nevekben és a forrásokban is meghagyjuk az ékezetes betűket!
-            https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/adatok.html</para>
+            <link xlink:href="https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/adatok.html">https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/adatok.html</link>
+        </para>
+        <para>
+            Ebben a feladatban a már jól ismert Mandelbrot halmazt kellett futtatni úgy, hogy az ékezetes betűket nem kellett ékezet nélkülire átírnunk. Ehhez 3 programra 
+            lesz szükségünk: MandelbrotHalmaz.java MandelbrotHalmazNagyító.java és MandelbrotIterációk.java. Az ékezetes betűk kezeléséhez az <function>-encoding</function> kapcsolót kell használnunk és mellé 
+            pedig a megfelelő encoding karakter kódját, mint például <function>ISO-8859-2</function> <function>ISO-8859-2</function> vagy ha windowson íródott a program, akkor <function>windows-1252</function>. 
+            Erre azért van szükség, mert ha megnézzük a forráskódunkat, akkor ilyesmiket láthatunk az ékezetek helyén, mint az alábbi kódcsipeten megfigyelhetünk:
+        </para>
+        <figure>
+                <title>Kódcsipet a MandelbrotHalmaz.java forrásfájlból</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="img/java/mandelkarakter.png" width="50%" format="PNG"/>
+                    </imageobject>
+                </mediaobject>   
+            </figure>
+        <para>
+            Ezért tehát a programunk fordítása,majd futtatása a következőképpen történik: 
+        </para>
+        <screen>
+            javac -encoding ISO-8859-1 MandelbrotHalmazNagyító.java
+            java MandelbrotHalmazNagyító
+        </screen>
+        <figure>
+            <title>A MandelbrotHalmazNagyító fordítása és futtatása</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/mandelbrot.png" width="100%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
     </section>
 
     <section>
         <title>OOCWC lexer</title>
-        <para>Izzítsuk be az OOCWC-t és vázoljuk a https://github.com/nbatfai/robocar-emulator/blob/master/justine/rcemu/src/carlexer.ll lexert és kapcsolását a programunk OO struktúrájába!</para>
+        <para>Izzítsuk be az OOCWC-t és vázoljuk a <link xlink:href="https://github.com/nbatfai/robocar-emulator/blob/master/justine/rcemu/src/carlexer.ll">https://github.com/nbatfai/robocar-emulator/blob/master/justine/rcemu/src/carlexer.ll</link> 
+            lexert és kapcsolását a programunk OO struktúrájába!</para>
     </section>   
 
     <section>
-        <title>l334d1c4 5 (zöld)</title>
+        <title>l334d1c4</title>
         <para>Írj olyan OO Java vagy C++ osztályt, amely leet cipherként működik, azaz megvalósítja ezt a betű
-            helyettesítést: https://simple.wikipedia.org/wiki/Leet (Ha ez első részben nem tetted meg, akkor írasd
-            ki és magyarázd meg a használt struktúratömb memóriafoglalását!)</para>
+            helyettesítést: <link xlink:href="https://simple.wikipedia.org/wiki/Leet">https://simple.wikipedia.org/wiki/Leet</link> 
+            (Ha ez első részben nem tetted meg, akkor írasd
+            ki és magyarázd meg a használt struktúratömb memóriafoglalását!)
+        </para>
     </section>   
 
     <section>
         <title>Full screen</title>
-        <para>Készítsünk egy teljes képernyős Java programot!
-            Tipp: https://www.tankonyvtar.hu/en/tartalom/tkt/javat-tanitok-javat/ch03.html#labirintus_jatek</para>
+        <para>
+            Készítsünk egy teljes képernyős Java programot!
+            Tipp: <link xlink:href="https://www.tankonyvtar.hu/en/tartalom/tkt/javat-tanitok-javat/ch03.html#labirintus_jatek">https://www.tankonyvtar.hu/en/tartalom/tkt/javat-tanitok-javat/ch03.html#labirintus_jatek</link>
+        </para>
+        <para>
+            Ebben a feladatban egy pattogó labda programot írtam Java-ban, mely elindítás után teljes képernyőben hozza be az ablakot. 
+        </para>
+        <programlisting language="java"><![CDATA[ 
+import java.awt.Color;
+import java.awt.Graphics;
+import javax.swing.*;
+ 
+public class BouncingBall extends JPanel {
+ 
+
+  private int width;
+  private int height;
+ 
+  private float radius = 30; 
+  private float diameter = radius * 2;
+ 
+  private float X = radius + 50;
+  private float Y = radius + 20;
+ 
+  private float dx = 1;
+  private float dy = 1;
+            ]]>
+        </programlisting>
+        <para>
+            Először szükségünk lesz a java <function>Color</function>, <function>Graphics</function> osztályokra, melyekkel a labda formáját és színét 
+            adhatjuk majd meg, továbbá a teljes <function>javax.swing</function> osztályokra, ami az ablakunkkkal kapcsolatos dolgokat állíthatjuk be. 
+        </para>
+        <programlisting language="java"><![CDATA[      
+    public BouncingBall() {
+ 
+        Thread thread = new Thread() {
+            public void run() {
+                while (true) {
+                        
+                //jelenlegi képernyőméret lekérdezése
+                    width = getWidth();
+                    height = getHeight();
+                            
+                    X = X + dx ;
+                    Y = Y + dy;
+                            
+                //Ha az X tengely nem éri el a képernyő jobb szélét, lépjünk lefelé egyet, ellenkező esetben fordítsuk meg az irányt
+                    if (X - radius < 0) {
+                        dx = -dx; 
+                        X = radius; 
+                    } else if (X + radius > width) {
+                        dx = -dx;
+                        X = width - radius;
+                    }
+                            
+                //Ha az Y tengely nem éri el a képernyő alját, lépjünk lefelé egyet, ellenkező esetben fordítsuk meg az irányt.
+                    if (Y - radius < 0) {
+                        dy = -dy;
+                        Y = radius;
+                    } else if (Y + radius > height) {
+                        dy = -dy;
+                        Y = height - radius;
+                    }
+                    repaint();
+                            
+                //sleep() segítségével állíthatjuk be a sebességet
+                    try {
+                        Thread.sleep(5);
+                    } catch (InterruptedException ex) { }
+                
+                }
+            }
+        };
+        thread.start();
+}           
+        ]]>
+        </programlisting>
+        <para>
+            A BouncingBall() osztályban új szálat hozunk létre a <function>Thread()</function> függvény segítségével. 
+            a <function>getWidth()</function> és a <function>getHeight()</function> fügvénnyel kérdezhetjük le a képernyőnk jelenlegi méretét, amiket a <function>width</function> és <function>height</function> 
+            változókban tároljuk el. Az if-else elágazásokkal vizsgáljuk meg a labda helyzetét a képernyő méretéhez képest. Ha a labda eléri a képernyő szélét, akkor az else ágba lépve megváltoztatjuk a labda 
+            menetének irányát. A sebességet sleep() függvénnyel adhatjuk meg. E szál futtatásához a <function>thread.start()</function> sort is le kell írnunk.  
+        </para>
+        <programlisting language="java"><![CDATA[ 
+public void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    g.setColor(Color.GREEN);
+    g.fillOval((int)(X-radius), (int)(Y-radius), (int)diameter, (int)diameter);
+}
+            ]]>
+        </programlisting>
+        <para>
+            A <function>paintComponent()</function> függvényünknek paraméterként a Graphics osztályt adjuk meg. Ezen belül állítjuk be a színt (GREEN) és hogy a labdánk kerek legyen (fillOval).
+        </para>
+        <programlisting language="java"><![CDATA[ 
+public static void main(String[] args) {
+    JFrame frame = new JFrame("Pattogó labda");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+    frame.setContentPane(new BouncingBall());
+    frame.setVisible(true);
+    }
+}
+            ]]>
+        </programlisting> 
+        <para>
+            Végül a main függvényünkben a new JFrame zárójelében megadhatjuk ablakunk nevét, a <function>setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)</function> hozzáadja az abalakunkhoz a 
+            bezárás gombot. És végül a feladatunk megoldásához kulcsfontosságú a <function>setExtendedState(JFrame.MAXIMIZED_BOTH)</function> osztály meghívása is, ugyanis ez fogja maximalizálni a képernyőnk 
+            méretét. 
+        </para>
+        <figure>
+            <title>Teljes képernyős Java program</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/bouncing.png" width="70%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
     </section>   
 
     <section>
         <title>Paszigráfia Rapszódia OpenGL full screen vizualizáció</title>
-        <para>Lásd vis_prel_para.pdf! Apró módosításokat eszközölj benne, pl. színvilág, textúrázás, a szintek jobb
-            elkülönítése, kézreállóbb irányítás.</para>
-    </section>     
-    
-    <section>
-        <title>Paszigráfia Rapszódia LuaLaTeX vizualizáció</title>
-        <para>Lásd vis_prel_para.pdf! Apró módosításokat eszközölj benne, pl. színvilág, még erősebb 3D-s hatás.</para>
+        <para>
+            Lásd vis_prel_para.pdf! Apró módosításokat eszközölj benne, pl. színvilág, textúrázás, a szintek jobb
+            elkülönítése, kézreállóbb irányítás.
+        </para>
+        <para>
+            Ennek a programnak az elindításához szükségünk lesz egy GLU csomagra, melynek telepítése: 
+        </para>
+        <screen>
+            sudo apt-get install libsdl2-dev
+            sudo apt install libsdl2-image-dev
+        </screen>
+        <para>
+            A program futtatásához pedig az alábi parancssorra lesz szükségünk:
+        </para>
+        <screen>
+g++ para6.cpp -o para -lboost_system -lGL -lGLU -lglut
+./para 3:2:1:1:0:3:2:1:0:2:0:2:1:1:0:3:3:0:2:0:1:1:0:1:0:1:0:1:
+        0:2:2:0:1:1:1:3:2:1:0:2:0:2:1:1:1:2:3:0:1:1:1:1:0:3:3:0:
+        1:0:2:1:0:1:0:2:2:0:0:0:1:3:1:0:1:3:2:1:0:2:0:3:3:0:1:0:2:1:0
+        </screen>
+        <para>
+            Ahhoz, hogy megváltoztassuk a 3D-s kockánk színét, a <function>glColor3f()</function> függvényt kell használnunk. Én most egy átmenetes kockára gondoltam, amihez a következő változtatásra lesz szükségünk 
+            a para6.cpp programunkon belül: 
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+        glColor3f ( 1.0f, 0.0f, 0.0f );
+        glVertex3f ( -1.0f, 1.0f, 1.0f );
+        glColor3f ( 0.0f, 1.0f, 0.0f );
+        glVertex3f ( 1.0f, 1.0f, 1.0f );
+        glColor3f ( 0.0f, 0.6f, 0.0f );
+        glVertex3f ( 1.0f,-1.0f, 1.0f );
+        glColor3f ( 0.0f, 0.0f, 1.0f );
+        glVertex3f ( -1.0f,-1.0f, 1.0f );
+            ]]>
+        </programlisting>
+        <figure>
+                <title>Színátmenetes kocka</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="img/java/cube1.png" width="70%" format="PNG"/>
+                    </imageobject>
+                </mediaobject>   
+        </figure>
+        <para>
+            A képen látható az eredmény a program újrafordítása és futtatása után. Billentyűzettel rányíthatjuk a kockákat, mégpedig a fel-le-bal-jobb gombbal mozgathatjuk és a 0-1-2 billentyűzettel változtathatjuk meg, hogy melyik kockát 
+            szeretnénk irányítani. De ha azt szeretnénk, hogy a kockaforgatást az 'asdw' billentyűzettel valósítsuk meg, akkor az alábbi kódcsipetet kell módosítanunk: 
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+void keyboard ( unsigned char key, int x, int y )
+{       
+        if ( key == 'w' ) {
+                cubeLetters[index].rotx += 5.0;
+        } else if ( key =='s' ) {
+                cubeLetters[index].rotx -= 5.0;
+        } else if ( key == 'd' ) {
+                cubeLetters[index].roty -= 5.0;
+        } else if ( key == 'a' ) {
+                cubeLetters[index].roty += 5.0;
+        } else if ( key == '0' ) {
+                index=0;
+        } else if ( key == '1' ) {
+                index=1;
+        } else if ( key == '2' ) {
+                index=2;
+        } else if ( key == '3' ) {
+                index=3;
+        } else if ( key == '4' ) {
+                index=4;
+        } else if ( key == '5' ) {
+                index=5;
+        } else if ( key == '6' ) {
+                index=6;
+        } else if ( key == 't' ) {
+                transp = !transp;
+        } else if ( key == '-' ) {
+                ++fovy;
+
+                glMatrixMode ( GL_PROJECTION );
+                glLoadIdentity();
+                gluPerspective ( fovy, ( float ) w/ ( float ) h, .1f, 1000.0f );
+                glMatrixMode ( GL_MODELVIEW );
+
+        } else if ( key == '+' ) {
+                --fovy;
+
+                glMatrixMode ( GL_PROJECTION );
+                glLoadIdentity();
+                gluPerspective ( fovy, ( float ) w/ ( float ) h, .1f, 1000.0f );
+                glMatrixMode ( GL_MODELVIEW );
+
+        }
+
+        glutPostRedisplay();
+
+}
+
+void skeyboard ( int key, int x, int y )
+{
+        if ( key == GLUT_KEY_PAGE_UP ) {
+                cubeLetters[index].rotz += 5.0;
+        } else if ( key == GLUT_KEY_PAGE_DOWN ) {
+                cubeLetters[index].rotz -= 5.0;
+        }
+
+        glutPostRedisplay();
+}
+                ]]>
+            </programlisting>
+            <para>
+                Kíváncsi voltam még, hogyan tudok piramis rajzolni, ezért 4 elemként hozzáadtam a draw függvényen belül: 
+            </para>
+            <programlisting language="c++"><![CDATA[ 
+glLoadIdentity();                  
+glTranslatef(-5.5f, 0.0f, -6.0f);  
+ 
+   glBegin(GL_TRIANGLES);           
+     
+      glColor3f(1.0f, 0.0f, 0.0f);     
+      glVertex3f( 0.0f, 1.0f, 0.0f);
+      glColor3f(0.0f, 1.0f, 0.0f);     
+      glVertex3f(-1.0f, -1.0f, 1.0f);
+      glColor3f(0.0f, 0.0f, 1.0f);     
+      glVertex3f(1.0f, -1.0f, 1.0f);
+ 
+     
+      glColor3f(1.0f, 0.0f, 0.0f);    
+      glVertex3f(0.0f, 1.0f, 0.0f);
+      glColor3f(0.0f, 0.0f, 1.0f);    
+      glVertex3f(1.0f, -1.0f, 1.0f);
+      glColor3f(0.0f, 1.0f, 0.0f);    
+      glVertex3f(1.0f, -1.0f, -1.0f);
+ 
+      
+      glColor3f(1.0f, 0.0f, 0.0f);     
+      glVertex3f(0.0f, 1.0f, 0.0f);
+      glColor3f(0.0f, 1.0f, 0.0f);     
+      glVertex3f(1.0f, -1.0f, -1.0f);
+      glColor3f(0.0f, 0.0f, 1.0f);    
+      glVertex3f(-1.0f, -1.0f, -1.0f);
+ 
+      
+      glColor3f(1.0f,0.0f,0.0f);       
+      glVertex3f( 0.0f, 1.0f, 0.0f);
+      glColor3f(0.0f,0.0f,1.0f);      
+      glVertex3f(-1.0f,-1.0f,-1.0f);
+      glColor3f(0.0f,1.0f,0.0f);       
+      glVertex3f(-1.0f,-1.0f, 1.0f);
+   glEnd();  
+
+                ]]>
+            </programlisting>
+            <figure>
+                    <title>Színátmenetes kocka</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata fileref="img/java/piramis.png" width="70%" format="PNG"/>
+                        </imageobject>
+                    </mediaobject>   
+            </figure>
+
     </section>     
 
     <section>
         <title>Perceptron osztály</title>
-        <para>Dolgozzuk be egy külön projektbe a projekt Perceptron osztályát!
-            Lásd https://youtu.be/XpBnR31BRJY</para>
+        <para>
+            Dolgozzuk be egy külön projektbe a projekt Perceptron osztályát! Lásd <link xlink:href="https://youtu.be/XpBnR31BRJY">https://youtu.be/XpBnR31BRJY</link>
+        </para>
+        <para>
+            A perceptron a legismertebb neurális modell, amit Rosenblatt talált fel 1957-ben. Ebből alakult ki a többrétegű perceptron hálózatok (MLP), ami a legtöbbször alkalmazott 
+            struktúra a gyakorlatban. Ilyen MLP-t figyelhetünk meg az <filename>ml.hpp</filename> fájlban. A programunk futtatásához szükségünk lesz még a 
+            <filename>main.cpp</filename> programra és egy mandelbrot képre, amit az 5.1. fejezetben már megcsináltuk. Továbbá fel kell legyen telepítve a <function>png++</function> is. 
+            A main.cpp fájlunk a következőképpen fog kinézni: 
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+#include <iostream>
+#include "ml.hpp"
+#include <png++/png.hpp>
+                                
+int main (int argc, char **argv)
+    {
+        png::image <png::rgb_pixel> png_image (argv[1]);
+        int size = png_image.get_width() *png_image.get_height();
+                    
+        Perceptron* p = new Perceptron (3, size, 256, size);
+                    
+        double* image = new double[size];
+                    
+        for (int i = 0; i<png_image.get_width(); ++i)
+            for (int j = 0; j<png_image.get_height(); ++j)
+                image[i*png_image.get_width() +j] = png_image[i][j].red;
+                            
+        double* pimage = (*p) (image);
+                    
+        for (int i = 0; i<png_image.get_width(); ++i)
+            for (int j = 0; j<png_image.get_height(); ++j)
+                png_image[i][j].green = pimage[i*png_image.get_height()+i];
+                            
+        png_image.write("output.png");
+                    
+        delete p;
+        delete [] image;
+    }
+                
+            ]]>
+        </programlisting>
+        <para>
+            Lényegében a pixelekkel "játszunk". A for ciklusban az eredeti kép szélessége és magassága alapján mi most a zöld komponenseit változtatjuk meg, azaz lenullázzuk.<![CDATA[ ]]>
+            A kék és piros színnel együtt lilát kellene kapnunk, ezért nézzük meg, hogy működik e a programunk az alábbi parancssorok megadásával, ahol a mandelp.png egy 
+            lehet a általunk korábban készített mandelbrot képünk. :
+        </para>
+        <screen>
+            g++ ml.hpp main.cpp -lpng -o perceptron -std=c++11
+            ./perceptron mandelp.png
+        </screen>
+        <figure>
+                <title>Perceptron eredmény</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="img/java/mandelout.png" width="70%" format="PNG"/>
+                    </imageobject>
+                </mediaobject>   
+        </figure>
+        <para>
+            A képen látható, hogy azt az eredményt kaptuk, amire számítottunk. Ha szeretnénk több színt is lenullázni, akkor könnyen megtehetjük egy kis módosítással, mint például: 
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+for (int i = 0; i<png_image.get_width(); ++i)
+    for (int j = 0; j<png_image.get_height(); ++j) {
+        png_image[i][j].green = pimage[i*png_image.get_height()+i];
+        png_image[i][j].blue = pimage[i*png_image.get_height()+i];
+    }    
+        ]]>
+        </programlisting>
+        <para>
+            Azaz for cikluson belül kapcsos zárójelek között adhatunk meg további színeket.
+        </para>
     </section>         
 </chapter> 
