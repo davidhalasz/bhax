@@ -167,7 +167,7 @@ public static void main(String[] args) {
         </programlisting> 
         <para>
             Végül a main függvényünkben a new JFrame zárójelében megadhatjuk ablakunk nevét, a <function>setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)</function> hozzáadja az abalakunkhoz a 
-            bezárás gombot. És végül a feladatunk megoldásához kulcsfontosságú a <function>setExtendedState(JFrame.MAXIMIZED_BOTH)</function> osztály meghívása is, ugyanis ez fogja maximalizálni a képernyőnk 
+            bezárás gombot. És végül a feladatunk megoldásához kulcsfontosságú a <function>setExtendedState(JFrame.MAXIMIZED_BOTH)</function> osztály meghívása is, ugyanis ez fogja maximalizálni az ablakunk 
             méretét. 
         </para>
         <figure>
@@ -203,7 +203,7 @@ g++ para6.cpp -o para -lboost_system -lGL -lGLU -lglut
         1:0:2:1:0:1:0:2:2:0:0:0:1:3:1:0:1:3:2:1:0:2:0:3:3:0:1:0:2:1:0
         </screen>
         <para>
-            Ahhoz, hogy megváltoztassuk a 3D-s kockánk színét, a <function>glColor3f()</function> függvényt kell használnunk. Én most egy átmenetes kockára gondoltam, amihez a következő változtatásra lesz szükségünk 
+            Ahhoz, hogy megváltoztassuk a 3D-s kockánk színét, a <function>glColor3f()</function> függvényt kell használnunk. Én most egy színátmenetes kockára gondoltam, amihez a következő változtatásra lesz szükségünk 
             a para6.cpp programunkon belül: 
         </para>
         <programlisting language="c++"><![CDATA[ 
@@ -226,8 +226,8 @@ g++ para6.cpp -o para -lboost_system -lGL -lGLU -lglut
                 </mediaobject>   
         </figure>
         <para>
-            A képen látható az eredmény a program újrafordítása és futtatása után. Billentyűzettel rányíthatjuk a kockákat, mégpedig a fel-le-bal-jobb gombbal mozgathatjuk és a 0-1-2 billentyűzettel változtathatjuk meg, hogy melyik kockát 
-            szeretnénk irányítani. De ha azt szeretnénk, hogy a kockaforgatást az 'asdw' billentyűzettel valósítsuk meg, akkor az alábbi kódcsipetet kell módosítanunk: 
+            A képen látható az eredmény a program újrafordítása és futtatása után. Billentyűzettel irányíthatjuk a kockákat, mégpedig a fel-le-bal-jobb gombbal mozgathatjuk és a 0-1-2 billentyűzettel változtathatjuk meg, hogy melyik kockát 
+            szeretnénk irányítani. De ha azt szeretnénk, hogy a kockaforgatást az 'asdw' billentyűzettel történjen, akkor az alábbi kódcsipetet kell módosítanunk: 
         </para>
         <programlisting language="c++"><![CDATA[ 
 void keyboard ( unsigned char key, int x, int y )
@@ -291,7 +291,7 @@ void skeyboard ( int key, int x, int y )
                 ]]>
             </programlisting>
             <para>
-                Kíváncsi voltam még, hogyan tudok piramis rajzolni, ezért 4 elemként hozzáadtam a draw függvényen belül: 
+                Kíváncsi voltam még, hogyan tudok piramist rajzolni, ezért 4. elemként hozzáadtam a draw függvényen belül: 
             </para>
             <programlisting language="c++"><![CDATA[ 
 glLoadIdentity();                  
