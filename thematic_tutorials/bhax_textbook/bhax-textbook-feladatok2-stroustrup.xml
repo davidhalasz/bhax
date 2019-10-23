@@ -10,12 +10,177 @@
         <title>JDK osztályok</title>
         <para>Írjunk olyan Boost C++ programot (indulj ki például a fénykardból) amely kilistázza a JDK összes
 osztályát (miután kicsomagoltuk az src.zip állományt, arra ráengedve)!</para>
+    
+    <para>
+       Ehhez a feladathoz a boost oldalán található forrást vettem alapul, pontosabban annak egyik main függvényét. 
+       A csak kisebb módosításokat végeztem el itt, például a try elágazásból kitöröltem mindent és helyette kiírató 
+       kódsort írtam be: 
+    </para>
+    <programlisting language="c++"><![CDATA[ 
+try {
+    int classCounter = it(p);
+    cout << "Java fájlok száma: " << classCounter << std::endl;  
+}
+        ]]>
+    </programlisting>
+    <para>
+        Továbbá include segítségével hozzá kell adni a boost/filesystem.hpp és a boost/regex.hpp headereket, amelyek kifejezetten c++ nyelre íródtak, 
+        de mikor csináltam ezt a feladatot, a neten kutakodva találtam rá, hogy a legújabb c++ változatban már alapból elérhetőek ezek a std::filesystem-et használva, 
+        így igazából nem is lenne szükségünk a boost-ra a feladat megoldása során. Mi most mégis maradjunk ennél, mert a feladat kifejezett Boost c++ programot kér. 
+        Az egyszerűség kedvéért hozzáadtam még egy <code>namespace fs = boost::filesystem;</code> is, aminek feladata, hogy a programunk írása 
+        során nem kell mindig végigírni a boost::filesystem-et, hanem helyette elég az fs rövidítést használni. Ezzel lerövidíthetjük programunkat és időt spórolhatunk meg. 
+    </para>
+    <programlisting language="c++"><![CDATA[ 
+namespace fs = boost::filesystem;
+
+int it(fs::path p){
+    int classCounter = 0;  
+
+    for (const fs::directory_entry& x : fs::recursive_directory_iterator(p)){
+        if(fs::extension(x.path().string()) == ".java"  && fs::is_regular_file(x.path())){
+            ++classCounter;
+            std::cout << "    " << x.path() << '\n';
+        }
+        
+    }
+    return classCounter;
+}
+        ]]>
+    </programlisting>
+    <para>
+        A <function>it(fs::path p)</function> függvény fogja kiszámolni a java fájlok számát. Paraméterként a forrás mappát fogjuk majd megadni. 
+        Ahhoz, hogy a mappát rekurzívan, azaz minden egyes almappát megvizsgálva járjuk be, az <function>recursive_directory_iterator(p)</function> függvényt 
+        fogjuk használni, ami paraméterként a forrásfájlt adjuk meg. Ezután if függvénnyel vizsgáljuk meg, hogy az adott fájl neve ".java" végződésű-e és hogy a vizsgált 
+        elem fájl-e. Előbbihez a fs::extension(x.path().string()) == ".java", az utóbbihoz pedig a fs::is_regular_file(x.path()) kell használnunk. 
+        Ha a feltételek teljesülnek, akkor a classCounter számát megnöveljük, minden egyes alkalommal és kiíratjuk a fájlok nevét az elérési útvonalukkal együtt. Fontos, hogy a 
+        classCounter az if-en belül legyen és ne a for-on, mert így mindent meg fog számolni, nem csak a java fájlokat, így nem kapnánk pontos eredményt. 
+        A programunk fordítása, majd futtatása a következőképpen történik: 
+    </para>
+    <figure>
+        <title></title>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="img/java/jdk.png" format="PNG"/>
+            </imageobject>
+        </mediaobject>
+    </figure>
+    </section>
+
+    <section>
+        <title>Összefoglaló: Másoló-mozgató szemantika</title>
+        <para>
+            A C++ filozófiájának egyik alapeleme, hogy a felhasználó által definiált adattípusok is ugyanolyan fontos részei legyenek egy programnak, mint a beépített típusok. 
+            A konstruktorok olyan különleges függvénymezők, melyekkel meghatározhatók, hogy egy adott osztály objektumai milyen módon hozhatóak létre. Egy konstruktor lehet a felhasználó által létrehozott, 
+            vagy a C++ rendszer alapértelmezése szerinti is. A c++ nyelvben automatikusan történik a konstruktorok meghívása, például amikor egy adott osztállyal objektum-példányt definiálunk. 
+            A konstruktorhoz kapcsolódik a destruktor is, amelynek szerepe a korábban létrehozott objektum megszüntetése. Ez is explicit vagy implicit módon hívódik elő, mint a konstruktor esetében. A konstruktor neve és 
+            az osztály nevének meg kell egyezniük, hogy a program tudja, hogy az adott függvénymező egy konstruktor. 
+        </para>
+        <para>
+            A másoló konstruktorral egy a már létező objektum alapján hozunk létre újat. Ennek az az argumentuma kötelezően referencia típusú kell, hogy legyen, továbbá célszerű a paramétert konstansnak megadni, hogy ne módosítsuk az eredeti objektumot. 
+            A konstruktor törzsében hivatkozhatunk egy másik objektum adattagjára. A létrehozott példányokat megkülönböztethetjük 
+            kétféle másolatát. A <function>mély másolat</function> esetén a teljes objektum fog lemásolódni a memóriában egy ugyanakkora, de másik memóriaterületre, így a másolaton végzett értékmódosítások nem lesznek 
+            hatással az eredeti példányra, ugyanakkor nem nevezhető hatékonynak a memóriafoglalás miatt. A másik másolási mód a <function>sekély másolat</function>, amikor referencián vagy mutatón keresztül kezeljük az objektumot. 
+            Ennek hátránya ezért az, hogy a módosítások hatással lesznek az eredeti példányra. Ezek alapján a sekély másolatot érdemesebb használni, kivéve akkor, amikor tényleg szükségünk van másodpéldányra a módosításhoz, mint ahogy majd a 
+            másoló-mozgató szemantika feladatban megfigylhetjük majd. Az ilyen saját másoló konstruktor létrehozása nagyon fontos a C++ nyelvben, mert hiánya esetén a beépített alap konstruktor hívódik meg, 
+            ami lemásolja a nem statikus tagváltozókat, ami miatt nem várt eredményt kaphatunk.
+        </para>
+        <para>
+            A C++ 11 nyelvben megjelent a mozgató konstruktor és mozgató értékadás. Ennek lényege, hogy az eredeti objektum tartalmát átrakja egy másik objektumra, majd az eredeti objektum elveszíti tartalmát, vagyis nem lesz elérhető 
+            a későbbiekben, ugyanis egy unnamed objektum lesz. Itt a paraméterként egy nem konstans jobb érték referenciát adunk meg. Ennek a referencia típusnak a jelölése a <![CDATA[&&]]>.  Akkor használjuk ezt a konstruktort, amikor a felesleges másolásokat akarjuk csökkenteni vagy ha nincs szükségünk 
+            a másolandó adat megőrzésére. A mozgatás meghívását a konstruktor törzsében a <function>std::move</function> függvény segítségével tehetjük meg.
+        </para>
     </section>
 
     <section>
         <title>Másoló-mozgató szemantika</title>
         <para>Kódcsipeteken (copy és move ctor és assign) keresztül vesd össze a C++11 másoló és a mozgató
-szemantikáját, a mozgató konstruktort alapozd a mozgató értékadásra!</para>
+                szemantikáját, a mozgató konstruktort alapozd a mozgató értékadásra!
+        </para>
+        <para>
+            Először nézzük meg a másoló konstruktort.
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+class Person {
+    public:
+        string *name;
+        int age;
+
+    Person(string name, int age) {
+        this->name = new string(name);
+        this->age = age;
+    }
+            ]]>
+        </programlisting>
+        <para>
+            A Person függvényünk két paramétert vár, egy string típusú <function>name</function> és egy integer típusú <function>age</function>-t. Ezután 
+            a destruktor következik:
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+   ~Person() {
+        cout << "Destructor!\n";
+        delete name;
+    }
+            ]]>
+        </programlisting>
+        <para>
+            A destruktorban kiíratunk egy szöveget, majd töröljük <function>name</function> pointerrel kapcsolatos objektumot.  
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+    Person(const Person &p) {
+        cout << "Copy constructor.\n";
+        name = new string(*p.name);
+        age = p.age;
+    } 
+    
+    void changeNameAndAge(string name, int age) {
+        *(this->name) = name;
+        this->age = age;
+    }
+
+    void introduce() {
+        cout <<"Hey I am "<< *name <<" and I am "<<age<< " years old."<<endl;
+    }
+};
+            ]]>
+        </programlisting>
+        <para>
+            Ez a kódcsipet maga a másoló konstruktor. A konstruktor nevének meg kell egyeznie az osztály nevével, paraméterként konstans referenciát 
+            kér. Nyomkövetés céljából kiíratunk itt is egy szöveget, majd megtörténik egy új string példányosítása.
+            Ennek a másoló konstruktornak a lényege, hogy az objektum tartalmát egy új objektumba másolja, tehát eltérő memóriacímük lesz.
+            Ennek az eredménye az alábbi lesz:
+        </para>
+        <screen>
+Hey I am Anakin and I am 8 years old.
+Copy constructor.
+Hey I am Anakin and I am 8 years old.
+Hey I am Darth Vader and I am 24 years old.
+Hey I am Anakin and I am 8 years old.
+Destructor!
+Destructor!
+        </screen>
+        <para>
+            A mozgató szemantika a másoló konstruktorral szemben nem másolást végez, hanem az objektum tartalmát cut/paste módon átruházza egy másik 
+            objektumra, majd a régi objektum tartalma elvész és unnamed lesz, azaz a későbbiekben nem tudunk rá hivatkozni. 
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+Person& operator = (Person && p) {
+        cout << "Move constructor.\n";
+        swap(name, p.name);
+        return *this;
+    }
+
+Person dark (Person && p) {
+        name = nullptr;
+        *this = move(p);
+        cout << "Move assignment\n";
+    }
+            ]]>
+        </programlisting>
+        <para>
+            Mozgató konstruktor esetén paraméterként egy jobbérték referenciát vár és a swap segítségével 
+            felcseréljük a name és a p.name mutatójának értékeit. Továbbá a name egy null pointer lesz és a 
+            move segítségével megtörténik a mozgatás. A régi memóriacíme már nem lesz elérhető. 
+        </para>
     </section>   
 
     <section>
@@ -30,10 +195,95 @@ készített titkos szövegen.</para>
         <para>Készítsünk olyan példát, amely egy képet tesz az alábbi projekt Perceptron osztályának bemenetére
 és a Perceptron ne egy értéket, hanem egy ugyanakkora méretű „képet” adjon vissza. (Lásd még a 4
 hét/Perceptron osztály feladatot is.)</para>
-    </section>   
+      
+    <para>
+        Ehhez a feladathoz az előző héten megismert perceptron programot fogjuk használni. Két lényeges dologra kell figyelnünk. Az egyik, hogy a main függvényben 
+        a new Perceptron létrehozásakor 1-es helyett "size" legyen megadva utolsó értékként:
+    </para>
+    <programlisting language="c++"><![CDATA[ 
+Perceptron* p = new Perceptron (3, size, 256, size);
+        ]]>
+    </programlisting>
+    <para>
+        A másik fontos dolog pedig a header fájlban található. Ebből csak pár kódcsipetet mutatok meg:
+    </para>
+    <programlisting language="c++"><![CDATA[ 
+Perceptron ( int nof, ... )
+    {
+        n_layers = nof;
+        
+        units = new double*[n_layers];
+        n_units = new int[n_layers];
+        
+        va_list vap;
+        
+        va_start ( vap, nof );
+        
+        for ( int i {0}; i < n_layers; ++i )
+        {
+            n_units[i] = va_arg ( vap, int );
+            
+            if ( i )
+                units[i] = new double [n_units[i]];
+        }
+        
+        va_end ( vap );
 
-    <section>
-        <title>Összefoglaló</title>
-        <para>Az előző 4 feladat egyikéről írj egy 1 oldalas bemutató „”esszé szöveget!</para>
-    </section>        
+        
+        ]]>
+    </programlisting>
+    <para>
+        A perceptron konstruktorában van egy integer típusú <function>nof</function> 
+        paraméter és egy <function>...</function>. Ez utóbbi azt jelenti, hogy változó hosszúságú argumentumlista feldolgozható. Ahhoz, hogy a paramétereket 
+        tartalmazó memóriaterületen megtaláljuk az átadott argumentumok értékét, legalább az első paramétert mindig meg kell adnunk, ami jelen esetben a nof. 
+        Include használatával hozzá kell adni a cstdarg-ot is, hogy használni tudjuk a változó hosszúságú argumentumlistát. 
+        A <function>va_start</function> segítségével inicializáljuk az argumentumok eléréséhez használt mutatót, majd a <function>va_end()</function> függvénnyel 
+        az argumentum feldolgozása után megtörténik a "takarítás".
+    </para>
+    <programlisting language="c++"><![CDATA[ 
+double* operator() ( double image [] )
+    {
+        
+        units[0] = image;
+        
+        for ( int i {1}; i < n_layers; ++i )
+        {
+            
+            #ifdef CUDA_PRCPS
+            
+            cuda_layer ( i, n_units, units, weights );
+            
+            #else
+            
+            #pragma omp parallel for
+            for ( int j = 0; j < n_units[i]; ++j )
+            {
+                units[i][j] = 0.0;
+                
+                for ( int k = 0; k < n_units[i-1]; ++k )
+                {
+                    units[i][j] += weights[i-1][j][k] * units[i-1][k];
+                }
+                
+                units[i][j] = sigmoid ( units[i][j] );
+                
+            }
+            
+            #endif
+            
+        }
+        for(int i=0; i <n_units[n_layers-1]; i++)
+            image[i] = units[n_layers-1][i];
+        
+        return image;
+        
+    }
+        ]]>
+    </programlisting>
+    <para>
+        A double pointer operator() paraméterként egy tömböt kap. Az <function>image[i] = units[n_layers-1][i];</function> kódsor segítségével az image tömbnek átadjuk az units értékeit, 
+        majd ezt adjuk vissza.
+    </para>
+    </section> 
+            
 </chapter>
