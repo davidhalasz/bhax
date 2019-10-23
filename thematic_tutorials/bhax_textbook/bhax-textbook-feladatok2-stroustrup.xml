@@ -9,7 +9,11 @@
     <section>
         <title>JDK osztályok</title>
         <para>Írjunk olyan Boost C++ programot (indulj ki például a fénykardból) amely kilistázza a JDK összes
-osztályát (miután kicsomagoltuk az src.zip állományt, arra ráengedve)!</para>
+            osztályát (miután kicsomagoltuk az src.zip állományt, arra ráengedve)!
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_strousup/jdk/javaList.cpp">https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_strousup/jdk/javaList.cpp</link>                 
+        </para>
     
     <para>
        Ehhez a feladathoz a boost oldalán található forrást vettem alapul, pontosabban annak egyik main függvényét. 
@@ -56,6 +60,13 @@ int it(fs::path p){
         classCounter az if-en belül legyen és ne a for-on, mert így mindent meg fog számolni, nem csak a java fájlokat, így nem kapnánk pontos eredményt. 
         A programunk fordítása, majd futtatása a következőképpen történik: 
     </para>
+    <screen>
+g++ javaList.cpp -o javaList -lboost_system -lboost_filesystem -lboost_program_options -std=c++14
+./javaList /home/davee/Dokumentumok/jdk
+    </screen>
+    <para>
+        A JDK 13 src mappájára a következő eredményt kapjuk:
+    </para>
     <figure>
         <title></title>
         <mediaobject>
@@ -95,6 +106,9 @@ int it(fs::path p){
         <title>Másoló-mozgató szemantika</title>
         <para>Kódcsipeteken (copy és move ctor és assign) keresztül vesd össze a C++11 másoló és a mozgató
                 szemantikáját, a mozgató konstruktort alapozd a mozgató értékadásra!
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_strousup/copymove/copy.cpp">https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_strousup/copymove/copy.cpp</link>                 
         </para>
         <para>
             Először nézzük meg a másoló konstruktort.
@@ -188,13 +202,20 @@ Person dark (Person && p) {
         <para>Készítsünk betű gyakoriság alapú törést egy hibásan implementált RSA kódoló:
 https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_3.pdf (71-73 fólia) által
 készített titkos szövegen.</para>
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>                 
+        </para>
     </section>   
 
     <section>
         <title>Változó argumentumszámú ctor</title>
         <para>Készítsünk olyan példát, amely egy képet tesz az alábbi projekt Perceptron osztályának bemenetére
-és a Perceptron ne egy értéket, hanem egy ugyanakkora méretű „képet” adjon vissza. (Lásd még a 4
-hét/Perceptron osztály feladatot is.)</para>
+        és a Perceptron ne egy értéket, hanem egy ugyanakkora méretű „képet” adjon vissza. (Lásd még a 4
+        hét/Perceptron osztály feladatot is.)
+        </para>
+        <para>
+            Megoldás forrásai: <link xlink:href="https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_strousup/perceptron">https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_strousup/perceptron</link>                 
+        </para> 
       
     <para>
         Ehhez a feladathoz az előző héten megismert perceptron programot fogjuk használni. Két lényeges dologra kell figyelnünk. Az egyik, hogy a main függvényben 
