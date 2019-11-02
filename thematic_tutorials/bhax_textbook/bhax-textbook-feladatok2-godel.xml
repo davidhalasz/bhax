@@ -1,0 +1,151 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Gödel!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    
+    <section>
+        <title>Gengszterek</title>
+        <para>
+            Gengszterek rendezése lambdával a Robotautó Világbajnokságban
+            <link xlink:href="https://youtu.be/DL6iQwPx1Yw">https://youtu.be/DL6iQwPx1Yw</link>(8:05-től)
+        </para>
+        <para>
+            Felhasznált irodalom: <citation>BERTALAN</citation>           
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>                 
+        </para>
+    
+        <para>
+            Ebben a feladatban a Robotautó Világbajnokság forráskódjában szereplő lambda kifejezések használatával történő std::sort-al kapcsolatban lesz szó. 
+            A lambda függvények segítségével akár többsoros névtelen függvényeket definiálhatunk, ott ahol hasznát vennénk. Általános alakja: <![CDATA[ [] {} () ]]> 
+            Ahol a szögletes zárójel jelzi, hogy lambda kifejetés következik, a kapcsos zárójelbe kerül a függvény törzse, a kerek zárójel pedig függvényhívást jelenti. 
+            A lambda szerkezete nem kötött, ha valamelyik része hiányzik, akkor azt a fordító feltételezés alapján automatikusan kitölti. Most vizsgáljuk meg a forráskódban szereplő 
+            kódcsipetet:
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+std::sort ( gangsters.begin(), gangsters.end(), [this, cop] ( Gangster x, Gangster y ) 
+{
+    return dst ( cop, x.to ) < dst ( cop, y.to );
+} );
+            ]]>
+        </programlisting>
+        <para>
+            A fenti lambda függvény csak az std::vector beépítése után működőképes. Az std::sort segítségével történik a sorbarendezés, melynek paraméterként adjuk meg a lambda függvényt. 
+            A <function>.begin()</function> és a <function>.end()</function> függvények alkalmazásával mondjuk meg, hogy mettől meddig szeretnénk számításba venni a sorbarendezést. Mi most a 
+            <function>gangsters</function> vektort használjuk erre, azaz a vektor első és utolsó indexét adjuk meg. Ezután jön a szögletes zárójel, amiben két változó van: a <function>this</function> 
+            segítségével érhetjük el az osztály tagjait, és a <function>cop</function> objetumára lenne szükségünk. Az <function>std::sort() {}</function> kapcsos zárójelében annak visszatérési értékét 
+            kapjuk meg, hogy melyik gangster van közelebb a rendőrhöz. 
+        </para>
+    </section>
+
+    <section>
+        <title>C++11 Custom Allocator</title>
+        <para>
+            <link xlink:href="https://prezi.com/jvvbytkwgsxj/high-level-programming-languages-2-c11-allocators/">https://prezi.com/jvvbytkwgsxj/high-level-programming-languages-2-c11-allocators/</link> a
+            CustomAlloc-os példa, lásd C forrást az UDPROG repóban!
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>                 
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+    
+            ]]>
+        </programlisting>
+    </section>
+
+    <section>
+        <title>STL map érték szerinti rendezése</title>
+        <para>
+                Például: <link xlink:href="https://github.com/nbatfai/future/blob/master/cs/F9F2/fenykard.cpp#L180">https://github.com/nbatfai/future/blob/master/cs/F9F2/fenykard.cpp#L180</link>
+        </para>
+        
+        <para>
+                Megoldás forrása: <link xlink:href=""></link>                 
+        </para>
+        
+        <para>
+            Az STL a C++ nyelv Szabványos Sablonkönyvtára (Standard Template Library). Elterjedt adatstruktúrákat és algoritmusokat építhetünk be a programunkba. 3 csoportra osztható: 
+            konténerekre, alogritmusokra és iterátorokra. A <function>map</function> konténerekben adatpárok tárolódnak, ahol az első tag a kulcs, a második pedig az adat. Az alábbi 
+            kódcsipet a fenykard.cpp programból van és ezt fogjuk most megvizsgálni:    
+        </para>
+
+        <programlisting language="c++"><![CDATA[ 
+std::vector<std::pair<std::string, int>> sort_map ( std::map <std::string, int> &rank )
+{
+        std::vector<std::pair<std::string, int>> ordered;
+
+        for ( auto & i : rank ) {
+                if ( i.second ) {
+                        std::pair<std::string, int> p {i.first, i.second};
+                        ordered.push_back ( p );
+                }
+        }
+
+        std::sort (
+                std::begin ( ordered ), std::end ( ordered ),
+        [ = ] ( auto && p1, auto && p2 ) {
+                return p1.second > p2.second;
+        }
+        );
+
+        return ordered;
+}
+            ]]>
+        </programlisting>
+        <para>
+            Itt az látható, hogy a sort_map két paramétert vár: egy string és egy integer típusút. Ebből fogunk csinálni egy vektort, mégpedig úgy, hogy a két paramétert 
+            összepárosítjuk az <function>std::pair</function> függvénnyel, majd ezek összességét elnevezzük <function>ordered</function>-nek. A <function>pair</function> 
+            lehetővé teszi, hogy egyetlen objektumban két különböző objektumot tároljunk, amelyek közül az elsőre a first, míg a másodikra a second névvel hivatkozhatunk. 
+            Továbbá mivel map konténerről van szó, ezért az asszociatív tömb elemeiben a kulcsoknak egyedinek kell lennie. A <function>push_back</function> segítségével tesszük bele 
+            a kulcs/érték párokat az ordered vektorba. Ekkor jön a már megismert sorbarendezés. A szögletes zárójelben lévő egyenlőségjel segítségével az összes helyi változót érték szerint fogjuk elkapni és 
+            ez alapján rendezzük majd a vektort.
+            A zárójelben lévő <function>auto</function> kulcsszóval pedig automatikusan fog megtörténni a típus-meghatározás. 
+        </para>
+    </section>
+
+    <section>
+        <title>
+            Alternatív Tabella rendezése
+        </title>
+        <para>
+            Mutassuk be a <link xlink:href="https://progpater.blog.hu/2011/03/11/alternativ_tabella">https://progpater.blog.hu/2011/03/11/alternativ_tabella</link> a programban a java.lang
+            Interface Comparable<![CDATA[ <T> ]]> szerepét!
+        </para>
+        
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>                 
+        </para>
+            
+        <para>
+                
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+        
+            ]]>
+        </programlisting>
+    </section>
+
+    <section>
+        <title>Prolog családfa</title>
+        <para>
+            Ágyazd be a Prolog családfa programot C++ vagy Java programba! Lásd para_prog_guide.pdf!
+        </para>
+        
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>                 
+        </para>
+            
+        <para>
+                
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+        
+            ]]>
+        </programlisting>
+    </section>
+            
+</chapter>

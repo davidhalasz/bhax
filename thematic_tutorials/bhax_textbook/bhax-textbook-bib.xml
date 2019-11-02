@@ -198,5 +198,24 @@
                         </publishername>
                     </publisher>
                 </biblioentry> 
-        </bibliodiv>                   
+        </bibliodiv>           
+        <bibliodiv>
+                <title>A C++11 nyelv új lehetőségeinek áttekintése</title>
+                <biblioentry>
+                    <abbrev>BERTALAN</abbrev>
+                    <authorgroup>
+                        <author>
+                            <personname>
+                                <firstname>Tóth Bertalan</firstname>
+                            </personname>
+                        </author>
+                    </authorgroup>
+                    <title>A C++11 nyelv új lehetőségeinek áttekintése</title>
+                    <publisher>
+                        <publishername>
+                            <link xlink:href="http://www.zmgzeg.sulinet.hu/bemutatkozunk/tankonyv/progismhalado/ccpp/cpp11.pdf">http://www.zmgzeg.sulinet.hu/bemutatkozunk/tankonyv/progismhalado/ccpp/cpp11.pdf</link>
+                        </publishername>
+                    </publisher>
+                </biblioentry> 
+        </bibliodiv>                 
 </bibliography>     
