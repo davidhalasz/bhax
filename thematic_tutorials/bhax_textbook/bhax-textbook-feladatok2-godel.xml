@@ -51,10 +51,125 @@ std::sort ( gangsters.begin(), gangsters.end(), [this, cop] ( Gangster x, Gangst
         <para>
             Megoldás forrása: <link xlink:href=""></link>                 
         </para>
+        <para>
+            A C++ programok írása során előfordulhatnak olyan különleges esetek, amikor szükségünk van saját allokátor létrehozására az alapértelmezett helyfoglalás helyett, így ebben a feladatban 
+            most egy ilyen saját allokátor elkészítését mutatom be. Először nézzük meg, mik a legfontosabb allokátor tagfüggvények:
+        </para>
+        <itemizedlist mark='opencircle'>
+            <listitem>
+                <para>allocator(), allocator(const allocator<![CDATA[&]]> a) és ~allocator: konstruktorok és destruktor </para>
+            </listitem>
+            <listitem>
+                <para>pointer address(reference r) cons: r címével tér vissza</para>
+            </listitem>
+            <listitem>
+                <para>pointer allocate(size_type n): tárfoglalás n darab objektum számára</para>
+            </listitem>
+            <listitem>
+                <para>void deallocate(pointer p, size_type n): a lefoglalt memória felszabadítása</para>
+            </listitem>
+            <listitem>
+                <para>size_type max_size() const: a difference_type legnagyobb értékével tér vissza</para>
+            </listitem>
+        </itemizedlist>
+        <para>
+            Most pedig lássuk a customalloc.h fájlt: 
+        </para>
         <programlisting language="c++"><![CDATA[ 
-    
+template<typename T>
+class CustomAlloc
+{
+public:
+    CustomAlloc() {}
+    CustomAlloc(const CustomAlloc&) {}
+    ~CustomAlloc() {}
+
+    using size_type = size_t;
+    using value_type = T;
+    using pointer = T*;
+    using const_pointer = const T*;
+    using reference = T&;
+    using const_reference = const T&;
+    using difference_tyoe = ptrdiff_t;
+
+    pointer allocate( size_type n){
+        int s;
+        char* p = abi::__cxa_demangle( typeid (T).name(), 0, 0, &s);
+        std::cout << "Allocating "
+                  << n << " objects of "
+                  << n*sizeof (T)
+                  << " bytes. "
+                  << typeid (T).name() << "=" << p
+                  << std::endl;
+        delete p;
+        return reinterpret_cast<T*>(new char[n*sizeof(T)]);
+    }
+
+    void deallocate (pointer p, size_type n){
+        delete[] reinterpret_cast<char *>(p);
+        std::cout << "Deallocating "
+                  << n << " objects of "
+                  << n*sizeof (T)
+                  << " bytes. "
+                  << typeid (T).name() << "=" << p
+                  << std::endl;
+
+    }
+};
             ]]>
         </programlisting>
+        <para>
+            Ahogy láthajuk, a CustomAlloc osztályunk az allokátor kunstruktoraival és destruktorral kezdődik. Az <function>using</function> kulcsszó használatával pedig 
+            alias-okat hozhatunk létre, azaz az egyenlőségjel után állókat használjuk majd később a programuk írása során. 
+            A memóriafoglalás a <function>pointer allocate()</function> metódus segítségével történik, ahol megadott 
+            számú (n) elemet foglal le és visszatért a blokk címével. A <function>abi::__cxa_demangle()</function> használatával függvények, típusok és változók neveiből 
+            egyedi kódnevet állít elő a linkerek számára. Végül kiíratjuk az adatokat.
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+int main()
+{
+    std::vector<int, CustomAlloc<int>> v;
+
+    v.push_back(1);
+    v.push_back(2);
+    v.push_back(3);
+    v.push_back(4);
+    v.push_back(5);
+    v.push_back(6);
+    v.push_back(7);
+    v.push_back(8);
+    v.push_back(9);
+    v.push_back(10);
+    v.push_back(11);
+    v.push_back(12);
+    v.push_back(13);
+    v.push_back(14);
+    v.push_back(15);
+
+    for(int x : v){
+        std::cout << x << std::endl;
+    }
+
+    return 0;
+}
+            ]]>
+        </programlisting>
+        <para>
+            A fenti kódcsipet a main.cpp file-ban található. Szerepe, hogy egy vektort hozunk létre és ide fogjuk berakni 
+            az allokátorunk által előállított elemeket, és ezeket íratjuk ki.
+        </para>
+        <figure>
+            <title>Allokátor eredménye</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/allocate.png" width="100%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            A fenti képen az figyelhető meg a fordítás és futtatás után, hogy az allocating utáni szám minden egyes alkalommal 
+            megkétszereződik, majd felszabadítja az előző memóriát. Azaz az új memóriára rámásolja az előzőt az újjal együtt és így tovább.
+        </para>
     </section>
 
     <section>
@@ -121,31 +236,41 @@ std::vector<std::pair<std::string, int>> sort_map ( std::map <std::string, int> 
         </para>
             
         <para>
-                
+            Ebben a feladatban a <function>Comparable</function> interfész működéséről lesz szó. Ezzel az interfésszel teljes rendezést 
+            tudunk definiálni az azt megvalósító osztályok egyedein. Egy metódusa van, mégpedig a <function>compareTo</function>, amivel két metódust tudunk összehasonlítani. 
+            Ha a a paraméterben adott objektum nagyobb, mint az objektum, amelynek meghívtuk a compareTo metódusát, 
+            akkor negatív értéket, ha viszont a paraméterben kapott objektum a kisebb, akkor pozitív lesz az értéke. Egyenlő értékeke esetén pedig 
+            nullát ad értékül. A mi esetünkben a Csapat osztály implementálja a Comparable interfészt az <filename>AlternativTabella.java</filename> programunkban:
         </para>
         <programlisting language="c++"><![CDATA[ 
-        
-            ]]>
-        </programlisting>
-    </section>
+class Csapat implements Comparable<Csapat> {
 
-    <section>
-        <title>Prolog családfa</title>
-        <para>
-            Ágyazd be a Prolog családfa programot C++ vagy Java programba! Lásd para_prog_guide.pdf!
-        </para>
-        
-        <para>
-            Megoldás forrása: <link xlink:href=""></link>                 
-        </para>
-            
-        <para>
-                
-        </para>
-        <programlisting language="c++"><![CDATA[ 
-        
+  protected String nev;
+  protected double ertek;
+
+  public Csapat(String nev, double ertek) {
+    this.nev = nev;
+    this.ertek = ertek;
+  }
+
+  public int compareTo(Csapat csapat) {
+    if (this.ertek < csapat.ertek) {
+      return -1;
+    } else if (this.ertek > csapat.ertek) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+}
             ]]>
         </programlisting>
+        <para>
+            A <filename>Wiki2Matrix.java</filename> fájlban tároljuk el kétdimenziós tömbben (<function>kereszt</function>) a
+             labdarúgó bajnokság eredményeit. Ebből lesznek majd kiszámolva egy linkmátrix az compare interfészet tartalmazó 
+             <function>AlternativTabella</function> programunkhoz. Itt kell bettennünk az AlternativTabella osztályban lévő 
+             double[][] L = {}; kapcsos zárójelek közé.
+        </para>
     </section>
             
 </chapter>
