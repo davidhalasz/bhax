@@ -1,0 +1,19 @@
+.root { 
+	-fx-accent: #70BC1D;
+	-fx-base: #262525;
+	-fx-font-size: 12pt;
+}
+                    
+.label{
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #313131;
+}
+                    
+.separator *.line { 
+   -fx-background-color: #313131;
+   -fx-text-fill: #ffffff;
+}
+                    
+.tree-cell {
+   -fx-text-fill: #ffffff;
+}

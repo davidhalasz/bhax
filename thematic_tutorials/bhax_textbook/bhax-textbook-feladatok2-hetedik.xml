@@ -1,0 +1,414 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, !</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    
+    <section>
+        <title>FUTURE tevékenység editor</title>        
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>                 
+        </para>
+        <para>
+            Javítsunk valamit a ActivityEditor.java JavaFX programon!
+            <link xlink:href="https://github.com/nbatfai/future/tree/master/cs/F6">https://github.com/nbatfai/future/tree/master/cs/F6</link>
+            Itt láthatjuk működésben az alapot: <link xlink:href="https://www.twitch.tv/videos/222879467">https://www.twitch.tv/videos/222879467</link>
+        </para>
+        <para>
+            Ehhez a feladathoz létre kell hoznunk egy <function>.css</function> végződésű stylesheet fájlt, ahol a webfejlesztéshez hasonlóan szerkeszthetjük 
+            a külső megjelenést. <filename>ActivityEditor.java</filename> fájlban hozzá kell adnunk egy sort, mellyel a stylesheet fájlokat adhatunk hozzá:
+        </para>
+        <programlisting language="java"><![CDATA[ 
+scene.getStylesheets().add("style.css");
+            ]]>
+        </programlisting>
+        <para>
+            A <filename>style.css</filename> fájl tartalma az alábbi kódcsipetben látható:
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+.root { 
+	-fx-accent: #70BC1D;
+	-fx-base: #262525;
+	-fx-font-size: 12pt;
+}
+                    
+.label{
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #313131;
+}
+                    
+.separator *.line { 
+   -fx-background-color: #313131;
+   -fx-text-fill: #ffffff;
+}
+                    
+.tree-cell {
+   -fx-text-fill: #ffffff;
+}
+            ]]>
+        </programlisting>
+        <para>
+            Ahol a programban módosítani kívánt részek ponttal kezdődnek, majd a programrész neve követi. A kapcsos zárójelek közé kerülnek a módosítandó adatok. 
+            A JavaFX-ben előre meg vannak adva, hogy milyen kulcszavakat kell előhívni bizonyos módosításokhoz. Erről részletesebben a 
+            <link xlink:href="https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html">https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html</link> weboldalon 
+            lehet olvasni. A fenti kódcsipetben az <![CDATA[-fx-accent]]> segítségével adjuk meg, hogy milyen színű kiemelést kapjon a ráklikkelt elem. Az <![CDATA[-fx-base]]> pedig az alapszínt adja meg. 
+            Az <![CDATA[-fx-font-size]]> értelemszerűen a szöveg méretét jelenti, jelen esetben 12pt lesz és a szöveg színének beállításához a <![CDATA[-fx-text-fill]]> kell használnunk.
+        </para>
+        <figure>
+            <title>Az átalakított program</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/javafx.png" width="40%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            Az alap program ablaka az elindítás után nálam kicsiben és képernyő alsó sarkában jelent meg, ezért ahhoz, hogy megadjunk egy alap ablak méretet és hogy 
+            a program elindítása után a kijelző közepén jelenjen meg, az alébbi kódcsipetre kell módosítani a programunkat a <filename>ActivityEditor.java</filename> fájl végén:
+        </para>
+        <programlisting language="java"><![CDATA[ 
+javafx.geometry.Rectangle2D primaryScreenBounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+stage.setX(primaryScreenBounds.getMinX() + primaryScreenBounds.getWidth());
+stage.setY(primaryScreenBounds.getMinY() + primaryScreenBounds.getHeight());
+        
+stage.setWidth(600);
+stage.setHeight(800);
+		
+stage.centerOnScreen(); 
+	    
+stage.show();
+            ]]>
+        </programlisting>
+        <para>
+            A <![CDATA[stage.setX()]]> és a <![CDATA[stage.setY()]]> kódsorokkal kapjuk meg az aktuális kijelzőnk méretét. Az ablakunk méretét a 
+            <![CDATA[stage.setWidth()]]> és a <![CDATA[stage.setHeight()]]> függvények segítségével módosíthatjuk, jelen esetünkben most a szélesség 600 
+            és a magasság pedig 800 lesz. Ahhoz, hogy az ablakunk középen jelenjen meg, a <![CDATA[stage.centerOnScreen()]]> automatikusan végzi el majd végül a 
+            <![CDATA[stage.show()]]> jeleníti meg számunkra a programot. 
+        </para>
+    </section>
+
+        <section>
+        <title>OOCWC Boost ASIO hálózatkezelése</title>        
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>                 
+        </para>
+        <para>
+            Mutassunk rá a scanf szerepére és használatára! <link xlink:href="https://github.com/nbatfai/robocar-
+emulator/blob/master/justine/rcemu/src/carlexer.ll">carlexerl.ll</link>
+        </para>
+
+        <para>
+            A scanf kulcsszó már ismerős lehet számunkra, mert az előző fejezetben találkozhattunk vele, most ennek működését mutatom be. Először is lássuk a kódcsipetet:
+        </para>
+        <programlisting language="c++"><![CDATA[
+            while ( std::sscanf ( data+nn, "<OK %d %u %u %u>%n", &idd, &f, &t, &s, &n ) == 4 )
+                {
+                    nn += n;
+                    gangsters.push_back ( Gangster {idd, f, t, s} );
+                }]]>                
+        </programlisting>
+        <para>
+            A kód while ciklussal kezdődik, azaz addig fog lefutni, amíg be nem olvastuk az összes adatot. A <function>std::sscanf()</function> 
+            függvény első paramétere a beolvasni kívánt adatot tartalmazza, a második pedig azt, hogy milyen adatot keresünk. Ebben az esetben <function>OK</function>-val kezdődjön, 
+            majd decimális egész számot várunk, továbbá 3 darab előjel nélküli egészet (<![CDATA[%u]]>). Az <![CDATA[%n]]> a legutóbb beolvasott bájtok számát jelenti, 
+            ezt minden egyes alkalommal hozzáadjuk és eltároljuk az 
+            <function>nn</function> változóban. Ha mind a négy adat megegyezik, akkor létrehozunk egy új gangster objektumot és eltároljuk a gangsters vektorban.
+        </para>
+        <para>
+            Tehát a sscanf() függvény sztringből formázott adatot olvas, lényegében megegyezik a scanf() függvénnyel, azzal a különbséggel, hogy az előbbi a bemenetét a 
+            buffer által megadott memóriaterületről veszi. Visszatérési értéke a sikeresen beolvasott és tárolt mezők száma. 
+        </para>
+    </section>
+
+        <section>
+        <title>SamuCam</title>        
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>                 
+        </para>
+        <para>
+            Mutassunk rá a webcam (pl. Androidos mobilod) kezelésére ebben a projektben:
+            <link xlink:href="https://github.com/nbatfai/SamuCam">SamuCam</link>
+        </para>
+    
+        <para>
+            Ennek a feladatnak a célja, hogy bemutassuk a kameránk képének adatfeldolgozását. 
+            Ehhez szükségünk lesz a qt5 és az opencv programok feltelepítésére, továbbá kelleni fog egy 
+            ip cím, amin keresztül használjuk a webkameránkat, ehhez a motion alkalmazást kell feltelepíteni az Ubuntura. 
+            Ez utóbbi telepítése és elindítása az alábbi módon történik:
+        </para>
+        <screen>
+            sudo apt-get install motion
+            sudo motion
+        </screen>
+        <para>
+            Majd a böngészőnkbe a http://localhost:8081 címet beírva, leellenőrízhetjük, hogy működik-e. A feladatleírásban található 
+            linken tölthetjük le a SamuCam programot, amiben az mi ip címünkre kell kicserélni a <filename>main.cpp</filename> fájlban, 
+            ahogy az alábbi kódcsipetben is látható:
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+ QCommandLineOption webcamipOption ( QStringList() << "ip" << "webcamip",
+        QCoreApplication::translate ( "main", "Specify IP address of your IP webcam app on Android phone (default is http://192.168.0.18:8080/video?x.mjpeg)." ),
+        QCoreApplication::translate ( "main", "webcamip" ), "http://localhost:8081" );
+  parser.addOption ( webcamipOption );
+            ]]>
+        </programlisting>
+        <para>
+            Az alábbi kódcsipet a <filename>SamuCam.cpp</filename> fájlban található és azt figyelhetjük meg, hogy megadunk a videostream-nak egy méretet (width és height), majd az <function>videoCapture.open(videoStream)</function> 
+            fogja megnyitni számunkra az ip által kapott videót. A <function>VideoCapture.set()</function> segítségével adhatjuk meg a videónk tulajdonságait, 
+            például a <function>CV_CAP_PROP_FRAME_WIDTH</function> a kép szélességét adja meg, a <function>CV_CAP_PROP_FPS</function> pedig a képfrissítést.
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+SamuCam::SamuCam ( std::string videoStream, int width = 176, int height = 144 )
+  : videoStream ( videoStream ), width ( width ), height ( height )
+{
+  openVideoStream();
+}
+
+SamuCam::~SamuCam ()
+{
+}
+
+void SamuCam::openVideoStream()
+{
+  videoCapture.open ( videoStream );
+
+  videoCapture.set ( CV_CAP_PROP_FRAME_WIDTH, width );
+  videoCapture.set ( CV_CAP_PROP_FRAME_HEIGHT, height );
+  videoCapture.set ( CV_CAP_PROP_FPS, 10 );
+}
+            ]]>
+        </programlisting>
+        <para>
+            A letöltött SamuCam mappánkba még le kell töltenünk a lbpcascade_frontalface.xml fájlt is, ugyanis ez fog majd felelni az arcfelismerésért. 
+            Majd a vInitialHack ágra lépve futtathatjuk a <function>qmake</function> és <function>make</function> parancsokat. 
+            Ezeket a folyamatokat a terminálba beírva, az alábbi módon tehetjük meg: 
+        </para>
+        <screen>
+wget https://github.com/Itseez/opencv/raw/master/data/lbpcascades/lbpcascade_frontalface.xml
+git checkout vInitialHack
+qmake 
+make
+        </screen>
+
+        <para>
+            Ha a make parancs után hibaüzenet jelenik meg, akkor valószínűleg az lehet a baj, hogy az anaconda fejlesztői környezetben is fel van telepítve rengeteg 
+            ugyanolyan program, ami e programon kívül is fel van telepítve a gépünkre. Ilyenkor a hibazüzenetben szereplő alkalmazásokat kell 
+            letörölni a <function>conda uninstall program_neve</function> módszerrel. Ezután a make parancs újboli kiadásával nálam már működött a program. 
+            Most pedig folytassuk a <filename>SamuCam.cpp</filename> további részeivel:
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+void SamuCam::run()
+{
+
+  cv::CascadeClassifier faceClassifier;
+
+  std::string faceXML = "lbpcascade_frontalface.xml"; // https://github.com/Itseez/opencv/tree/master/data/lbpcascades
+
+  if ( !faceClassifier.load ( faceXML ) )
+    {
+      qDebug() << "error: cannot found" << faceXML.c_str();
+      return;
+    }
+
+  cv::Mat frame;
+
+  while ( videoCapture.isOpened() )
+    {
+
+      QThread::msleep ( 50 );
+      while ( videoCapture.read ( frame ) )
+        {
+
+          if ( !frame.empty() )
+            {
+
+              cv::resize ( frame, frame, cv::Size ( 176, 144 ), 0, 0, cv::INTER_CUBIC );
+
+              std::vector<cv::Rect> faces;
+              cv::Mat grayFrame;
+
+              cv::cvtColor ( frame, grayFrame, cv::COLOR_BGR2GRAY );
+              cv::equalizeHist ( grayFrame, grayFrame );
+
+              faceClassifier.detectMultiScale ( grayFrame, faces, 1.1, 3, 0, cv::Size ( 60, 60 ) );
+
+              if ( faces.size() > 0 )
+                {
+
+                  cv::Mat onlyFace = frame ( faces[0] ).clone();
+
+                  QImage* face = new QImage ( onlyFace.data,
+                                              onlyFace.cols,
+                                              onlyFace.rows,
+                                              onlyFace.step,
+                                              QImage::Format_RGB888 );
+
+                  cv::Point x ( faces[0].x-1, faces[0].y-1 );
+                  cv::Point y ( faces[0].x + faces[0].width+2, faces[0].y + faces[0].height+2 );
+                  cv::rectangle ( frame, x, y, cv::Scalar ( 240, 230, 200 ) );
+
+
+                  emit  faceChanged ( face );
+                }
+
+              QImage*  webcam = new QImage ( frame.data,
+                                             frame.cols,
+                                             frame.rows,
+                                             frame.step,
+                                             QImage::Format_RGB888 );
+
+              emit  webcamChanged ( webcam );
+
+            }
+
+          QThread::msleep ( 80 );
+
+        }
+
+      if ( ! videoCapture.isOpened() )
+        {
+          openVideoStream();
+        }
+
+    }
+            ]]>
+        </programlisting>
+        <para>
+            Itt kell majd megadnunk a már említett lbpcascade_frontalface.xml fájl címét. A while ciklus pedig addig fog lefutni, amíg a kamera képe 
+            elérhető a program számára és 80 miliszekundumonként fog ismétlődni a folyamat, ami a <![CDATA[ QThread::msleep ( 80 );]]> tesz lehetővé. 
+            A képből kiolvasott adatokat egy többdimenziós tömbben fogja eltárolni. A <![CDATA[ faceClassifier.detectMultiScale () ]]> kódsorral különböző 
+            méretű arcokat keresünk a képen. A program futtatása után az alábbi eredményt kell kapnunk: 
+        </para>
+        <figure>
+            <title>SamuCam</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/samucam.png" width="80%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+    </section>
+
+        <section>
+        <title>BrainB</title>        
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>                 
+        </para>
+        <para>
+            Mutassuk be a Qt slot-signal mechanizmust ebben a projektben: <link xlink:href="https://github.com/nbatfai/esport-
+talent-search">BrainB</link>
+        </para>
+        <para>
+            A BrainB program lényege, hogy az egérrel az entropy-n kell folyamatosan nyomva tartani, miközben egyre több ilyen entropy-k jelennek meg, 
+            így egyre nehezebb lesz megtalálni a sajátunkat, majd a program bezárása után kapunk erről egy eredményt. 
+            Erről már volt szó a könyv első részében, így részletesebben magyarázatra nincs szükség, 
+            helyette csak a Qt slot-signal mechanizmust mutatom be. 
+        </para>
+        <para>
+            Akárcsak az előző feladatnál, ehhez a programhoz is szükségünk lesz a 
+            Qt keretrendszerre és az openCV-re. A Qt keretrendszer segítségével készíthetünk grafikus programokat és ehhez tartozik a feladatban említett 
+            slot-signal is. Ennek lényege egy egyszerű példával élve, ha egy gombra rákattintunk, akkor megváltozik az állapota, így tehát az objektum signal-t adott ki. 
+            A Qt-ban az objektumoknak lehetnek slot-jaik is, azaz olyan tagfüggvények, amik ezeket az állapotváltozásokat figyelik. Tehát amikor a signalt a slothoz kötjük, 
+            akkor azt mondjuk meg a slotnak, hogy melyik állapotváltozás esetén, melyik másik objektumnak kell reagálnia. Most pedig nézzük meg, hogy is működik ez a BrainB programunkban.
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+BrainBWin::BrainBWin ( int w, int h, QWidget *parent ) : QMainWindow ( parent )
+{
+
+//    setWindowTitle(appName + " " + appVersion);
+//    setFixedSize(QSize(w, h));
+
+        statDir = appName + " " + appVersion + " - " + QDate::currentDate().toString() + QString::number ( QDateTime::currentMSecsSinceEpoch() );
+
+        brainBThread = new BrainBThread ( w, h - yshift );
+        brainBThread->start();
+
+        connect ( brainBThread, SIGNAL ( heroesChanged ( QImage, int, int ) ),
+                  this, SLOT ( updateHeroes ( QImage, int, int ) ) );
+
+        connect ( brainBThread, SIGNAL ( endAndStats ( int ) ),
+                  this, SLOT ( endAndStats ( int ) ) );
+
+}
+            ]]>
+        </programlisting>
+
+        <para>
+            A fenti kódcsipet a <filename>BrainBWin.cpp</filename> fájlban található. Látható,hogy nem egy szokványos C++ utasításról van szó. 
+            A <function>connect</function>-ben fogjuk megadni, hogy melyik objektum fogja a signalt emittálni, majd a <function>SIGNAL()</function> 
+            zárójelében lesz megadva, hogy melyik ez a signal, jelen esetben a <function>heroesChanged()</function> paraméteres függvény. 
+            Ezután megadjuk a slotot tartalmazó objektumot, majd a <function>SLOT()</function> zárójelében, azt kell megadni, hogy melyik slot lesz a signálhoz 
+            kapcsolva. Itt most ez a <function>QImage()</function> szintén paraméteres függvény lesz. 
+        </para>
+        <para>
+            Figyeljük meg, hogy mindkét függvény, azaz a signal és a slot is 
+            ugyanannyi paramétert vár, ez nagyon fontos, ellenkező esetben nem fog működni a programunk. A Qt4-ben fontos az azonos típusparaméter is, de a Qt5 már 
+            nem ragaszokdik teljesen az azonos típushoz a signal és a slot esetén. A fenti kódcsipet a gyakorlatban azt csinálja, hogy megváltoztatja a hősök számát, azaz 
+            újakat hoz létre vagy meglévőket szűntet meg. A második connect() függvény pedig szöveget ír ki, lementi az eredményeket, majd bezárja az ablakot. Ez utóbbinál így néz ki 
+            a kódcsipet: 
+        </para>
+        <programlisting language="C++"><![CDATA[ 
+//BrainBThread.cpp
+...
+void BrainBThread::run()
+{
+        while ( time < endTime ) {
+                QThread::msleep ( delay );
+
+                if ( !paused ) {
+                        ++time;
+                        devel();
+                }
+                draw();
+        }
+        emit endAndStats ( endTime );
+}
+...
+
+
+// BrainBWin.cpp
+...
+void BrainBWin::endAndStats ( const int &t )
+{
+
+        qDebug()  << "\n\n\n";
+        qDebug()  << "Thank you for using " + appName;
+        qDebug()  << "The result can be found in the directory " + statDir;
+        qDebug()  << "\n\n\n";
+
+        save ( t );
+        close();
+}         
+...
+            ]]>
+        </programlisting>
+    </section>
+
+        <section>
+        <title>OSM térképre rajzolása 6</title>
+        <para>
+            
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>                 
+        </para>
+    
+        <para>
+            Debrecen térképre dobjunk rá cuccokat, ennek mintájára, ahol én az országba helyeztem el a DEAC
+            hekkereket: <link xlink:href="https://www.twitch.tv/videos/182262537">https://www.twitch.tv/videos/182262537</link> (de az OOCWC Java Swinges
+            megjelenítőjéből:
+            <link xlink:href="https://github.com/nbatfai/robocar-emulator/tree/master/justine/rcwin">https://github.com/nbatfai/robocar-emulator/tree/master/justine/rcwin</link> is
+            kiindulhatsz, mondjuk az komplexebb, mert ott időfejlődés is van...)
+        </para>
+        <programlisting language="c++"><![CDATA[ 
+
+            ]]>
+        </programlisting>
+        <para>
+
+        </para>
+    </section>
+
+</chapter>
