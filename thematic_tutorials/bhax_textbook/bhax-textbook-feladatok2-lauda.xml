@@ -13,7 +13,10 @@
             <link xlink:href="https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/ch01.html#id527287">https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/ch01.html#id527287</link>                 
         </para>
         <para>
-
+           A kivételkezelés a szerepe, hogy a program futtatása során hiba esetén megszakítja a programot, majd kidob egy hibaüzenetet. Ha egy metódus eldob egy kivételt, a futtató 
+           környezetmegpróbál a kezelésére találni valamit. 3 blokkból állhat: <![CDATA[try, catch]]> és <![CDATA[finally]]> blokkokból. A <![CDATA[try]]> a kivételkezelő első lépésének eszköze. Ide kerül 
+           az a kódcsipet, ami hibát dobhat a program futtatása során. A <![CDATA[catch]]> blokkba kerül a hibaüzenet kiíratása, a <![CDATA[finally]]> blokk pedig rendet tesz a programban, tehát például bezárja a 
+           nem használt fájlokat, amikre nem lesz már szükségünk. Most pedig nézzük meg a feladatban szereplő kódcsipetet:
         </para>
         <programlisting language="java"><![CDATA[ 
 public class KapuSzkenner {
@@ -35,34 +38,14 @@ public class KapuSzkenner {
                 System.out.println(i + " nem figyeli");
                 
             }
-    }
-    
+    } 
 }
             ]]>
         </programlisting>
         <para>
-           
-        </para>
-    </section>
-
-    <section>
-        <title>AOP</title>        
-        <para>
-            Szőj bele egy átszövő vonatkozást az első védési programod Java átiratába! (Sztenderd védési
-            feladat volt korábban.)              
-        </para>
-        <para>
-            Megoldás forrása: <link xlink:href=""></link> 
-        </para>
-        <para>
-            
-        </para>
-        <programlisting language="java"><![CDATA[ 
-
-            ]]>
-        </programlisting>
-        <para>
-           
+            Ez a program annyit csinál, hogy minden 1024 alatti számú gép TCP kapuival megpróbál kapcsolatot létrehozni. Minden egyes kapcsolaton végigmegy és egyesével írja ki, 
+            hogy sikerült-e vagy sem. Siker esetén például kiíratjuk, hogy az adott számút figyeli, majd bezárjuk a kapcsolatot, azonban ha nem sikerül a kapcsolat, átlépünk a catch blokkba, 
+            ahol azt íratjuk ki, hogy hanyas számú portot nem figyeli a program. 
         </para>
     </section>
 
@@ -449,26 +432,5 @@ class LZWtest {
                 </imageobject>
             </mediaobject>   
         </figure>
-    </section>
-
-    <section>
-        <title>OSCI</title>        
-        <para>
-            Készíts egyszerű C++/OpenGL-es megjelenítőt, amiben egy kocsit irányítasz az úton.
-                             
-        </para>
-        <para>
-            Megoldás forrása: <link xlink:href=""></link>  
-        </para>
-        <para>
-            
-        </para>
-        <programlisting language="java"><![CDATA[ 
-
-            ]]>
-        </programlisting>
-        <para>
-           
-        </para>
     </section>
 </chapter>

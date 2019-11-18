@@ -31,7 +31,8 @@ from __future__ import print_function
 import argparse
 
 # Import data
-from tensorflow.examples.tutorials.mnist import input_data
+from tensorflow_core.examples.mnist import input_data
+tf.compat.v1.disable_eager_execution()
 
 import tensorflow as tf
 old_v = tf.logging.get_verbosity()
@@ -126,4 +127,6 @@ if __name__ == '__main__':
   parser.add_argument('--data_dir', type=str, default='/tmp/tensorflow/mnist/input_data',
                       help='Directory for storing input data')
   FLAGS = parser.parse_args()
-  tf.app.run()
+
+  sess = tf.compat.v1.Session()
+  tf.app.sess.run()

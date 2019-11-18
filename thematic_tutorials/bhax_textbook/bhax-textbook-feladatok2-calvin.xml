@@ -1,0 +1,173 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Calvin!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    
+    <section>
+        <title>MNIST</title>
+        <para>
+            Az alap feladat megoldása, +saját kézzel rajzolt képet is ismerjen fel,
+            <link xlink:href="https://progpater.blog.hu/2016/11/13/hello_samu_a_tensorflow-bol">Tensorflow</link> Háttérként ezt vetítsük le:
+            <link xlink:href="https://prezi.com/0u8ncvvoabcr/no-programming-programming/">Prezi</link>"
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>
+        </para>
+        <para>
+            A TensorFlow-val már találkoztunk a könyv első részében. Az MNIST egy olyan adatállomány, amelyben kézírással írt számjegyek képeit tartalmazza. 
+            Mindegyik kép 28x28 pixel. Így nekünk is egy ilyen méretű kézzel írt képpel kell dolgoznunk. Lássuk először, hogyan is épül fel a program:
+        </para>
+        <programlisting  language="python"><![CDATA[
+  mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
+
+  # Create the model
+  x = tf.placeholder(tf.float32, [None, 784])
+  W = tf.Variable(tf.zeros([784, 10]))
+  b = tf.Variable(tf.zeros([10]))
+  y = tf.matmul(x, W) + b
+        ]]>
+        </programlisting>
+        <para>
+            A fenti kódcsipetben az látható, hogy egy 10 komponensű one-hot vektorunk lesz. Az MNIST adatállományban mindegyik számhoz tartozik egy címke, amely egy 0 és 9 közötti számjegy. 
+            A 784-es szám úgy jött ki, hogy mivel egy 28x28 pixelű képpel dolgozunk ezért ezt a két számot megszorozzuk, így 784 komponensű vektorunk lesz. Az x változó az input adat esetén 
+            egy i osztályba tartozás evidenciáját jelenti. A w pedig az i-edik osztályra vonatkozó súlyokat jelenti és a b pedig a torzítási (biás) értéket.
+            Ezekből az evideniciákból fogunk kiszámolni egy valószínűségeloszlást, aminek értéke 0 és 1 között lehet és eltároljuk az y változóban.
+        </para>
+        <programlisting language="python"><![CDATA[ 
+  y_ = tf.placeholder(tf.float32, [None, 10])
+  cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels = y_, logits = y))
+  train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+            ]]>
+        </programlisting>
+        <para>
+            Ezután a keresztentrópiát is implementálunk (cross_entropy), ami azt méri, hogy mennyire helytelenek a jóslataink a valóságos helyzet leírására. 
+            a train_step változóba kerül a a tanítás során milyen módszert szeretnénk használni. Mi a a gradiens módszeren alapuló optimalizáló eljárást alkalmazzuk. 
+            Mi vel ez egy a Tensorflow beépített függvénye, ezért nekünk elég csak ezt előhívni.
+        </para>
+        <programlisting language="python"><![CDATA[ 
+    for i in range(1000):
+    batch_xs, batch_ys = mnist.train.next_batch(100)
+    sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
+    if i % 100 == 0:
+      print(i/10, "%")
+            ]]>
+        </programlisting>
+        <para>
+            A fenti for ciklusban kezdődik meg a tanítási folyamat. 1000-szer fog lefutni és az input adatokat 100-as kötegekben hozzuk be. 
+        </para>
+        <programlisting language="python"><![CDATA[ 
+  img = readimg()
+  image = img.eval()
+  image = image.reshape(28*28)
+
+  matplotlib.pyplot.imshow(image.reshape(28,28), cmap=matplotlib.pyplot.cm.binary)
+  matplotlib.pyplot.savefig("2.png")  
+  matplotlib.pyplot.show()
+
+  classification = sess.run(tf.argmax(y, 1), feed_dict={x: [image]})
+
+  print("-- Ezt a halozat ennek ismeri fel: ", classification[0])
+  print("----------------------------------------------------------")
+            ]]>
+        </programlisting>
+        <para>
+            Ezután következhet a kép beolvasása és elemzése. Én most egy kézzel írt 2-es számot tartalmazó 28x28 méretű képpel próbálkoztam. 
+            Ennek eredményét 2.png néven fogja elmenteni. A classification változóban lesz elmentve, hogy a hálózat hanyas számot ismert fel. 
+            Lássuk az eredményt:
+        </para>
+        <figure>
+            <title></title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/mnist2es.png" width="80%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <para>
+            A program felismerte a kettes számot. A pontosság 0.9156 lett.
+        </para>
+    </section>
+
+    <section>
+        <title>Mint az előző, de a mély változattal. Segítő ábra, vesd össze a forráskóddal a
+            <link xlink:href="https://arato.inf.unideb.hu/batfai.norbert/NEMESPOR/DE/denbatfai2.pdf">DEEP MNIST</link> 8. fóliáját!
+        </title>
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>
+        </para>
+        <para>
+            Ez a feladat hasonlít az előzőhöz,csak itt most az alap deep mnist fájlt fogjuk módosítani. 
+        </para>
+        <programlisting language="python"><![CDATA[ 
+def readimg():
+    file = tf.read_file("sajat2es.png")
+    img = tf.image.decode_png(file, 1)
+    return img            
+            ]]>
+        </programlisting>
+        <para>
+            Először definiáljuk a readimg() függvényt. Itt fogjuk megadni, hogy melyik saját kézzel írt képünket szeretnénk használni. 
+            Az előző programban a <![CDATA[tf.image.decode_png()]]> függvény csak egy paramétert, azaz a file-t várt, de nekünk most jeleznünk 
+            kell a programunknak, hogy ez egy grayscale típusú kép, ezért itt egy második paramétert az 1-est is meg kell adni. 
+        </para>
+
+        <programlisting  language="java"><![CDATA[
+    img = readimg()
+    image = img.eval()
+    image = image.reshape(28*28)
+
+    matplotlib.pyplot.imshow(image.reshape(28,28), cmap=matplotlib.pyplot.cm.binary)
+    matplotlib.pyplot.savefig("2.png")  
+    matplotlib.pyplot.show()
+
+    classification = sess.run(tf.argmax(y_conv, 1), feed_dict={x: [image], keep_prob: 1.0})
+    print("-- Ezt a halozat ennek ismeri fel: ", classification[0])
+    print("--------------------
+        ]]>
+        </programlisting>
+        <para>
+           A kép tesztelése, majd kiíratása is hasonló, főbb különbség, hogy a y_conv változó értékét használjuk fel. A tanítás nagyon sok időt vesz 
+           igénybe (kb több, mint fél óra). Ez azért van, mert sokkal bonyolultabb képletekkel számol és itt 20000-szer fog lefutni a for ciklus. A program befejezése 
+           után megkapjuk, hogy felismerte a 2-es számot és a pontosság 0.9919 lett, ami már nagyon jó eredmény.
+        </para>
+        <figure>
+            <title>Deep MNIST</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/deep.png" width="80%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+
+    </section>
+
+    <section>
+        <title></title>
+        <para>
+            
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href=""></link>
+        </para>
+        <para>
+        
+        </para>
+        <programlisting  language="java"><![CDATA[
+
+        ]]>
+        </programlisting>
+        <figure>
+            <title>Az LSP megsértése</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/liskovsert.png" width="80%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+
+    </section>
+    
+</chapter>                
