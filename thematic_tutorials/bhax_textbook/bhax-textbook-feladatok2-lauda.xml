@@ -55,7 +55,7 @@ public class KapuSzkenner {
             Írjunk egy egyszerű Androidos „játékot”! Építkezzünk például a 2. hét „Helló, Android!” feladatára!                
         </para>
         <para>
-            Megoldás forrása: <link xlink:href=""></link> 
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_lauda/android">https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_lauda/android</link> 
         </para>
         <para>
             Ebben a feladatban egy Tic Tac Toe nevű játékot fogunk felépíteni, amely egy olyan kétszemélyes stratégiai játék, ahol egy 3x3 mezőből álló 
@@ -365,15 +365,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
             ]]>
         </programlisting>
-        <para>
-
-        </para>
     </section>
 
     <section>
         <title>Junit teszt</title>        
         <para>
-            Megoldás forrása: <link xlink:href=""></link>                 
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_lauda/junit/LZWtest.java">https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_lauda/junit/LZWtest.java</link>                 
         </para>
         <para>
             A <link xlink:href="https://progpater.blog.hu/2011/03/05/labormeres_otthon_avagy_hogyan_dolgozok_fel_egy_pedat">progprater</link>

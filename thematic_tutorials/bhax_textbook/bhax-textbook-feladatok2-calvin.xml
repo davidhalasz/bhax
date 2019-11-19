@@ -14,7 +14,10 @@
             <link xlink:href="https://prezi.com/0u8ncvvoabcr/no-programming-programming/">Prezi</link>"
         </para>
         <para>
-            Megoldás forrása: <link xlink:href=""></link>
+            Felhasznált irodalom: <citation>BIOINTELLIGENCE</citation>
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_calvin/mnist/szoftmax2.py">https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_calvin/mnist/szoftmax2.py</link>
         </para>
         <para>
             A TensorFlow-val már találkoztunk a könyv első részében. Az MNIST egy olyan adatállomány, amelyben kézírással írt számjegyek képeit tartalmazza. 
@@ -96,7 +99,7 @@
             <link xlink:href="https://arato.inf.unideb.hu/batfai.norbert/NEMESPOR/DE/denbatfai2.pdf">DEEP MNIST</link> 8. fóliáját!
         </title>
         <para>
-            Megoldás forrása: <link xlink:href=""></link>
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_calvin/mnist_deep/mnist_deep.py">https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_calvin/mnist_deep/mnist_deep.py</link>
         </para>
         <para>
             Ez a feladat hasonlít az előzőhöz,csak itt most az alap deep mnist fájlt fogjuk módosítani. 

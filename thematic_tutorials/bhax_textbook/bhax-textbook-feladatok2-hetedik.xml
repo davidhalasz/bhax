@@ -9,7 +9,7 @@
     <section>
         <title>FUTURE tevékenység editor</title>        
         <para>
-            Megoldás forrása: <link xlink:href=""></link>                 
+            Megoldás forrásai: <link xlink:href="https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_hetedik/F6/src">https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_hetedik/F6/src</link>                 
         </para>
         <para>
             Javítsunk valamit a ActivityEditor.java JavaFX programon!
@@ -294,7 +294,7 @@ void SamuCam::run()
         <section>
         <title>BrainB</title>        
         <para>
-            Megoldás forrása: <link xlink:href=""></link>                 
+            Megoldás forrásai: <link xlink:href="https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_hetedik/esport-talent-search-master">https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_hetedik/esport-talent-search-master</link>                 
         </para>
         <para>
             Mutassuk be a Qt slot-signal mechanizmust ebben a projektben: <link xlink:href="https://github.com/nbatfai/esport-
@@ -384,31 +384,6 @@ void BrainBWin::endAndStats ( const int &t )
 ...
             ]]>
         </programlisting>
-    </section>
-
-        <section>
-        <title>OSM térképre rajzolása 6</title>
-        <para>
-            
-        </para>
-        <para>
-            Megoldás forrása: <link xlink:href=""></link>                 
-        </para>
-    
-        <para>
-            Debrecen térképre dobjunk rá cuccokat, ennek mintájára, ahol én az országba helyeztem el a DEAC
-            hekkereket: <link xlink:href="https://www.twitch.tv/videos/182262537">https://www.twitch.tv/videos/182262537</link> (de az OOCWC Java Swinges
-            megjelenítőjéből:
-            <link xlink:href="https://github.com/nbatfai/robocar-emulator/tree/master/justine/rcwin">https://github.com/nbatfai/robocar-emulator/tree/master/justine/rcwin</link> is
-            kiindulhatsz, mondjuk az komplexebb, mert ott időfejlődés is van...)
-        </para>
-        <programlisting language="c++"><![CDATA[ 
-
-            ]]>
-        </programlisting>
-        <para>
-
-        </para>
     </section>
 
 </chapter>
