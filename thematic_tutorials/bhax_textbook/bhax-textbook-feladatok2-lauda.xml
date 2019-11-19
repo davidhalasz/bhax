@@ -365,6 +365,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
             ]]>
         </programlisting>
+        <figure>
+            <title>Tic Tac Toe</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/tictactoe.png" width="35%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
     </section>
 
     <section>
