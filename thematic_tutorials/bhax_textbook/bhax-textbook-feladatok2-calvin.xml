@@ -141,29 +141,42 @@ def readimg():
                 </imageobject>
             </mediaobject>   
         </figure>
-
     </section>
 
     <section>
-        <title></title>
+        <title>Android telefonra a TF objektum detektálója</title>
         <para>
-            
+            Telepítsük fel, próbáljuk ki!
         </para>
         <para>
             Megoldás forrása: <link xlink:href=""></link>
         </para>
         <para>
-        
+            Ennek a feladat megoldásához szükségünk lesz az Android Studio programra, amibe importálni kell a <link xlink:href="https://github.com/tensorflow/tensorflow/tree/master/tensorflow/examples/android">repoban</link> 
+            található android mappát. 
+            Itt a Build > Generate signed APK menüpont kiválasztásával hozhatunk létre .apk végződésű fájlt, ami telepíthető az Androidos telefonunkra. 
+            Nálam nem sikerült elsőre az apk létrehozása, mert valami hibaüzenetet dobott ki, de egy kis utánakereséssel a Gradle Sripcts > build.gradle fájlban 
+            a következőre módosítottam az alábbi kódcsipetet:
         </para>
         <programlisting  language="java"><![CDATA[
-
+// set to 'bazel', 'cmake', 'makefile', 'none'
+def nativeBuildSystem = 'none'
         ]]>
         </programlisting>
+        <para>
+            Tehát nálam alapból 'baze' lett beállítva, amit 'none'-re módosítottam, így már engedte az app létrehozását. A Classify program 
+            egész jól működik, a legtöbb esetben felismerte az adott tárgyat, ahogy az alábbi képeken is látható:
+        </para>
         <figure>
-            <title>Az LSP megsértése</title>
+            <title>TF Classify tesztelése</title>
             <mediaobject>
                 <imageobject>
-                    <imagedata fileref="img/java/liskovsert.png" width="80%" format="PNG"/>
+                    <imagedata fileref="img/java/tf1.png" width="60%" format="PNG"/>
+                </imageobject>
+            </mediaobject>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/tf2.png" width="60%" format="PNG"/>
                 </imageobject>
             </mediaobject>   
         </figure>
