@@ -16,7 +16,7 @@
             Felhasznált irodalom: <citation>BERTALAN</citation>           
         </para>
         <para>
-            Megoldás forrása: <link xlink:href=""></link>                 
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_godel/gengszterek/myshmclient.cpp">https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_godel/gengszterek/myshmclient.cpp</link>                 
         </para>
     
         <para>
@@ -49,7 +49,7 @@ std::sort ( gangsters.begin(), gangsters.end(), [this, cop] ( Gangster x, Gangst
             CustomAlloc-os példa, lásd C forrást az UDPROG repóban!
         </para>
         <para>
-            Megoldás forrása: <link xlink:href=""></link>                 
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_godel/customalloc">https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_godel/customalloc</link>                 
         </para>
         <para>
             A C++ programok írása során előfordulhatnak olyan különleges esetek, amikor szükségünk van saját allokátor létrehozására az alapértelmezett helyfoglalás helyett, így ebben a feladatban 
@@ -179,7 +179,7 @@ int main()
         </para>
         
         <para>
-                Megoldás forrása: <link xlink:href=""></link>                 
+                Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_godel/map/fenykard.cpp">https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_godel/map/fenykard.cpp</link>                 
         </para>
         
         <para>
@@ -232,7 +232,7 @@ std::vector<std::pair<std::string, int>> sort_map ( std::map <std::string, int> 
         </para>
         
         <para>
-            Megoldás forrása: <link xlink:href=""></link>                 
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_godel/alternativ%20tabella">https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_godel/alternativ%20tabella</link>                 
         </para>
             
         <para>
