@@ -95,9 +95,12 @@
     </section>
 
     <section>
-        <title>Mint az előző, de a mély változattal. Segítő ábra, vesd össze a forráskóddal a
-            <link xlink:href="https://arato.inf.unideb.hu/batfai.norbert/NEMESPOR/DE/denbatfai2.pdf">DEEP MNIST</link> 8. fóliáját!
+        <title>
+            DEEP MNIST
         </title>
+        <para>Mint az előző, de a mély változattal. Segítő ábra, vesd össze a forráskóddal a
+            <link xlink:href="https://arato.inf.unideb.hu/batfai.norbert/NEMESPOR/DE/denbatfai2.pdf">DEEP MNIST</link> 8. fóliáját!
+        </para>
         <para>
             Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_calvin/mnist_deep/mnist_deep.py">https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_calvin/mnist_deep/mnist_deep.py</link>
         </para>
