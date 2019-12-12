@@ -198,16 +198,6 @@ Person dark (Person && p) {
     </section>   
 
     <section>
-        <title>Hibásan implementált RSA törése</title>
-        <para>Készítsünk betű gyakoriság alapú törést egy hibásan implementált RSA kódoló:
-https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_3.pdf (71-73 fólia) által
-készített titkos szövegen.</para>
-        <para>
-            Megoldás forrása: <link xlink:href=""></link>                 
-        </para>
-    </section>   
-
-    <section>
         <title>Változó argumentumszámú ctor</title>
         <para>Készítsünk olyan példát, amely egy képet tesz az alábbi projekt Perceptron osztályának bemenetére
         és a Perceptron ne egy értéket, hanem egy ugyanakkora méretű „képet” adjon vissza. (Lásd még a 4

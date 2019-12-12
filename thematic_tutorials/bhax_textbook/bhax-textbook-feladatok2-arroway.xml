@@ -15,7 +15,7 @@ példánytag, amely a nem visszaadottat tárolja és egy logikai tag, hogy van-e
 az algot.) és az OpenJDK, Oracle JDK-ban a Sun által adott OO szervezés ua.!
         </para>
         <para>
-            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/OO/PolarGenerator.java">PolarGenerator.java</link>                 
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/OO/PolarGenerator.java">PolarGenerator.java</link>                 
         </para>
         <para>
             Ebben a feladatban a polártranszformációs generátort nézzük meg Java verzióban, melynek célja, 
@@ -106,10 +106,10 @@ public class PolarGenerator {
         (például a böngésző címsorából) kapja meg azt a mintát, amelynek kiszámolja az LZW binfáját!
     </para>
     <para>
-       Első Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/Homokozo/LZWBinFa.java">LZWBinFa.java</link>                 
+       Első Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/Homokozo/LZWBinFa.java">LZWBinFa.java</link>                 
     </para>
     <para>
-        Második Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/Homokozo/LZWJavaServlet.java">LZWJavaServlet.java</link>                 
+        Második Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/Homokozo/LZWJavaServlet.java">LZWJavaServlet.java</link>                 
     </para>
     <para>
         A programunk először az osztályok importálásával kezdődik. A <function>PrintWriter</function> segítségével íratjuk ki a szövegeket, a <function>BufferedReader</function> az osztályok 
@@ -537,10 +537,10 @@ public void doGet(HttpServletRequest request, HttpServletResponse response)
         példányokat poolozza!
     </para>
     <para>
-        Első Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/Gagyi/Gagyi1.java">Gagyi1.java</link>                 
+        Első Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/Gagyi/Gagyi1.java">Gagyi1.java</link>                 
     </para>
     <para>
-        Második Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/Gagyi/Gagyi2.java">Gagyi2.java</link>                 
+        Második Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/Gagyi/Gagyi2.java">Gagyi2.java</link>                 
     </para>
     <para>
         A feladat lényege, hogy megmutassuk, hogy két-két azonos szám megadásával miért viselkedik eltérő módon ugyanaz a while ciklus.
@@ -620,7 +620,7 @@ public class Gagyi2 {
             Az alábbi szemlélteti a hagyományos és a Yoda conditions használatát:
         </para>
         <para>
-            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/Yoda/Yoda.java">Yoda.java</link>                 
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/Yoda/Yoda.java">Yoda.java</link>                 
         </para>
         <programlisting language="java"><![CDATA[ 
         //Hagyományos, ahogy eddig programoztunk
@@ -661,7 +661,7 @@ class Yoda {
             melyet szeretném, ha átélnél).
         </para>
         <para>
-            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/BBP/BBP.java">BBP.java</link>                 
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_arroway/BBP/BBP.java">BBP.java</link>                 
         </para>
         <para>
             A BBP algoritmust Bailey, Borwei és Plouffe 1995-ben publikálta, mellyel kiszámítható a Pí tetszőleges számjegye

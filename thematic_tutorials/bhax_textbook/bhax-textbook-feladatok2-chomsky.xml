@@ -13,6 +13,9 @@
             <link xlink:href="https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/adatok.html">https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/adatok.html</link>
         </para>
         <para>
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_chomsky/encoding/MandelbrotHalmazNagy%C3%ADt%C3%B3.java">https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_chomsky/encoding/MandelbrotHalmazNagy%C3%ADt%C3%B3.java</link>
+        </para>
+        <para>
             Ebben a feladatban a már jól ismert Mandelbrot halmazt kellett futtatni úgy, hogy az ékezetes betűket nem kellett ékezet nélkülire átírnunk. Ehhez 3 programra 
             lesz szükségünk: MandelbrotHalmaz.java MandelbrotHalmazNagyító.java és MandelbrotIterációk.java. Az ékezetes betűk kezeléséhez az <function>-encoding</function> kapcsolót kell használnunk és mellé 
             pedig a megfelelő encoding karakter kódját, mint például <function>ISO-8859-2</function> <function>ISO-8859-2</function> vagy ha windowson íródott a program, akkor <function>windows-1252</function>. 
@@ -44,25 +47,13 @@
     </section>
 
     <section>
-        <title>OOCWC lexer</title>
-        <para>Izzítsuk be az OOCWC-t és vázoljuk a <link xlink:href="https://github.com/nbatfai/robocar-emulator/blob/master/justine/rcemu/src/carlexer.ll">https://github.com/nbatfai/robocar-emulator/blob/master/justine/rcemu/src/carlexer.ll</link> 
-            lexert és kapcsolását a programunk OO struktúrájába!</para>
-    </section>   
-
-    <section>
-        <title>l334d1c4</title>
-        <para>Írj olyan OO Java vagy C++ osztályt, amely leet cipherként működik, azaz megvalósítja ezt a betű
-            helyettesítést: <link xlink:href="https://simple.wikipedia.org/wiki/Leet">https://simple.wikipedia.org/wiki/Leet</link> 
-            (Ha ez első részben nem tetted meg, akkor írasd
-            ki és magyarázd meg a használt struktúratömb memóriafoglalását!)
-        </para>
-    </section>   
-
-    <section>
         <title>Full screen</title>
         <para>
             Készítsünk egy teljes képernyős Java programot!
             Tipp: <link xlink:href="https://www.tankonyvtar.hu/en/tartalom/tkt/javat-tanitok-javat/ch03.html#labirintus_jatek">https://www.tankonyvtar.hu/en/tartalom/tkt/javat-tanitok-javat/ch03.html#labirintus_jatek</link>
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_chomsky/fullScreen/BouncingBall.java">https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_chomsky/fullScreen/BouncingBall.java</link>
         </para>
         <para>
             Ebben a feladatban egy pattogó labda programot írtam Java-ban, mely elindítás után teljes képernyőben hozza be az ablakot. 
@@ -185,6 +176,9 @@ public static void main(String[] args) {
         <para>
             Lásd vis_prel_para.pdf! Apró módosításokat eszközölj benne, pl. színvilág, textúrázás, a szintek jobb
             elkülönítése, kézreállóbb irányítás.
+        </para>
+        <para>
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_chomsky/paszigrafia/pasigraphy-rhapsody-master/para/docs">https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_chomsky/paszigrafia/pasigraphy-rhapsody-master/para/docs</link>
         </para>
         <para>
             Ennek a programnak az elindításához szükségünk lesz egy GLU csomagra, melynek telepítése: 
@@ -348,6 +342,9 @@ glTranslatef(-5.5f, 0.0f, -6.0f);
         <title>Perceptron osztály</title>
         <para>
             Dolgozzuk be egy külön projektbe a projekt Perceptron osztályát! Lásd <link xlink:href="https://youtu.be/XpBnR31BRJY">https://youtu.be/XpBnR31BRJY</link>
+        </para>
+        <para>
+            Megoldás forrásai: <link xlink:href="https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_chomsky/perceptron">https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_chomsky/perceptron</link>
         </para>
         <para>
             A perceptron a legismertebb neurális modell, amit Rosenblatt talált fel 1957-ben. Ebből alakult ki a többrétegű perceptron hálózatok (MLP), ami a legtöbbször alkalmazott 

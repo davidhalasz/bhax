@@ -14,9 +14,7 @@
             kapcsolatára a forráskódban és a diagramon, lásd még: https://youtu.be/Td_nlERlEOs.
             <link xlink:href="https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog1_6.pdf">https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog1_6.pdf (28-32 fólia)</link>  
         </para>
-        <para>
-            Megoldás forrása: <link xlink:href=""></link>                 
-        </para>
+
         <para>
             Az UML osztálydiagram segítségével statikus nézetben dokumentálhatjuk programunk részegységeit, architekturális elemeit. 
             Az osztálydiagramban lévő osztály fogalma nem teljesen azonos az 
@@ -67,7 +65,7 @@
             UML-ben tervezzünk osztályokat és generáljunk belőle forrást!
         </para>
         <para>
-            Megoldás forrásai: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_mandelbrot/UML/ForwardUML">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_mandelbrot/UML/ForwardUML</link>                 
+            Megoldás forrásai: <link xlink:href="https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_mandelbrot/UML/ForwardUML">https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_mandelbrot/UML/ForwardUML</link>                 
         </para>
         <para>
             Ebben a feladatban az osztálydiagramból kell most C++ forrást generálni. Én most egy egyszerű diagramot csináltam, amiből olyan program készülne, 
@@ -248,12 +246,12 @@ class Negyzet : public Negyszog {
             Tutor/felhasznált forrás: <link xlink:href="https://github.com/kovacsferencz98/Prog2/tree/master/Harmadik_het/Esettan">Kovács Ferencz</link> 
         </para>
         <para>
-            Megoldás forrásai: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_mandelbrot/BME">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_mandelbrot/BME</link>                 
+            Megoldás forrásai: <link xlink:href="https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_mandelbrot/BME">https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_mandelbrot/BME</link>                 
         </para>
         <para>
             Ebben a feladatban olyan programot fogunk írni, amellyel egy kereskedés számítógép-alkatrész és konfigurációk nyilvántartására lesz alkalmas. 
-            Támogatnia kell a termékek állományból való betöltését, képernyőre trténő listázását, állományba való kiírását és az árképzés rugalmas kialakítását. 
-            Mivel ez egy több fájlból álló nagyon összetett program, ezért csak néhány kódcsipetről fogok írni. Az összes fájl elérhető a gitlab tárhelyen. 
+            Támogatnia kell a termékek állományból való betöltését, képernyőre történő listázását, állományba való kiírását és az árképzés rugalmas kialakítását. 
+            Mivel ez egy több fájlból álló nagyon összetett program, ezért csak néhány kódcsipetről fogok írni. Az összes fájl elérhető a github tárhelyen. 
             Kezdjük a <function>product.h</function> header fájllal, amiben a Product osztály található:
         </para>
         <programlisting  language="C++"><![CDATA[

@@ -16,7 +16,7 @@
             Felhasznált irodalom: <citation>PROTECHNIKA</citation>           
         </para>
         <para>
-            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/Liskov_2/liskov">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/Liskov_2/liskov</link>
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/Liskov_2/liskov">https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/Liskov_2/liskov</link>
         </para>
         <para>
             A Liskov féle behellyettesítési elv (LSP) egy olyan programozási technológia, amely során a program viselkedése 
@@ -228,7 +228,7 @@ int main ( int argc, char **argv )
             keresztül csak az ős üzenetei küldhetőek!
         </para>
         <para>
-            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/Liskov_2/szulo">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/Liskov_2/szulo</link>                 
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/Liskov_2/szulo">https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/Liskov_2/szulo</link>                 
         </para>
         <para>
             Ebben a feladatban olyan programot mutatok be, amivel demonstrálni lehet, hogy az ős osztály csak a 
@@ -330,7 +330,7 @@ int main (int argc, char **argv) {
             darab jegyét határozzuk meg C, C++, Java és C# nyelveken és vessük össze a futási időket!
         </para>
         <para>
-            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_liskov/BBP">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_liskov/BBP</link>
+            Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_liskov/BBP">https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_liskov/BBP</link>
         </para>
         <para>
             Ebben a feladatban az előző fejezetben megismert BBP algoritmussal fogunk dolgozni. A különböző nyelven megírt programokat 
@@ -417,41 +417,6 @@ mono PiBBPBench.exe
                     </tbody>
                 </tgroup>
         </table>
-    </section>
-
-    <section>
-        <title>Hello, Android!</title>
-        <para>
-           Élesszük fel az SMNIST for Humans projektet! 
-           <link xlink:href="https://gitlab.com/nbatfai/smnist/tree/master/forHumans/SMNISTforHumansExp3/app/src/main">https://gitlab.com/nbatfai/smnist/tree/master/forHumans/SMNISTforHumansExp3/app/src/main</link> 
-           Apró módosításokat eszközölj benne, pl. színvilág.
-        </para>
-        <para>
-            Megoldás forrása: <link xlink:href="https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/Liskov_2/SMNIST">https://gitlab.com/davidhalasz/bhax/tree/master/attention_raising/Source/Liskov_2/SMNIST</link>                 
-        </para>
-        <para>
-            Az SMNIST egy olyan java nyelven írt program, mely megvizsgálja, hogy milyen gyorsan hány pontot tudunk megszámolni. Minél több pontot érünk el, annál gyorsabban váltakoznak a pontok. 
-            Ha meg szeretnénk változtatni a feladatban szereplő programunk színvilágát, akkor azt az <function>SMNISTSurfaceView.java</function> programban tehetjük meg.
-        </para>
-        <programlisting language="java"><![CDATA[
-            int[] bgColor =
-            {
-                    android.graphics.Color.rgb(11, 180, 250),
-                    android.graphics.Color.rgb(11, 250, 180)
-            };
-            ]]>
-        </programlisting>
-        <para>
-            Jelenleg kék és zöld között váltakoznak a színek. A piros és a sárga színhez a következő módosításokra lesz szükségünk:
-        </para>
-        <programlisting language="java"><![CDATA[
-            int[] bgColor =
-            {
-                    android.graphics.Color.rgb(252, 2, 1),
-                    android.graphics.Color.rgb(252, 253, 1)
-            };
-            ]]>
-        </programlisting>
     </section>
 
     <section>

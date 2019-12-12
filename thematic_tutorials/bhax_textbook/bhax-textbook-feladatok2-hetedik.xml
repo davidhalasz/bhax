@@ -92,7 +92,7 @@ stage.show();
         <section>
         <title>OOCWC Boost ASIO hálózatkezelése</title>        
         <para>
-            Megoldás forrása: <link xlink:href=""></link>                 
+            <link xlink:href="https://github.com/nbatfai/robocar-emulator/blob/master/justine/rcemu/src/carlexer.ll">carlexerl.ll</link>                
         </para>
         <para>
             Mutassunk rá a scanf szerepére és használatára! <link xlink:href="https://github.com/nbatfai/robocar-
@@ -124,9 +124,6 @@ emulator/blob/master/justine/rcemu/src/carlexer.ll">carlexerl.ll</link>
 
         <section>
         <title>SamuCam</title>        
-        <para>
-            Megoldás forrása: <link xlink:href=""></link>                 
-        </para>
         <para>
             Mutassunk rá a webcam (pl. Androidos mobilod) kezelésére ebben a projektben:
             <link xlink:href="https://github.com/nbatfai/SamuCam">SamuCam</link>
@@ -293,12 +290,13 @@ void SamuCam::run()
 
         <section>
         <title>BrainB</title>        
-        <para>
-            Megoldás forrásai: <link xlink:href="https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_hetedik/esport-talent-search-master">https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_hetedik/esport-talent-search-master</link>                 
-        </para>
+        
         <para>
             Mutassuk be a Qt slot-signal mechanizmust ebben a projektben: <link xlink:href="https://github.com/nbatfai/esport-
 talent-search">BrainB</link>
+        </para>
+        <para>
+            Megoldás forrásai: <link xlink:href="https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_hetedik/esport-talent-search-master">https://github.com/davidhalasz/bhax/tree/master/attention_raising/Source/2_hetedik/esport-talent-search-master</link>                 
         </para>
         <para>
             A BrainB program lényege, hogy az egérrel az entropy-n kell folyamatosan nyomva tartani, miközben egyre több ilyen entropy-k jelennek meg, 

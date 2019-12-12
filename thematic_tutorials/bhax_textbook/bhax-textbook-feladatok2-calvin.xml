@@ -14,7 +14,7 @@
             <link xlink:href="https://prezi.com/0u8ncvvoabcr/no-programming-programming/">Prezi</link>"
         </para>
         <para>
-            Felhasznált irodalom: <citation>BIOINTELLIGENCE</citation>
+            Felhasznált irodalom: <citation>NEURALIS</citation>
         </para>
         <para>
             Megoldás forrása: <link xlink:href="https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_calvin/mnist/szoftmax2.py">https://github.com/davidhalasz/bhax/blob/master/attention_raising/Source/2_calvin/mnist/szoftmax2.py</link>
@@ -147,6 +147,84 @@ def readimg():
                 </imageobject>
             </mediaobject>   
         </figure>
+        <para>
+            Az alábbi ábrán látható a program modellje. Két konvolúciós rétegünk van. Az első réteg 28x28x1-es kép. Onnan tudjuk, hogy konvolúciós
+             rétegről van szó, hogy a programunkban szerepel a <![CDATA['conv']]> kulcsszó és hogy hanyadik rétegről van szó. Például az első ilyen rétegünk így néz ki: 
+        </para>
+        <figure>
+            <title></title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="img/java/deepabra.png" width="80%" format="PNG"/>
+                </imageobject>
+            </mediaobject>   
+        </figure>
+        <programlisting language="python"><![CDATA[ 
+    with tf.name_scope('conv1'):
+        W_conv1 = weight_variable([5, 5, 1, 32])
+        b_conv1 = bias_variable([32])
+        h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
+            ]]></programlisting>
+        <para>
+           A fenti kódcsipet eredménye 28x28x32 lesz, ahogy a fenti képen látható. Majd ezt az eredményt összevonjuk, azaz 14x14x32-es kép lesz belőle:
+        </para>
+        <programlisting language="python"><![CDATA[ 
+    with tf.name_scope('pool1'):
+        h_pool1 = max_pool_2x2(h_conv1)
+            ]]></programlisting>
+        <para>
+            Ezt követi a 2. konvolúciós réteg majd újabb összevonás: 
+        </para>
+        <programlisting>
+            <![CDATA[ 
+    # Second convolutional layer -- maps 32 feature maps to 64.
+    with tf.name_scope('conv2'):
+        W_conv2 = weight_variable([5, 5, 32, 64])
+        b_conv2 = bias_variable([64])
+        h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
+
+    # Second pooling layer.
+    with tf.name_scope('pool2'):
+        h_pool2 = max_pool_2x2(h_conv2)
+            ]]>
+        </programlisting>
+        <para>
+            Ennek eredménye 14x14x64 majd 7x7x64-es kép lesz. Ekkor csinálunk egy fully connected réteget, ami súlyokkal és bias értékekkel számolva egy 1024-es képünk lesz:
+        </para>
+        <programlisting>
+            <![CDATA[ 
+    with tf.name_scope('fc1'):
+        W_fc1 = weight_variable([7 * 7 * 64, 1024])
+        b_fc1 = bias_variable([1024])
+        
+        h_pool2_flat = tf.reshape(h_pool2, [-1, 7*7*64])
+        h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)    
+            ]]>
+        </programlisting>
+        <para>
+           A következő kódcsipetben a bonyolult modellünk kontrollálása történik meg. Amikor képről van szó, akkor ezt nem lehet majd eldobni, értéke 1 lesz. 
+        </para>
+        <programlisting>
+            <![CDATA[ 
+    with tf.name_scope('dropout'):
+        keep_prob = tf.placeholder(tf.float32)
+        h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
+            ]]>
+        </programlisting>
+        <para>
+            Az 1024-et leképezzük 10 osztályra, egy-egy számjegynek megfelelően.
+        </para>
+        <programlisting><![CDATA[ 
+    with tf.name_scope('fc2'):
+        W_fc2 = weight_variable([1024, 10])
+        b_fc2 = bias_variable([10])
+
+        y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
+    return y_conv, keep_prob 
+            ]]></programlisting>
+            <para>
+                Ezzel az ábra végéhez értünk. Láthatjuk, hogy a weight és a bias értékekkel történő számítások kulcsfontosságúak. Ezek az értékek a tanítás során fohnak beállni.
+            </para>
     </section>
 
     <section>
@@ -155,7 +233,7 @@ def readimg():
             Telepítsük fel, próbáljuk ki!
         </para>
         <para>
-            Megoldás forrása: <link xlink:href=""></link>
+            Megoldás forrása: <link xlink:href="https://github.com/tensorflow/tensorflow/tree/master/tensorflow/examples/android">Android TF</link>
         </para>
         <para>
             Ennek a feladat megoldásához szükségünk lesz az Android Studio programra, amibe importálni kell a <link xlink:href="https://github.com/tensorflow/tensorflow/tree/master/tensorflow/examples/android">repoban</link> 
